@@ -1,0 +1,22 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ],
+
+
+  "compilerOptions": {
+
+    "target": "es2017", // O más reciente como "esnext"
+    "module": "esnext", // O "commonjs"
+    "lib": ["dom", "es2017", "esnext.promise"], // Asegura que se conozcan las características modernas de JS
+    "esModuleInterop": true,   // ¡MUY IMPORTANTE!
+    "allowSyntheticDefaultImports": true, // A menudo va con esModuleInterop
+    "moduleResolution": "node", // Cómo TypeScript busca módulos en node_modules
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": false, // Mantenlo en false para que TypeScript haga todas las comprobaciones
+    "jsx": "react"
+  }
+}

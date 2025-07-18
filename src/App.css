@@ -1,0 +1,90 @@
+:root {
+  --turquesa-medio: #2aa198;
+  --turquesa-oscuro: #20706e;
+  --turquesa-claro: #3ecfcf;
+  --gris-suave: #f6f8fa;
+  --gris-medio: #e0e0e0;
+  --gris-oscuro: #b0b0b0;
+  --texto-principal: #1a2327;
+  --fuente: "Segoe UI", "Arial", "Helvetica Neue", Arial, sans-serif;
+  --max-width: 1000px;
+  --radius: 12px;
+  --sombra: 0 4px 24px rgba(0, 0, 0, 0.08);
+  --header-height: 70px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  position: relative;
+  height: 100px;
+}
+
+.logo {
+  position: absolute;
+  left: 25%;
+  transform: translateX(-50%);
+  margin: 0;
+}
+
+.logo-komuni {
+  max-height: 90px; /* Ajusta según el tamaño que desees para el logo */
+}
+
+.navi {
+  margin-left: auto;
+}
+
+.menu {
+  display: flex;
+  list-style: none;
+  padding-right: 8rem;
+  margin: 0;
+}
+
+.menu_item {
+  margin-left: 1.5rem;
+}
+
+.menu_link {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.menu_link.active {
+  color: orange; /* Color para el enlace activo */
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--turquesa-medio);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+  min-height: var(--header-height);
+}
+
+.contmini-icono {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.sobreh2 {
+  text-align: center;
+  padding-bottom: 20px;
+}
+
+.textalign{
+  padding-left: 10%;
+  padding-right: 10%;
+}
+
+.footer{
+  display: flex;
+  justify-content: center;
+  padding: 25px;
+  background-color: var(--turquesa-medio);
+}
