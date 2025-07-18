@@ -43,16 +43,6 @@ function Header() {
               </li>
               <li className="menu_item">
                 <NavLink
-                  to="/about"
-                  className={({ isActive }: { isActive: boolean }) =>
-                    "menu_link" + (isActive ? " active" : "")
-                  }
-                >
-                  Sobre nosotros
-                </NavLink>
-              </li>
-              <li className="menu_item">
-                <NavLink
                   to="/mapa"
                   className={({ isActive }: { isActive: boolean }) =>
                     "menu_link" + (isActive ? " active" : "")
@@ -63,12 +53,23 @@ function Header() {
               </li>
               <li className="menu_item">
                 <NavLink
+                  to="/about"
+                  className={({ isActive }: { isActive: boolean }) =>
+                    "menu_link" + (isActive ? " active" : "")
+                  }
+                >
+                  Sobre nosotros
+                </NavLink>
+              </li>
+
+              <li className="menu_item">
+                <NavLink
                   to="/foro"
                   className={({ isActive }: { isActive: boolean }) =>
                     "menu_link" + (isActive ? " active" : "")
                   }
                 >
-                  ???
+                  Foro/Comunidad
                 </NavLink>
               </li>
               <li className="menu_item">
