@@ -44,14 +44,14 @@ const About = () => {
             <div className="contmini-icono">
               <a href={member.Github}>
                 <img
-                  src="../public/github.png"
+                  src="/icons/github.png"
                   alt="Logo de Github"
                   style={{ height: "30px" }}
                 />
               </a>
               <a href={member.Linkedin}>
                 <img
-                  src="../public/linkedin.png"
+                  src="/icons/linkedin.png"
                   alt="Logo de Linkedin"
                   style={{ height: "30px" }}
                 />
