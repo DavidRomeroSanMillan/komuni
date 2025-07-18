@@ -23,7 +23,7 @@ function Header() {
             <Link to="/">
               <img
                 className="logo-komuni"
-                src="../public/icons/barrier-icon.png"
+                src="/icons/barrier-icon.png"
                 alt="Logo de KOMUNI, con una imagen de una chincheta de mapa con una silla de ruedas en azul."
               />
             </Link>
