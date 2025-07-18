@@ -140,6 +140,7 @@ ul {
   box-shadow: 0 2px 12px #0001;
   padding: 1.5rem 1.2rem;
   margin-bottom: 1.5rem;
+  width:50%;
 }
 
 @media (max-width: 600px) {

@@ -88,3 +88,12 @@
   padding: 25px;
   background-color: var(--turquesa-medio);
 }
+
+.juntar{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap:25px;
+  margin-bottom: 16px;
+  justify-content: space-evenly;
+}
