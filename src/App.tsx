@@ -5,6 +5,7 @@ import Home from "./Home";
 import About from "./About";
 import Mapa from "./Mapa";
 import Privacidad from "./Privacidad";
+import ContactPage from "./ContactPage";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="about" element={<About />} />
         <Route path="mapa" element={<Mapa />} />
         <Route path="privacidad" element={<Privacidad />} />
+        <Route path="contacto" element={<ContactPage />} />
 
         {/* <Route path="contact" element={<Contact />} /> */}
       </Route>
