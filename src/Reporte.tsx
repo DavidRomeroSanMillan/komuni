@@ -1,6 +1,15 @@
 import { useState, useEffect, type ChangeEvent, type FormEvent } from 'react';
 import { sendReporte } from '../services/api.ts'; 
 
+// import { useAuthState } from "react-firebase-hooks/auth";
+// import { auth } from "../firebase";
+
+// const [user, loading] = useAuthState(auth);
+
+// if (!user) {
+//   return <p>Debes iniciar sesión para reportar barreras.</p>;
+// }
+
 // Definición de la interfaz para el payload del reporte
 interface ReportPayload {
   id: string;
