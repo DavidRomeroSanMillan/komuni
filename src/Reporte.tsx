@@ -1,13 +1,17 @@
+// Reporte.tsx
 import { useState, useEffect, type ChangeEvent, type FormEvent } from 'react';
-import { sendReporte } from '../services/api.ts'; 
+import { sendReporte } from '../services/api.ts';
 
 // Definición de la interfaz para el payload del reporte
+// NOTE: 'imagen' should now be 'File | null' if we pass the file directly to sendReporte
+// OR, if sendReporte handles base64, then it remains string | null.
+// For Firebase Storage, passing the File object is more straightforward.
 interface ReportPayload {
   id: string;
   calle: string;
   descripción: string;
   informaciónExtra: string;
-  imagen: string | null;
+  imagen: File | null; // Changed to File | null
   latitud: number | null;
   longitud: number | null;
   fecha: string;
@@ -78,25 +82,15 @@ export default function ReportPage() {
       return;
     }
 
-    let imagenBase64: string | null = null;
-    if (foto) {
-      imagenBase64 = await new Promise<string | null>(resolve => {
-        const reader = new FileReader();
-        reader.onload = (e: ProgressEvent<FileReader>) => resolve(e.target?.result as string);
-        reader.onerror = () => {
-          console.error("Error reading file.");
-          resolve(null);
-        };
-        reader.readAsDataURL(foto);
-      });
-    }
+    // No need to convert to base64 here anymore
+    // The `foto` (File object) will be passed directly.
 
     const payload: ReportPayload = {
       id: generateId(),
       calle: calle.trim(),
       descripción: desc.trim(),
       informaciónExtra: extra.trim(),
-      imagen: imagenBase64,
+      imagen: foto, // Pass the File object directly
       latitud: coords?.latitud || null,
       longitud: coords?.longitud || null,
       fecha: new Date().toISOString()
@@ -108,7 +102,7 @@ export default function ReportPage() {
       setCalle('');
       setDesc('');
       setExtra('');
-      setFoto(null);
+      setFoto(null); // Clear the file input
     } catch (err) {
       console.error("Error sending report:", err);
       setMsg('❌ Ocurrió un error al enviar');
