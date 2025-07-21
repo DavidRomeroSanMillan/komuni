@@ -28,6 +28,7 @@ const Home = () => {
         <div className="card" style={{ minWidth: 260, flex: 1 }}>
           <h2 style={{ marginTop: 0 }}>🤝 Comunidad</h2>
           <p>Comparte tu experiencia, ayuda a otras personas y forma parte de una red global comprometida con la accesibilidad.</p>
+          <Link to="/blog"><button style={{ marginTop: 12, width: '100%' }}>Lee nuestro blog</button></Link>
         </div></div>
       </div>
 
