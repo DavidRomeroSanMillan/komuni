@@ -2,6 +2,15 @@
 import { useState, useEffect, type ChangeEvent, type FormEvent } from 'react';
 import { sendReporte } from '../services/api.ts';
 
+// import { useAuthState } from "react-firebase-hooks/auth";
+// import { auth } from "../firebase";
+
+// const [user, loading] = useAuthState(auth);
+
+// if (!user) {
+//   return <p>Debes iniciar sesión para reportar barreras.</p>;
+// }
+
 // Definición de la interfaz para el payload del reporte
 // NOTE: 'imagen' should now be 'File | null' if we pass the file directly to sendReporte
 // OR, if sendReporte handles base64, then it remains string | null.
