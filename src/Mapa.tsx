@@ -8,31 +8,21 @@ import {
 } from "react";
 import L, { Map, Marker, CircleMarker, Icon } from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { sendReporte, getReportes } from "../services/api.ts"; // Asegúrate de que 'api.ts' maneje las llamadas correctamente
-import axios from "axios";
+// Import all necessary types and functions from your Firebase-integrated API
+import {
+  sendReporte,
+  getReportes,
+  updateReporte as apiUpdateReporte, // Alias to avoid name clash
+  deleteReporte as apiDeleteReporte, // Alias to avoid name clash
+  type Reporte, // Import the Reporte interface from api.ts
+  type SendReportData, // Import the input type for sending new reports
+  type UpdateReportData // Import the input type for updating reports
+} from "../services/api.ts";
+// axios is no longer needed if you're fully on Firebase
+// import axios from "axios"; // Remove this line
 
-// Interfaz para un reporte
-interface Reporte {
-  id: string;
-  calle: string;
-  descripción: string;
-  informaciónExtra?: string;
-  imagen?: string;
-  latitud: number;
-  longitud: number;
-  fecha: string;
-  tipo?:
-    | "escalera"
-    | "rampa"
-    | "bache"
-    | "acera"
-    | "calle"
-    | "obstaculo"
-    | "cruce"
-    | "señal";
-  dificultad?: "baja" | "media" | "alta";
-  comentarios?: string[];
-}
+// The Reporte interface is now imported, so you can remove its local definition here:
+// interface Reporte { ... }
 
 // Interfaz para el estado de la barra lateral
 interface SidebarState {
@@ -41,7 +31,7 @@ interface SidebarState {
   lng: number | null;
   calle: string;
   modo: "nuevo" | "editar";
-  reporte: Reporte | null;
+  reporte: Reporte | null; // Use the imported Reporte interface
 }
 
 function getIconByDificultad(nivel: "alta" | "media" | "baja" | string): Icon {
@@ -144,7 +134,7 @@ async function getStreetName(lat: number, lng: number): Promise<string> {
 export default function Mapa() {
   const mapRef = useRef<Map | null>(null);
   const markersRef = useRef<Marker[]>([]);
-  const [reportes, setReportes] = useState<Reporte[]>([]);
+  const [reportes, setReportes] = useState<Reporte[]>([]); // Use the imported Reporte
   const [loading, setLoading] = useState<boolean>(true);
   const [search, setSearch] = useState<string>("");
   const [searchLoading, setSearchLoading] = useState<boolean>(false);
@@ -265,7 +255,7 @@ export default function Mapa() {
     };
   }, [sidebar.open, sidebar.lat, sidebar.lng]);
 
-  function openEditSidebar(rep: Reporte): void {
+  function openEditSidebar(rep: Reporte): void { // Use imported Reporte
     setSidebar({
       open: true,
       lat: rep.latitud,
@@ -301,30 +291,33 @@ export default function Mapa() {
     }
   }, [sidebar.open, tempMarker]);
 
-  async function updateReporte(
+  // Use the aliased updateReporte from api.ts
+  const updateReporte = useCallback(async (
     id: string,
-    data: Partial<Reporte>
-  ): Promise<void> {
+    data: UpdateReportData // Use the correct type for update input
+  ): Promise<void> => {
     try {
-      await axios.patch(`http://localhost:4000/reportes/${id}`, data);
+      const updated = await apiUpdateReporte(id, data); // Call the Firebase-integrated function
       setReportes((reps) =>
-        reps.map((r) => (r.id === id ? { ...r, ...data } : r))
+        reps.map((r) => (r.id === id ? updated : r)) // Update state with the returned updated report
       );
     } catch (error) {
       console.error("Error updating report:", error);
       alert("No se pudo actualizar el reporte.");
     }
-  }
+  }, []); // Dependencies can be empty if apiUpdateReporte is stable
 
-  async function deleteReporte(id: string): Promise<void> {
+  // Use the aliased deleteReporte from api.ts
+  const deleteReporte = useCallback(async (id: string): Promise<void> => {
     try {
-      await axios.delete(`http://localhost:4000/reportes/${id}`);
+      await apiDeleteReporte(id); // Call the Firebase-integrated function
       setReportes((reps) => reps.filter((r) => r.id !== id));
     } catch (error) {
       console.error("Error deleting report:", error);
       alert("No se pudo borrar el reporte.");
     }
-  }
+  }, []); // Dependencies can be empty if apiDeleteReporte is stable
+
 
   useEffect(() => {
     const map = L.map("map", {
@@ -337,8 +330,9 @@ export default function Mapa() {
       attribution: "&copy; OpenStreetMap contributors",
     }).addTo(map);
 
+    // Call the Firebase-integrated getReportes
     getReportes()
-      .then((res: any) => setReportes(res.data))
+      .then((res: Reporte[]) => setReportes(res)) // getReportes now returns Reporte[] directly, no .data
       .catch((error: any) => console.error("Error loading reports:", error))
       .finally(() => setLoading(false));
 
@@ -348,7 +342,7 @@ export default function Mapa() {
       map.off("click", onMapClick);
       map.remove();
     };
-  }, [onMapClick]);
+  }, [onMapClick]); // Added onMapClick as a dependency
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -365,13 +359,8 @@ export default function Mapa() {
         let imagenHtml = "";
         if (rep.imagen) {
           let imgSrc = rep.imagen;
-          if (rep.imagen.startsWith("data:image/")) {
-            imgSrc = rep.imagen;
-          } else if (rep.imagen.startsWith("http")) {
-            imgSrc = rep.imagen;
-          } else {
-            imgSrc = `/uploads/${rep.imagen}`;
-          }
+          // No need for base64 check if Firebase stores URLs
+          // The image URL from Firebase Storage will be a direct HTTP/HTTPS link.
           imagenHtml = `<div style="margin:6px 0; text-align:center;"><img src='${imgSrc}' alt="Imagen de la incidencia" style="max-width:100%;max-height:60px;border-radius:6px;box-shadow:0 1px 4px #0002;object-fit:contain;background:#eee;display:block;margin:0 auto;" /></div>`;
         }
 
@@ -450,6 +439,7 @@ export default function Mapa() {
                 ...(rep.comentarios || []),
                 comentario,
               ];
+              // Use the imported updateReporte for comments
               await updateReporte(rep.id, { comentarios: nuevosComentarios });
               input.value = "";
             };
@@ -472,7 +462,7 @@ export default function Mapa() {
 
   function ReportSidebar() {
     const editando = sidebar.modo === "editar";
-    const rep = sidebar.reporte;
+    const rep = sidebar.reporte; // This is of type Reporte (imagen is string | null)
     const [tipo, setTipo] = useState<Reporte["tipo"]>(
       editando ? rep?.tipo || "escalera" : "escalera"
     );
@@ -482,50 +472,60 @@ export default function Mapa() {
     const [desc, setDesc] = useState<string>(
       editando ? rep?.descripción || "" : ""
     );
-    const [foto, setFoto] = useState<File | null>(null);
+    const [foto, setFoto] = useState<File | null>(null); // This holds the File object
     const [sending, setSending] = useState<boolean>(false);
 
     async function handleSubmit(e: FormEvent<HTMLFormElement>): Promise<void> {
       e.preventDefault();
       setSending(true);
-      let imagenBase64: string | undefined = editando ? rep?.imagen : undefined;
-      if (foto) {
-        imagenBase64 = await new Promise<string | undefined>((resolve) => {
-          const reader = new FileReader();
-          reader.onload = (evt: ProgressEvent<FileReader>) =>
-            resolve(evt.target?.result as string);
-          reader.onerror = () => {
-            console.error("Error reading file.");
-            resolve(undefined);
-          };
-          reader.readAsDataURL(foto);
-        });
-      }
+
+      // Common data for both new and updated reports
+      const baseReportData = {
+        calle: sidebar.calle,
+        descripción: desc.trim() || `Incidencia de tipo ${tipo}`,
+        informaciónExtra: "", // You might want to pull this from a form field if available
+        latitud: sidebar.lat as number,
+        longitud: sidebar.lng as number,
+        fecha: new Date().toISOString(), // Or keep original date for edits
+        tipo,
+        dificultad,
+        comentarios: editando && rep?.comentarios ? rep.comentarios : [], // Keep existing comments for edits, or empty for new
+      };
+
       if (editando && rep) {
-        await updateReporte(rep.id, {
-          tipo,
-          dificultad,
-          descripción: desc.trim() || `Incidencia de tipo ${tipo}`,
-          imagen: imagenBase64,
-          calle: sidebar.calle,
-        });
-      } else {
-        const nuevoReporte: Reporte = {
-          id: generateId(),
-          calle: sidebar.calle,
-          descripción: desc.trim() || `Incidencia de tipo ${tipo}`,
-          informaciónExtra: "",
-          tipo,
-          dificultad,
-          imagen: imagenBase64,
-          latitud: sidebar.lat as number,
-          longitud: sidebar.lng as number,
-          fecha: new Date().toISOString(),
-          comentarios: [],
+        // For editing an existing report
+        const updatePayload: UpdateReportData = {
+          ...baseReportData,
+          // Conditionally add 'imagen' based on whether a new file is chosen or if it should be cleared
+          // If foto is a File, use it. If foto is null, explicitly set imagen to null (to clear it).
+          // Otherwise, if foto is undefined (not touched), do nothing so existing image URL remains.
+          ...(foto !== undefined ? { imagen: foto } : (rep.imagen !== undefined ? { imagen: rep.imagen } : {}))
         };
+        // Explicitly handle clearing the image if foto is null and there was an existing image
+        if (foto === null && rep.imagen !== null) {
+          updatePayload.imagen = null;
+        }
+
+
         try {
-          await sendReporte(nuevoReporte);
-          setReportes((prev) => [...prev, nuevoReporte]);
+          await updateReporte(rep.id, updatePayload); // Call the aliased updateReporte
+          // updateReporte updates local state via its callback, so no need to setReportes here directly
+        } catch (error) {
+          console.error("Error updating report:", error);
+          alert("❌ No se pudo actualizar el reporte.");
+        }
+
+      } else {
+        // For creating a new report
+        const newReportPayload: SendReportData = {
+          // No 'id' needed here; api.ts handles Firestore ID generation
+          ...baseReportData,
+          imagen: foto, // Pass the File object directly
+        };
+
+        try {
+          const addedReport = await sendReporte(newReportPayload); // Call the Firebase-integrated sendReporte
+          setReportes((prev) => [...prev, addedReport]); // Add the returned report with its Firestore ID
         } catch (error) {
           console.error("Error saving new report:", error);
           alert("❌ No se pudo guardar el reporte.");
@@ -558,6 +558,7 @@ export default function Mapa() {
           borderRadius: "12px 0 0 12px",
           minHeight: 320,
           transition: "transform 0.2s",
+          transform: sidebar.open ? "translateX(0)" : "translateX(100%)", // Sidebar slide effect
         }}
       >
         <button

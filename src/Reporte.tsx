@@ -1,30 +1,6 @@
 // Reporte.tsx
 import { useState, useEffect, type ChangeEvent, type FormEvent } from 'react';
-import { sendReporte } from '../services/api.ts';
-
-// import { useAuthState } from "react-firebase-hooks/auth";
-// import { auth } from "../firebase";
-
-// const [user, loading] = useAuthState(auth);
-
-// if (!user) {
-//   return <p>Debes iniciar sesión para reportar barreras.</p>;
-// }
-
-// Definición de la interfaz para el payload del reporte
-// NOTE: 'imagen' should now be 'File | null' if we pass the file directly to sendReporte
-// OR, if sendReporte handles base64, then it remains string | null.
-// For Firebase Storage, passing the File object is more straightforward.
-interface ReportPayload {
-  id: string;
-  calle: string;
-  descripción: string;
-  informaciónExtra: string;
-  imagen: File | null; // Changed to File | null
-  latitud: number | null;
-  longitud: number | null;
-  fecha: string;
-}
+import { sendReporte, type SendReportData } from '../services/api.ts'; // Import SendReportData
 
 function generateId(): string {
   return Math.random().toString(16).slice(2, 6);
@@ -91,11 +67,8 @@ export default function ReportPage() {
       return;
     }
 
-    // No need to convert to base64 here anymore
-    // The `foto` (File object) will be passed directly.
-
-    const payload: ReportPayload = {
-      id: generateId(),
+    const payload: SendReportData = { // Use SendReportData interface
+      id: generateId(), // This id might be ignored by sendReporte, as Firestore generates its own
       calle: calle.trim(),
       descripción: desc.trim(),
       informaciónExtra: extra.trim(),

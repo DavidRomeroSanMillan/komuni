@@ -1,27 +1,26 @@
-// services/api.ts
-import { db, storage } from '../src/firebaseConfig'; // Adjust path as needed
+// api.ts
+
+import { db, storage } from '../src/firebaseConfig';
 import {
   collection,
   addDoc,
   getDocs,
-  getDoc,
   doc,
   updateDoc,
   deleteDoc,
   query,
   type DocumentData,
-  QueryDocumentSnapshot
+  QueryDocumentSnapshot,
+  getDoc
 } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
-// This interface represents the data structure as it will be stored in Firestore
-// The `id` property won't be explicitly stored within the document, as Firestore generates its own document ID.
-// However, when we retrieve data, we'll often attach the Firestore document ID to this object.
-interface ReportPayload {
+// Define una interfaz base para los campos comunes del reporte que se almacenan en Firestore.
+// Excluimos 'imagen' de aquí porque su tipo varía según la operación (subida vs. almacenamiento).
+interface BaseReportFields {
   calle: string;
   descripción: string;
   informaciónExtra?: string;
-  imagen?: string | null | File; // This will store the URL of the image in Firebase Storage
   latitud: number | null;
   longitud: number | null;
   fecha: string;
@@ -30,14 +29,32 @@ interface ReportPayload {
   comentarios?: string[];
 }
 
-// This interface represents a full report including the Firestore document ID
-export interface Reporte extends ReportPayload {
-  id: string; // This will be the Firestore document ID
+// Esta interfaz define la estructura de un reporte tal como se ALMACENA en Firestore.
+// 'imagen' será siempre una URL (string) o null.
+interface FirestoreReportPayload extends BaseReportFields {
+  imagen?: string | null; // Almacena la URL de la imagen en Firebase Storage
 }
 
-// Function to send a new report (including image upload)
-// The `data` here expects the File object for `imagen`
-export async function sendReporte(data: Omit<ReportPayload, 'imagen'> & { imagen?: File | null }): Promise<Reporte> {
+// Esta interfaz define la estructura completa de un reporte incluyendo el ID del documento de Firestore.
+export interface Reporte extends FirestoreReportPayload {
+  id: string; // Este será el ID del documento de Firestore
+}
+
+// Esta interfaz define la estructura de los datos que la función sendReporte ACEPTA.
+// Permite que 'imagen' sea un objeto File para subirlo.
+export interface SendReportData extends BaseReportFields {
+  id?: string; // Opcional, ya que Firestore genera su propio ID
+  imagen?: File | null; // Permite un objeto File para la entrada
+}
+
+// Esta interfaz define la estructura de los datos que la función updateReporte ACEPTA.
+// Permite que 'imagen' sea un objeto File para subirlo, una URL string existente, o null para eliminarlo.
+export interface UpdateReportData extends Partial<BaseReportFields> {
+  imagen?: File | string | null;
+}
+
+// Función para enviar un nuevo reporte (incluyendo la subida de imagen)
+export async function sendReporte(data: SendReportData): Promise<Reporte> {
   try {
     let imageUrl: string | null = null;
 
@@ -47,9 +64,18 @@ export async function sendReporte(data: Omit<ReportPayload, 'imagen'> & { imagen
       imageUrl = await getDownloadURL(snapshot.ref);
     }
 
-    const docData: ReportPayload = {
-      ...data,
-      imagen: imageUrl // Store the URL or null
+    // Prepara los datos para Firestore, donde 'imagen' es una URL string o null.
+    const docData: FirestoreReportPayload = {
+      calle: data.calle,
+      descripción: data.descripción,
+      informaciónExtra: data.informaciónExtra,
+      latitud: data.latitud,
+      longitud: data.longitud,
+      fecha: data.fecha,
+      tipo: data.tipo,
+      dificultad: data.dificultad,
+      comentarios: data.comentarios,
+      imagen: imageUrl // Almacena la URL o null
     };
 
     const docRef = await addDoc(collection(db, "reportes"), docData);
@@ -63,7 +89,7 @@ export async function sendReporte(data: Omit<ReportPayload, 'imagen'> & { imagen
   }
 }
 
-// Function to get all reports
+// Función para obtener todos los reportes
 export async function getReportes(): Promise<Reporte[]> {
   try {
     const reportsCollection = collection(db, "reportes");
@@ -74,48 +100,55 @@ export async function getReportes(): Promise<Reporte[]> {
     querySnapshot.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
       reportes.push({
         id: doc.id,
-        ...(doc.data() as ReportPayload) // Cast to ReportPayload
+        ...(doc.data() as FirestoreReportPayload)
       });
     });
     return reportes;
   } catch (error) {
-    console.error("Error al obtener los reportes: ", error);
-    throw error;
+      console.error("Error al obtener los reportes: ", error);
+      throw error;
   }
 }
 
-// Function to update an existing report
-export async function updateReporte(id: string, data: Partial<ReportPayload> & { imagen?: File | string | null }): Promise<Reporte> {
+// Función para actualizar un reporte existente
+export async function updateReporte(id: string, data: UpdateReportData): Promise<Reporte> {
   try {
     const reportRef = doc(db, "reportes", id);
-    let imageUrl: string | null | undefined = undefined; // Use undefined to not update if not provided
+    let imageUrl: string | null | undefined = undefined; // Será URL, null, o undefined (si no se tocó)
 
-    // Check if a new File is provided for the image
+    // 1. Procesa la 'imagen' de entrada de 'data' para obtener una URL o null
     if (data.imagen instanceof File) {
       const storageRef = ref(storage, `report_images/${Date.now()}_${data.imagen.name}`);
       const snapshot = await uploadBytes(storageRef, data.imagen);
       imageUrl = await getDownloadURL(snapshot.ref);
     } else if (data.imagen === null || typeof data.imagen === 'string') {
-      imageUrl = data.imagen; // If null or a string (existing URL), use that
+      imageUrl = data.imagen; // Usa la URL existente o null si se está eliminando
     }
 
-    const updateData: Partial<ReportPayload> = { ...data };
-    if (imageUrl !== undefined) {
-      updateData.imagen = imageUrl;
-    } else {
-      delete updateData.imagen; // Do not update imagen if it's not provided or undefined
+    // 2. Desestructura 'data' para separar 'imagen' del resto de propiedades
+    const { imagen: inputImage, ...restOfData } = data;
+
+    // 3. Construye el payload para la actualización de Firestore
+    // Asegúrate de que todas las propiedades restantes estén correctamente tipadas
+    const updatePayload: Partial<FirestoreReportPayload> = {
+        ...restOfData // Esto contendrá todas las demás propiedades, correctamente tipadas
+    };
+
+    // 4. Añade condicionalmente la 'imagen' procesada (imageUrl) a updatePayload
+    // Esto asegura que 'imagen' solo se establezca si se proporcionó en la entrada 'data'
+    // o si se subió un nuevo archivo (es decir, imageUrl no es undefined).
+    if (data.hasOwnProperty('imagen')) {
+      updatePayload.imagen = imageUrl;
+    } else if (imageUrl !== undefined) {
+      updatePayload.imagen = imageUrl;
     }
 
-
-    await updateDoc(reportRef, updateData);
+    await updateDoc(reportRef, updatePayload); // Usa updatePayload aquí
     console.log("Reporte actualizado con ID: ", id);
 
-    // To return the updated report, you might need to fetch it again or reconstruct it
-    // For simplicity, let's assume the update was successful and return a partial object
-    // In a real app, you might fetch the full updated document.
     const updatedDoc = await getDoc(reportRef);
     if (updatedDoc.exists()) {
-        return { id: updatedDoc.id, ...(updatedDoc.data() as ReportPayload) };
+        return { id: updatedDoc.id, ...(updatedDoc.data() as FirestoreReportPayload) };
     } else {
         throw new Error("Reporte no encontrado después de actualizar.");
     }
@@ -126,7 +159,7 @@ export async function updateReporte(id: string, data: Partial<ReportPayload> & {
   }
 }
 
-// Function to delete a report
+// Función para eliminar un reporte
 export async function deleteReporte(id: string): Promise<void> {
   try {
     const reportRef = doc(db, "reportes", id);
@@ -137,4 +170,3 @@ export async function deleteReporte(id: string): Promise<void> {
     throw error;
   }
 }
-
