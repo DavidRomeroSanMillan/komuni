@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 Object.values(import.meta.glob("./assets/css/*", { eager: true }));
 
+
 function Header() {
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
