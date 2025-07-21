@@ -8,15 +8,15 @@
 
   "compilerOptions": {
 
-    "target": "es2017", // O más reciente como "esnext"
-    "module": "esnext", // O "commonjs"
-    "lib": ["dom", "es2017", "esnext.promise"], // Asegura que se conozcan las características modernas de JS
-    "esModuleInterop": true,   // ¡MUY IMPORTANTE!
-    "allowSyntheticDefaultImports": true, // A menudo va con esModuleInterop
-    "moduleResolution": "node", // Cómo TypeScript busca módulos en node_modules
+    "target": "es2017", 
+    "module": "esnext", 
+    "lib": ["dom", "es2017", "esnext.promise"], 
+    "esModuleInterop": true,  
+    "allowSyntheticDefaultImports": true, 
+    "moduleResolution": "node", 
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "skipLibCheck": false, // Mantenlo en false para que TypeScript haga todas las comprobaciones
+    "skipLibCheck": false, 
     "jsx": "react"
   }
 }
