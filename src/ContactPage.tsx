@@ -15,7 +15,7 @@ export default function ContactPage() {
     const asunto = data.get("asunto") || "Contacto Komuni";
     const mensaje = data.get("mensaje");
 
-    // Puedes cambiar la URL por tu backend real o usar Formspree/EmailJS
+    // Aquí hemos de poner la url de nuestra base de datos en Firebase
     try {
       const res = await fetch("https://formspree.io/f/xoqgqvnj", {
         method: "POST",
