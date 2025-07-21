@@ -7,13 +7,14 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 // TODO: Reemplaza estos valores por la configuración real de tu proyecto Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyDJA-U9rYcVRHiF0wutk6U2k9Pwnvrdj2E",
-  authDomain: "bootcamp-techtalent-2025.firebaseapp.com",
-  databaseURL: "https://bootcamp-techtalent-2025-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "bootcamp-techtalent-2025",
-  storageBucket: "bootcamp-techtalent-2025.firebasestorage.app",
-  messagingSenderId: "103520873502",
-  appId: "1:103520873502:web:bad3267fb103ae83f8920f"
+  apiKey: "AIzaSyDY4x8s6HJO5O8zfR5oeJRjW8iy9mJakHo",
+  authDomain: "komuni-app.firebaseapp.com",
+  databaseURL: "https://komuni-app-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "komuni-app",
+  storageBucket: "komuni-app.firebasestorage.app",
+  messagingSenderId: "1039755494173",
+  appId: "1:1039755494173:web:11e00b664e58cc9c46d7f4",
+  measurementId: "G-W7KFF9QJLK"
 };
 
 const app = initializeApp(firebaseConfig);
