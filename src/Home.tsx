@@ -15,11 +15,11 @@ const Home = () => {
         marginBottom: '2.5rem',
         justifyContent: 'center'
       }}>
-        <div className="card" style={{ minWidth: 260, flex: 1 }}>
+        <div className="card" style={{ minWidth: 260, flex: '1 1 48%'}}>
           <h2 style={{ marginTop: 0 }}>🗺️ Mapa interactivo</h2>
           <p>Visualiza y reporta barreras urbanas en tiempo real. Ayuda a mejorar la accesibilidad de tu ciudad y otras ciudades del mundo.</p>
           <Link to="/mapa"><button style={{ marginTop: 12, width: '100%' }}>Ir al mapa</button></Link>
-        </div>
+        </div><div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', flex: '1 1 48%' }}>
         <div className="card" style={{ minWidth: 260, flex: 1 }}>
           <h2 style={{ marginTop: 0 }}>📚 Educación</h2>
           <p>Descubre recursos, buenas prácticas y experiencias sobre accesibilidad urbana e inclusión social.</p>
@@ -28,7 +28,7 @@ const Home = () => {
         <div className="card" style={{ minWidth: 260, flex: 1 }}>
           <h2 style={{ marginTop: 0 }}>🤝 Comunidad</h2>
           <p>Comparte tu experiencia, ayuda a otras personas y forma parte de una red global comprometida con la accesibilidad.</p>
-        </div>
+        </div></div>
       </div>
 
       <div style={{
