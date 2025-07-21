@@ -102,6 +102,7 @@ export default function ContactPage() {
             type="text"
             name="nombre"
             required
+             placeholder="Introduce tu nombre"
             style={{
               width: "100%",
               marginTop: 7,
@@ -120,6 +121,7 @@ export default function ContactPage() {
             type="email"
             name="email"
             required
+             placeholder="Introduce tu correo elecrónico"
             style={{
               width: "100%",
               marginTop: 7,
@@ -156,6 +158,7 @@ export default function ContactPage() {
             name="mensaje"
             rows={5}
             required
+             placeholder="Escribe tu mensaje aquí..."
             style={{
               width: "100%",
               marginTop: 7,
