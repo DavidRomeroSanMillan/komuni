@@ -17,7 +17,7 @@ export default function ContactPage() {
 
     // Aquí hemos de poner la url de nuestra base de datos en Firebase
     try {
-      const res = await fetch("https://formspree.io/f/xoqgqvnj", {
+      const res = await fetch("https://komuni-app-default-rtdb.europe-west1.firebasedatabase.app/contactpage.json", {
         method: "POST",
         headers: { Accept: "application/json" },
         body: JSON.stringify({
