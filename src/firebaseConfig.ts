@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getDatabase } from 'firebase/database';
-// import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 
 //npm i fireabase
@@ -21,4 +21,4 @@ const app = initializeApp(firebaseConfig);
 
 
 export const db = getDatabase(app);
-// export const storage = getStorage(app);
+export const storage = getStorage(app);
