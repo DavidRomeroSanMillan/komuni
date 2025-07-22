@@ -114,36 +114,35 @@ export async function getReportes(): Promise<Reporte[]> {
 export async function updateReporte(id: string, data: UpdateReportData): Promise<Reporte> {
   try {
     const reportRef = doc(db, "reportes", id);
-    let imageUrl: string | null | undefined = undefined; // Será URL, null, o undefined (si no se tocó)
+    let imageUrl: string | null | undefined; // Will be URL, null, or undefined
 
-    // 1. Procesa la 'imagen' de entrada de 'data' para obtener una URL o null
+    // Process the 'imagen' input from 'data' to get a URL or null
     if (data.imagen instanceof File) {
       const storageRef = ref(storage, `report_images/${Date.now()}_${data.imagen.name}`);
       const snapshot = await uploadBytes(storageRef, data.imagen);
       imageUrl = await getDownloadURL(snapshot.ref);
-    } else if (data.imagen === null || typeof data.imagen === 'string') {
-      imageUrl = data.imagen; // Usa la URL existente o null si se está eliminando
+    } else if (typeof data.imagen === 'string' || data.imagen === null) {
+      imageUrl = data.imagen; // Use the existing URL string or null if deleting
     }
 
-    // 2. Desestructura 'data' para separar 'imagen' del resto de propiedades
+    // Destructure 'data' to separate 'imagen' from other properties
     const { imagen: inputImage, ...restOfData } = data;
 
-    // 3. Construye el payload para la actualización de Firestore
-    // Asegúrate de que todas las propiedades restantes estén correctamente tipadas
+    // Construct the payload for Firestore update
     const updatePayload: Partial<FirestoreReportPayload> = {
-        ...restOfData // Esto contendrá todas las demás propiedades, correctamente tipadas
+      ...restOfData // This will contain all other properties, correctly typed
     };
 
-    // 4. Añade condicionalmente la 'imagen' procesada (imageUrl) a updatePayload
-    // Esto asegura que 'imagen' solo se establezca si se proporcionó en la entrada 'data'
-    // o si se subió un nuevo archivo (es decir, imageUrl no es undefined).
+    // Conditionally add the processed 'imagen' (imageUrl) to updatePayload
+    // This ensures 'imagen' is only set if it was provided in the 'data' input
     if (data.hasOwnProperty('imagen')) {
       updatePayload.imagen = imageUrl;
-    } else if (imageUrl !== undefined) {
-      updatePayload.imagen = imageUrl;
     }
+    // Note: If data.imagen was not provided (and thus imageUrl remains undefined),
+    // we don't include the 'imagen' field in the updatePayload at all.
+    // This allows partial updates where the image field is left untouched.
 
-    await updateDoc(reportRef, updatePayload); // Usa updatePayload aquí
+    await updateDoc(reportRef, updatePayload);
     console.log("Reporte actualizado con ID: ", id);
 
     const updatedDoc = await getDoc(reportRef);

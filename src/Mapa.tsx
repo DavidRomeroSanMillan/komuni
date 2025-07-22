@@ -148,48 +148,32 @@ export default function Mapa() {
     null
   );
 
-  function centerOnUser(): void {
-    if (!mapRef.current) return;
-    if (!navigator.geolocation) {
-      alert("Geolocalización no soportada");
-      return;
-    }
-    navigator.geolocation.getCurrentPosition(
-      (pos: GeolocationPosition) => {
-        const { latitude, longitude } = pos.coords;
-        mapRef.current?.setView([latitude, longitude], 16, { animate: true });
-        function centerOnUser(): void {
-          if (!mapRef.current) return;
-          if (!navigator.geolocation) {
-            alert("Geolocalización no soportada");
-            return;
-          }
-          navigator.geolocation.getCurrentPosition(
-            (pos: GeolocationPosition) => {
-              const { latitude, longitude } = pos.coords;
-              mapRef.current?.setView([latitude, longitude], 16, {
-                animate: true,
-              });
-              // Create a local marker that is self-managed and doesn't interfere with `tempMarker` state
-              const userLocationMarker = L.circleMarker([latitude, longitude], {
-                radius: 10,
-                color: "#2aa198",
-                fillColor: "#2aa198",
-                fillOpacity: 0.5,
-              }).addTo(mapRef.current as Map);
-
-              // Set a timeout to remove *this specific* marker
-              setTimeout(() => {
-                mapRef.current?.removeLayer(userLocationMarker);
-              }, 3000);
-            },
-            () => alert("No se pudo obtener tu ubicación")
-          );
-        }
-      },
-      () => alert("No se pudo obtener tu ubicación")
-    );
+function centerOnUser(): void {
+  if (!mapRef.current) return;
+  if (!navigator.geolocation) {
+    alert("Geolocalización no soportada");
+    return;
   }
+  navigator.geolocation.getCurrentPosition(
+    (pos: GeolocationPosition) => {
+      const { latitude, longitude } = pos.coords;
+      mapRef.current?.setView([latitude, longitude], 16, { animate: true });
+
+      const userLocationMarker = L.circleMarker([latitude, longitude], {
+        radius: 10,
+        color: "#2aa198",
+        fillColor: "#2aa198",
+        fillOpacity: 0.5,
+      }).addTo(mapRef.current as Map);
+
+      // Set a timeout to remove *this specific* marker
+      setTimeout(() => {
+        mapRef.current?.removeLayer(userLocationMarker);
+      }, 3000);
+    },
+    () => alert("No se pudo obtener tu ubicación")
+  );
+}
 
   async function handleSearch(e: FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
@@ -314,17 +298,8 @@ export default function Mapa() {
       modo: "editar",
       reporte: rep,
     });
-    function openEditSidebar(rep: Reporte): void {
-      setSidebar({
-        open: true,
-        lat: rep.latitud,
-        lng: rep.longitud,
-        calle: rep.calle || "",
-        modo: "editar",
-        reporte: rep,
-      });
       // The useEffect for sidebar temp marker will now automatically create it based on updated sidebar state
-    }
+    
   }
 
   useEffect(() => {
