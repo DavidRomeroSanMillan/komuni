@@ -103,9 +103,6 @@ function getIncidenciaEmoji(descripcion: string = ""): string {
   return "";
 }
 
-function generateId(): string {
-  return Math.random().toString(16).slice(2, 6);
-}
 
 async function getStreetName(lat: number, lng: number): Promise<string> {
   try {
