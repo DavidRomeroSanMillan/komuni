@@ -16,13 +16,11 @@ import {
   deleteReporte as apiDeleteReporte, // Alias to avoid name clash
   type Reporte, // Import the Reporte interface from api.ts
   type SendReportData, // Import the input type for sending new reports
-  type UpdateReportData // Import the input type for updating reports
+  type UpdateReportData, // Import the input type for updating reports
 } from "../services/api.ts";
-// axios is no longer needed if you're fully on Firebase
-// import axios from "axios"; // Remove this line
 
-// The Reporte interface is now imported, so you can remove its local definition here:
-// interface Reporte { ... }
+
+
 
 // Interfaz para el estado de la barra lateral
 interface SidebarState {
@@ -160,17 +158,34 @@ export default function Mapa() {
       (pos: GeolocationPosition) => {
         const { latitude, longitude } = pos.coords;
         mapRef.current?.setView([latitude, longitude], 16, { animate: true });
-        const marker = L.circleMarker([latitude, longitude], {
-          radius: 10,
-          color: "#2aa198",
-          fillColor: "#2aa198",
-          fillOpacity: 0.5,
-        }).addTo(mapRef.current as Map);
-        setTempMarker(marker); // Guardar el marcador temporal
-        setTimeout(() => {
-          mapRef.current?.removeLayer(marker);
-          setTempMarker(null);
-        }, 3000);
+        function centerOnUser(): void {
+          if (!mapRef.current) return;
+          if (!navigator.geolocation) {
+            alert("Geolocalización no soportada");
+            return;
+          }
+          navigator.geolocation.getCurrentPosition(
+            (pos: GeolocationPosition) => {
+              const { latitude, longitude } = pos.coords;
+              mapRef.current?.setView([latitude, longitude], 16, {
+                animate: true,
+              });
+              // Create a local marker that is self-managed and doesn't interfere with `tempMarker` state
+              const userLocationMarker = L.circleMarker([latitude, longitude], {
+                radius: 10,
+                color: "#2aa198",
+                fillColor: "#2aa198",
+                fillOpacity: 0.5,
+              }).addTo(mapRef.current as Map);
+
+              // Set a timeout to remove *this specific* marker
+              setTimeout(() => {
+                mapRef.current?.removeLayer(userLocationMarker);
+              }, 3000);
+            },
+            () => alert("No se pudo obtener tu ubicación")
+          );
+        }
       },
       () => alert("No se pudo obtener tu ubicación")
     );
@@ -225,37 +240,72 @@ export default function Mapa() {
   []);
 
   useEffect(() => {
-    if (!mapRef.current) return;
+    let currentSidebarTempMarker: Marker | null = null; // Local variable for this effect's marker
 
-    if (tempMarker) {
-      mapRef.current.removeLayer(tempMarker);
-      setTempMarker(null);
-    }
-
-    if (sidebar.open && sidebar.lat && sidebar.lng) {
-      const marker = L.marker([sidebar.lat, sidebar.lng], {
+    if (
+      sidebar.open &&
+      sidebar.lat !== null &&
+      sidebar.lng !== null &&
+      mapRef.current
+    ) {
+      // Ensure mapRef.current is available before adding the marker
+      const newMarker = L.marker([sidebar.lat, sidebar.lng], {
         icon: L.icon({
           iconUrl: "/icons/marker-blue.png",
           iconSize: [32, 32],
           iconAnchor: [16, 32],
-          popupAnchor: [0, -30],
-          iconRetinaUrl: "/icons/marker-blue.png",
           shadowUrl:
             "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
         }),
-        interactive: false,
-      }).addTo(mapRef.current);
-      setTempMarker(marker);
+        interactive: false, // The marker should not be clickable
+        zIndexOffset: 1000, // Ensure it's above other markers
+      }).addTo(mapRef.current as Map); // Cast to Map for clarity
+
+      currentSidebarTempMarker = newMarker; // Store this specific marker
     }
+
+    // Cleanup function: This will remove the marker created by *this specific effect run*
+    return () => {
+      if (currentSidebarTempMarker && mapRef.current) {
+        mapRef.current.removeLayer(currentSidebarTempMarker);
+      }
+    };
+  }, [sidebar.open, sidebar.lat, sidebar.lng, mapRef.current]); // Added mapRef.current to dependencies
+
+  useEffect(() => {
+    // Si hay un marcador temporal previo, lo eliminamos primero
+    if (tempMarker) {
+      mapRef.current?.removeLayer(tempMarker);
+      setTempMarker(null);
+    }
+
+    // Si la barra está abierta y tiene coordenadas, creamos un nuevo marcador
+    if (sidebar.open && sidebar.lat && sidebar.lng) {
+      const newMarker = L.marker([sidebar.lat, sidebar.lng], {
+        icon: L.icon({
+          iconUrl: "/icons/marker-blue.png",
+          iconSize: [32, 32],
+          iconAnchor: [16, 32],
+          shadowUrl:
+            "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+        }),
+        interactive: false, // El marcador no debe ser clickeable
+        zIndexOffset: 1000, // Asegura que esté por encima de otros marcadores
+      }).addTo(mapRef.current as Map);
+
+      setTempMarker(newMarker);
+    }
+
+    // La función de limpieza se ejecutará cuando el componente se desmonte
+    // o cuando las dependencias (sidebar.open, etc.) cambien.
     return () => {
       if (tempMarker && mapRef.current) {
         mapRef.current.removeLayer(tempMarker);
-        setTempMarker(null);
       }
     };
   }, [sidebar.open, sidebar.lat, sidebar.lng]);
-
-  function openEditSidebar(rep: Reporte): void { // Use imported Reporte
+  function openEditSidebar(rep: Reporte): void {
+    // Use imported Reporte
     setSidebar({
       open: true,
       lat: rep.latitud,
@@ -264,23 +314,16 @@ export default function Mapa() {
       modo: "editar",
       reporte: rep,
     });
-    if (mapRef.current) {
-      if (tempMarker) {
-        mapRef.current.removeLayer(tempMarker);
-      }
-      const marker = L.marker([rep.latitud, rep.longitud], {
-        icon: L.icon({
-          iconUrl: "/icons/marker-blue.png",
-          iconSize: [32, 32],
-          iconAnchor: [16, 32],
-          popupAnchor: [0, -30],
-          iconRetinaUrl: "/icons/marker-blue.png",
-          shadowUrl:
-            "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-        }),
-        interactive: false,
-      }).addTo(mapRef.current);
-      setTempMarker(marker);
+    function openEditSidebar(rep: Reporte): void {
+      setSidebar({
+        open: true,
+        lat: rep.latitud,
+        lng: rep.longitud,
+        calle: rep.calle || "",
+        modo: "editar",
+        reporte: rep,
+      });
+      // The useEffect for sidebar temp marker will now automatically create it based on updated sidebar state
     }
   }
 
@@ -292,20 +335,23 @@ export default function Mapa() {
   }, [sidebar.open, tempMarker]);
 
   // Use the aliased updateReporte from api.ts
-  const updateReporte = useCallback(async (
-    id: string,
-    data: UpdateReportData // Use the correct type for update input
-  ): Promise<void> => {
-    try {
-      const updated = await apiUpdateReporte(id, data); // Call the Firebase-integrated function
-      setReportes((reps) =>
-        reps.map((r) => (r.id === id ? updated : r)) // Update state with the returned updated report
-      );
-    } catch (error) {
-      console.error("Error updating report:", error);
-      alert("No se pudo actualizar el reporte.");
-    }
-  }, []); // Dependencies can be empty if apiUpdateReporte is stable
+  const updateReporte = useCallback(
+    async (
+      id: string,
+      data: UpdateReportData // Use the correct type for update input
+    ): Promise<void> => {
+      try {
+        const updated = await apiUpdateReporte(id, data); // Call the Firebase-integrated function
+        setReportes(
+          (reps) => reps.map((r) => (r.id === id ? updated : r)) // Update state with the returned updated report
+        );
+      } catch (error) {
+        console.error("Error updating report:", error);
+        alert("No se pudo actualizar el reporte.");
+      }
+    },
+    []
+  ); // Dependencies can be empty if apiUpdateReporte is stable
 
   // Use the aliased deleteReporte from api.ts
   const deleteReporte = useCallback(async (id: string): Promise<void> => {
@@ -317,7 +363,6 @@ export default function Mapa() {
       alert("No se pudo borrar el reporte.");
     }
   }, []); // Dependencies can be empty if apiDeleteReporte is stable
-
 
   useEffect(() => {
     const map = L.map("map", {
@@ -472,65 +517,67 @@ export default function Mapa() {
     const [desc, setDesc] = useState<string>(
       editando ? rep?.descripción || "" : ""
     );
-    const [foto, setFoto] = useState<File | null>(null); // This holds the File object
+    const [foto, setFoto] = useState<File | null | undefined>(undefined); // This holds the File object
     const [sending, setSending] = useState<boolean>(false);
 
     async function handleSubmit(e: FormEvent<HTMLFormElement>): Promise<void> {
       e.preventDefault();
+
+      // 👇 AÑADIR ESTA COMPROBACIÓN (GUARD CLAUSE)
+      // Si no hay coordenadas, no podemos continuar.
+      if (sidebar.lat === null || sidebar.lng === null) {
+        console.error("Intento de enviar un reporte sin coordenadas.");
+        alert("❌ Error: No se ha podido determinar la ubicación del reporte.");
+        return; // Detiene la ejecución de la función aquí.
+      }
+
       setSending(true);
 
-      // Common data for both new and updated reports
-      const baseReportData = {
-        calle: sidebar.calle,
-        descripción: desc.trim() || `Incidencia de tipo ${tipo}`,
-        informaciónExtra: "", // You might want to pull this from a form field if available
-        latitud: sidebar.lat as number,
-        longitud: sidebar.lng as number,
-        fecha: new Date().toISOString(), // Or keep original date for edits
-        tipo,
-        dificultad,
-        comentarios: editando && rep?.comentarios ? rep.comentarios : [], // Keep existing comments for edits, or empty for new
-      };
-
       if (editando && rep) {
-        // For editing an existing report
         const updatePayload: UpdateReportData = {
-          ...baseReportData,
-          // Conditionally add 'imagen' based on whether a new file is chosen or if it should be cleared
-          // If foto is a File, use it. If foto is null, explicitly set imagen to null (to clear it).
-          // Otherwise, if foto is undefined (not touched), do nothing so existing image URL remains.
-          ...(foto !== undefined ? { imagen: foto } : (rep.imagen !== undefined ? { imagen: rep.imagen } : {}))
+          calle: sidebar.calle,
+          descripción: desc.trim() || `Incidencia de tipo ${tipo}`,
+          tipo,
+          dificultad,
+          comentarios: rep.comentarios || [],
         };
-        // Explicitly handle clearing the image if foto is null and there was an existing image
-        if (foto === null && rep.imagen !== null) {
+
+        if (foto) {
+          updatePayload.imagen = foto;
+        } else if (foto === null) {
           updatePayload.imagen = null;
         }
 
-
         try {
-          await updateReporte(rep.id, updatePayload); // Call the aliased updateReporte
-          // updateReporte updates local state via its callback, so no need to setReportes here directly
+          await updateReporte(rep.id, updatePayload);
         } catch (error) {
           console.error("Error updating report:", error);
           alert("❌ No se pudo actualizar el reporte.");
         }
-
       } else {
-        // For creating a new report
         const newReportPayload: SendReportData = {
-          // No 'id' needed here; api.ts handles Firestore ID generation
-          ...baseReportData,
-          imagen: foto, // Pass the File object directly
+          calle: sidebar.calle,
+          descripción: desc.trim() || `Incidencia de tipo ${tipo}`,
+          informaciónExtra: "",
+          latitud: sidebar.lat, // ✅ Ya no hay error
+          longitud: sidebar.lng, // ✅ Ya no hay error
+          fecha: new Date().toISOString(),
+          tipo,
+          dificultad,
+          comentarios: [],
+          imagen: foto || null,
         };
 
         try {
-          const addedReport = await sendReporte(newReportPayload); // Call the Firebase-integrated sendReporte
-          setReportes((prev) => [...prev, addedReport]); // Add the returned report with its Firestore ID
+          const addedReport = await sendReporte(newReportPayload);
+          setReportes((prev) => [...prev, addedReport]);
         } catch (error) {
           console.error("Error saving new report:", error);
           alert("❌ No se pudo guardar el reporte.");
         }
       }
+
+      setSending(false);
       setSidebar({
         open: false,
         lat: null,
@@ -539,7 +586,6 @@ export default function Mapa() {
         modo: "nuevo",
         reporte: null,
       });
-      setSending(false);
     }
 
     return (
@@ -671,77 +717,77 @@ export default function Mapa() {
       <div className="textalign">
         <h1>Mapa de accesibilidad</h1>
         <div className="juntar">
-        <div
-          style={{
-            display: "flex",
-            gap: 12,
-            marginBottom: 16,
-            alignItems: "center",
-            flexWrap: "wrap",
-          }}
-        >
-          <form onSubmit={handleSearch} style={{ display: "flex", gap: 6 }}>
-            <p>Usa el buscador para localizar una dirección.</p>
+          <div
+            style={{
+              display: "flex",
+              gap: 12,
+              marginBottom: 16,
+              alignItems: "center",
+              flexWrap: "wrap",
+            }}
+          >
+            <form onSubmit={handleSearch} style={{ display: "flex", gap: 6 }}>
+              <p>Usa el buscador para localizar una dirección.</p>
 
-            <input
-              type="text"
-              placeholder="Buscar dirección o ciudad..."
-              value={search}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setSearch(e.target.value)
-              }
-              style={{
-                padding: "0.5em 0.8em",
-                borderRadius: 8,
-                border: "1.5px solid #e0e0e0",
-                fontSize: "1rem",
-                minWidth: 180,
-              }}
-              aria-label="Buscar localización"
-            />
-            <button
-              type="submit"
-              disabled={searchLoading}
-              style={{ padding: "0.5em 1em", borderRadius: 8 }}
-            >
-              {searchLoading ? "Buscando..." : "Buscar"}
-            </button>
-            <button
-              type="button"
-              onClick={centerOnUser}
-              style={{
-                padding: "0.5em 1em",
-                borderRadius: 8,
-                background: "#2aa198",
-                color: "#fff",
-                border: "none",
-                fontWeight: 600,
-                cursor: "pointer",
-              }}
-            >
-              📍 Mi ubicación
-            </button>
-          </form>
+              <input
+                type="text"
+                placeholder="Buscar dirección o ciudad..."
+                value={search}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setSearch(e.target.value)
+                }
+                style={{
+                  padding: "0.5em 0.8em",
+                  borderRadius: 8,
+                  border: "1.5px solid #e0e0e0",
+                  fontSize: "1rem",
+                  minWidth: 180,
+                }}
+                aria-label="Buscar localización"
+              />
+              <button
+                type="submit"
+                disabled={searchLoading}
+                style={{ padding: "0.5em 1em", borderRadius: 8 }}
+              >
+                {searchLoading ? "Buscando..." : "Buscar"}
+              </button>
+              <button
+                type="button"
+                onClick={centerOnUser}
+                style={{
+                  padding: "0.5em 1em",
+                  borderRadius: 8,
+                  background: "#2aa198",
+                  color: "#fff",
+                  border: "none",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                }}
+              >
+                📍 Mi ubicación
+              </button>
+            </form>
+          </div>
+          <div
+            className="card"
+            style={{
+              marginBottom: 18,
+              background: "#fafdff",
+              border: "1.5px solid #e0e0e0",
+              fontSize: "1.04rem",
+              lineHeight: 1.7,
+              color: "#20706e",
+            }}
+          >
+            <strong>Guía de usuario:</strong>
+            <ul style={{ margin: "0.7em 0 0 1.2em", padding: 0 }}>
+              🖱️ Haz clic en el mapa para añadir un nuevo reporte. <br />
+              📝 Haz clic en un marcador para ver detalles o comentar. <br />❌
+              Pulsa la equis en el popup para cerrarlo.
+            </ul>
+          </div>
         </div>
-        <div
-          className="card"
-          style={{
-            marginBottom: 18,
-            background: "#fafdff",
-            border: "1.5px solid #e0e0e0",
-            fontSize: "1.04rem",
-            lineHeight: 1.7,
-            color: "#20706e",
-          }}
-        >
-          <strong>Guía de usuario:</strong>
-          <ul style={{ margin: "0.7em 0 0 1.2em", padding: 0 }}>
-            🖱️ Haz clic en el mapa para añadir un nuevo reporte. <br />
-            📝 Haz clic en un marcador para ver detalles o comentar. <br />❌
-            Pulsa la equis en el popup para cerrarlo.
-          </ul>
-        </div>
-</div>
         {loading && <p style={{ color: "#888" }}>Cargando reportes...</p>}
       </div>
       <div style={{ position: "relative" }}>

@@ -18,7 +18,6 @@ function App() {
         <Route path="contacto" element={<ContactPage />} />
         <Route path="blog" element={<ContactPage />} />
 
-        {/* <Route path="contact" element={<Contact />} /> */}
       </Route>
     </Routes>
   );
