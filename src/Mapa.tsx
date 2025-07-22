@@ -19,9 +19,6 @@ import {
   type UpdateReportData, // Import the input type for updating reports
 } from "../services/api.ts";
 
-
-
-
 // Interfaz para el estado de la barra lateral
 interface SidebarState {
   open: boolean;
@@ -103,7 +100,6 @@ function getIncidenciaEmoji(descripcion: string = ""): string {
   return "";
 }
 
-
 async function getStreetName(lat: number, lng: number): Promise<string> {
   try {
     const res = await fetch(
@@ -145,32 +141,32 @@ export default function Mapa() {
     null
   );
 
-function centerOnUser(): void {
-  if (!mapRef.current) return;
-  if (!navigator.geolocation) {
-    alert("Geolocalización no soportada");
-    return;
+  function centerOnUser(): void {
+    if (!mapRef.current) return;
+    if (!navigator.geolocation) {
+      alert("Geolocalización no soportada");
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos: GeolocationPosition) => {
+        const { latitude, longitude } = pos.coords;
+        mapRef.current?.setView([latitude, longitude], 16, { animate: true });
+
+        const userLocationMarker = L.circleMarker([latitude, longitude], {
+          radius: 10,
+          color: "#2aa198",
+          fillColor: "#2aa198",
+          fillOpacity: 0.5,
+        }).addTo(mapRef.current as Map);
+
+        // Set a timeout to remove *this specific* marker
+        setTimeout(() => {
+          mapRef.current?.removeLayer(userLocationMarker);
+        }, 3000);
+      },
+      () => alert("No se pudo obtener tu ubicación")
+    );
   }
-  navigator.geolocation.getCurrentPosition(
-    (pos: GeolocationPosition) => {
-      const { latitude, longitude } = pos.coords;
-      mapRef.current?.setView([latitude, longitude], 16, { animate: true });
-
-      const userLocationMarker = L.circleMarker([latitude, longitude], {
-        radius: 10,
-        color: "#2aa198",
-        fillColor: "#2aa198",
-        fillOpacity: 0.5,
-      }).addTo(mapRef.current as Map);
-
-      // Set a timeout to remove *this specific* marker
-      setTimeout(() => {
-        mapRef.current?.removeLayer(userLocationMarker);
-      }, 3000);
-    },
-    () => alert("No se pudo obtener tu ubicación")
-  );
-}
 
   async function handleSearch(e: FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
@@ -295,8 +291,7 @@ function centerOnUser(): void {
       modo: "editar",
       reporte: rep,
     });
-      // The useEffect for sidebar temp marker will now automatically create it based on updated sidebar state
-    
+    // The useEffect for sidebar temp marker will now automatically create it based on updated sidebar state
   }
 
   useEffect(() => {
@@ -367,8 +362,14 @@ function centerOnUser(): void {
     markersRef.current = [];
 
     reportes.forEach((rep) => {
-      if (!rep.latitud || !rep.longitud) return;
-
+  if (
+    rep.latitud !== null &&
+    typeof rep.latitud === 'number' &&
+    !isNaN(rep.latitud) &&
+    rep.longitud !== null &&
+    typeof rep.longitud === 'number' &&
+    !isNaN(rep.longitud)
+  )
       if (mapRef.current) {
         const icono = getIconByDificultad(rep.dificultad || "media");
         const emoji = getEmojiByDificultad(rep.dificultad || "media");
@@ -420,7 +421,39 @@ function centerOnUser(): void {
         </div>
       </div>
     `;
+        reportes.forEach((reporte) => {
+          // Comprobación robusta:
+          // 1. Que no sean null
+          // 2. Que sean de tipo 'number'
+          // 3. Que no sean NaN (Not-a-Number)
+          if (
+            reporte.latitud !== null &&
+            typeof reporte.latitud === "number" &&
+            !isNaN(reporte.latitud) &&
+            reporte.longitud !== null &&
+            typeof reporte.longitud === "number" &&
+            !isNaN(reporte.longitud)
+          ) {
+            // Si todas las condiciones se cumplen, entonces son números válidos y seguros para Leaflet.
+            L.marker([reporte.latitud, reporte.longitud])
+              .addTo(mapRef.current!) // Asegúrate que mapRef.current no sea null aquí tampoco.
+              .bindPopup(`<b>${reporte.calle}</b><br>${reporte.descripción}`)
+              .openPopup();
+          } else {
+            // Si alguna de las coordenadas no es válida, no creamos el marcador.
+            // Esto es muy útil para depurar qué reporte está causando el problema.
+            console.warn(
+              `Reporte con ID ${
+                reporte.id || "N/A"
+              } tiene coordenadas inválidas: ` +
+                `Latitud: ${reporte.latitud}, Longitud: ${reporte.longitud}. No se añadirá marcador.`
+            );
+          }
+        });
 
+        
+        
+        
         const marker = L.marker([rep.latitud, rep.longitud], { icon: icono })
           .addTo(mapRef.current)
           .bindPopup(popupHtml, {
