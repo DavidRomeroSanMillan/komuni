@@ -1,13 +1,12 @@
 import { initializeApp } from 'firebase/app';
-import { getDatabase } from 'firebase/database';
-import { getFirestore } from 'firebase/firestore'
+import { getDatabase } from "firebase/database";
+// import { getFirestore } from 'firebase/firestore'
 import { getStorage } from 'firebase/storage';
 // import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 
 //npm i fireabase
 
-// TODO: Reemplaza estos valores por la configuración real de tu proyecto Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyDY4x8s6HJO5O8zfR5oeJRjW8iy9mJakHo",
   authDomain: "komuni-app.firebaseapp.com",
@@ -22,6 +21,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 
-export const db = getFirestore(app)
-export const storage = getStorage(app);
-export const database = getDatabase(app);
+const db = getDatabase(app);
+const storage = getStorage(app);
+
+export  { app, db, storage };
+
+

@@ -2,21 +2,17 @@
 
 import { db, storage } from '../src/firebaseConfig';
 import {
-  collection,
-  addDoc,
-  getDocs,
-  doc,
-  updateDoc,
-  deleteDoc,
-  query,
-  type DocumentData,
-  QueryDocumentSnapshot,
-  getDoc
-} from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+  ref as dbRef,
+  push,
+  set,
+  get,
+  update,
+  remove,
+  onValue,
+  DataSnapshot
+} from 'firebase/database';
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 
-// Define una interfaz base para los campos comunes del reporte que se almacenan en Firestore.
-// Excluimos 'imagen' de aquí porque su tipo varía según la operación (subida vs. almacenamiento).
 interface BaseReportFields {
   calle: string;
   descripción: string;
@@ -29,43 +25,34 @@ interface BaseReportFields {
   comentarios?: string[];
 }
 
-// Esta interfaz define la estructura de un reporte tal como se ALMACENA en Firestore.
-// 'imagen' será siempre una URL (string) o null.
-interface FirestoreReportPayload extends BaseReportFields {
-  imagen?: string | null; // Almacena la URL de la imagen en Firebase Storage
+interface RealtimeReportPayload extends BaseReportFields {
+  imagen?: string | null;
 }
 
-// Esta interfaz define la estructura completa de un reporte incluyendo el ID del documento de Firestore.
-export interface Reporte extends FirestoreReportPayload {
-  id: string; // Este será el ID del documento de Firestore
+export interface Reporte extends RealtimeReportPayload {
+  id: string;
 }
 
-// Esta interfaz define la estructura de los datos que la función sendReporte ACEPTA.
-// Permite que 'imagen' sea un objeto File para subirlo.
 export interface SendReportData extends BaseReportFields {
-  id?: string; // Opcional, ya que Firestore genera su propio ID
-  imagen?: File | null; // Permite un objeto File para la entrada
+  id?: string;
+  imagen?: File | null;
 }
 
-// Esta interfaz define la estructura de los datos que la función updateReporte ACEPTA.
-// Permite que 'imagen' sea un objeto File para subirlo, una URL string existente, o null para eliminarlo.
 export interface UpdateReportData extends Partial<BaseReportFields> {
   imagen?: File | string | null;
 }
 
-// Función para enviar un nuevo reporte (incluyendo la subida de imagen)
 export async function sendReporte(data: SendReportData): Promise<Reporte> {
   try {
     let imageUrl: string | null = null;
 
     if (data.imagen instanceof File) {
-      const storageRef = ref(storage, `report_images/${Date.now()}_${data.imagen.name}`);
-      const snapshot = await uploadBytes(storageRef, data.imagen);
+      const imageStorageRef = storageRef(storage, `report_images/${Date.now()}_${data.imagen.name}`);
+      const snapshot = await uploadBytes(imageStorageRef, data.imagen);
       imageUrl = await getDownloadURL(snapshot.ref);
     }
 
-    // Prepara los datos para Firestore, donde 'imagen' es una URL string o null.
-    const docData: FirestoreReportPayload = {
+    const docData: RealtimeReportPayload = {
       calle: data.calle,
       descripción: data.descripción,
       informaciónExtra: data.informaciónExtra,
@@ -75,13 +62,14 @@ export async function sendReporte(data: SendReportData): Promise<Reporte> {
       tipo: data.tipo,
       dificultad: data.dificultad,
       comentarios: data.comentarios,
-      imagen: imageUrl // Almacena la URL o null
+      imagen: imageUrl
     };
 
-    const docRef = await addDoc(collection(db, "reportes"), docData);
-    console.log("Reporte añadido con ID: ", docRef.id);
+    const newReportRef = push(dbRef(db, "reportes"));
+    await set(newReportRef, docData);
+    console.log("Reporte añadido con ID: ", newReportRef.key);
 
-    return { id: docRef.id, ...docData };
+    return { id: newReportRef.key!, ...docData };
 
   } catch (error) {
     console.error("Error al añadir el reporte: ", error);
@@ -89,20 +77,20 @@ export async function sendReporte(data: SendReportData): Promise<Reporte> {
   }
 }
 
-// Función para obtener todos los reportes
 export async function getReportes(): Promise<Reporte[]> {
   try {
-    const reportsCollection = collection(db, "reportes");
-    const q = query(reportsCollection);
-    const querySnapshot = await getDocs(q);
+    const reportsRef = dbRef(db, "reportes");
+    const snapshot: DataSnapshot = await get(reportsRef);
 
     const reportes: Reporte[] = [];
-    querySnapshot.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
-      reportes.push({
-        id: doc.id,
-        ...(doc.data() as FirestoreReportPayload)
+    if (snapshot.exists()) {
+      snapshot.forEach((childSnapshot: DataSnapshot) => {
+        reportes.push({
+          id: childSnapshot.key!,
+          ...(childSnapshot.val() as RealtimeReportPayload)
+        });
       });
-    });
+    }
     return reportes;
   } catch (error) {
       console.error("Error al obtener los reportes: ", error);
@@ -110,44 +98,35 @@ export async function getReportes(): Promise<Reporte[]> {
   }
 }
 
-// Función para actualizar un reporte existente
 export async function updateReporte(id: string, data: UpdateReportData): Promise<Reporte> {
   try {
-    const reportRef = doc(db, "reportes", id);
-    let imageUrl: string | null | undefined; // Will be URL, null, or undefined
+    const reportRef = dbRef(db, `reportes/${id}`);
+    let imageUrl: string | null | undefined;
 
-    // Process the 'imagen' input from 'data' to get a URL or null
     if (data.imagen instanceof File) {
-      const storageRef = ref(storage, `report_images/${Date.now()}_${data.imagen.name}`);
-      const snapshot = await uploadBytes(storageRef, data.imagen);
+      const imageStorageRef = storageRef(storage, `report_images/${Date.now()}_${data.imagen.name}`);
+      const snapshot = await uploadBytes(imageStorageRef, data.imagen);
       imageUrl = await getDownloadURL(snapshot.ref);
     } else if (typeof data.imagen === 'string' || data.imagen === null) {
-      imageUrl = data.imagen; // Use the existing URL string or null if deleting
+      imageUrl = data.imagen;
     }
 
-    // Destructure 'data' to separate 'imagen' from other properties
     const { imagen: inputImage, ...restOfData } = data;
 
-    // Construct the payload for Firestore update
-    const updatePayload: Partial<FirestoreReportPayload> = {
-      ...restOfData // This will contain all other properties, correctly typed
+    const updatePayload: Partial<RealtimeReportPayload> = {
+      ...restOfData
     };
 
-    // Conditionally add the processed 'imagen' (imageUrl) to updatePayload
-    // This ensures 'imagen' is only set if it was provided in the 'data' input
     if (data.hasOwnProperty('imagen')) {
       updatePayload.imagen = imageUrl;
     }
-    // Note: If data.imagen was not provided (and thus imageUrl remains undefined),
-    // we don't include the 'imagen' field in the updatePayload at all.
-    // This allows partial updates where the image field is left untouched.
 
-    await updateDoc(reportRef, updatePayload);
+    await update(reportRef, updatePayload);
     console.log("Reporte actualizado con ID: ", id);
 
-    const updatedDoc = await getDoc(reportRef);
-    if (updatedDoc.exists()) {
-        return { id: updatedDoc.id, ...(updatedDoc.data() as FirestoreReportPayload) };
+    const updatedSnapshot = await get(reportRef);
+    if (updatedSnapshot.exists()) {
+        return { id: updatedSnapshot.key!, ...(updatedSnapshot.val() as RealtimeReportPayload) };
     } else {
         throw new Error("Reporte no encontrado después de actualizar.");
     }
@@ -158,14 +137,30 @@ export async function updateReporte(id: string, data: UpdateReportData): Promise
   }
 }
 
-// Función para eliminar un reporte
 export async function deleteReporte(id: string): Promise<void> {
   try {
-    const reportRef = doc(db, "reportes", id);
-    await deleteDoc(reportRef);
+    const reportRef = dbRef(db, `reportes/${id}`);
+    await remove(reportRef);
     console.log("Reporte eliminado con ID: ", id);
   } catch (error) {
     console.error("Error al eliminar el reporte: ", error);
     throw error;
   }
+}
+
+export function observeReports(callback: (reports: Reporte[]) => void): () => void {
+  const reportsRef = dbRef(db, "reportes");
+  const unsubscribe = onValue(reportsRef, (snapshot) => {
+    const reportes: Reporte[] = [];
+    if (snapshot.exists()) {
+      snapshot.forEach((childSnapshot: DataSnapshot) => {
+        reportes.push({
+          id: childSnapshot.key!,
+          ...(childSnapshot.val() as RealtimeReportPayload)
+        });
+      });
+    }
+    callback(reportes);
+  });
+  return unsubscribe;
 }
