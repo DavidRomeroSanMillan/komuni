@@ -3,6 +3,7 @@ import { useState, useEffect, type ChangeEvent, type FormEvent } from 'react';
 import { sendReporte, type SendReportData } from '../services/api.ts'; // Import SendReportData
 
 function generateId(): string {
+  
   return Math.random().toString(16).slice(2, 6);
 }
 
@@ -68,7 +69,7 @@ export default function ReportPage() {
     }
 
     const payload: SendReportData = { // Use SendReportData interface
-      id: generateId(), // This id might be ignored by sendReporte, as Firestore generates its own
+      id: generateId(), 
       calle: calle.trim(),
       descripción: desc.trim(),
       informaciónExtra: extra.trim(),

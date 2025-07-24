@@ -1,3 +1,4 @@
+// Mapa.tsx
 import {
   useEffect,
   useRef,
@@ -6,7 +7,7 @@ import {
   type ChangeEvent,
   type FormEvent,
 } from "react";
-import L, { Map, Marker, CircleMarker, Icon } from "leaflet";
+import L, { Map, Marker, Icon } from "leaflet";
 import "leaflet/dist/leaflet.css";
 // Import all necessary types and functions from your Firebase-integrated API
 import {
@@ -37,7 +38,7 @@ function getIconByDificultad(nivel: "alta" | "media" | "baja" | string): Icon {
       ? "orange"
       : nivel === "baja"
       ? "green"
-      : "blue";
+      : "blue"; // Default to blue for the temporary marker
 
   return L.icon({
     iconUrl: `/icons/marker-${color}.png`,
@@ -137,9 +138,9 @@ export default function Mapa() {
     modo: "nuevo",
     reporte: null,
   });
-  const [tempMarker, setTempMarker] = useState<Marker | CircleMarker | null>(
-    null
-  );
+  // tempMarker will now only manage the NEW report marker
+  const [tempNewReportMarker, setTempNewReportMarker] =
+    useState<Marker | null>(null);
 
   function centerOnUser(): void {
     if (!mapRef.current) return;
@@ -210,77 +211,47 @@ export default function Mapa() {
       lat,
       lng,
       calle: calleDetectada,
-      modo: "nuevo",
+      modo: "nuevo", // Ensure it's 'nuevo' for new reports
       reporte: null,
     });
   },
   []);
 
+  // Consolidated useEffect for handling the temporary marker for NEW reports
   useEffect(() => {
-    let currentSidebarTempMarker: Marker | null = null; // Local variable for this effect's marker
+    // If there's a previous temporary marker, remove it first
+    if (tempNewReportMarker) {
+      mapRef.current?.removeLayer(tempNewReportMarker);
+      setTempNewReportMarker(null);
+    }
 
+    // If the sidebar is open in 'nuevo' mode and has coordinates, create a new temporary marker
     if (
       sidebar.open &&
+      sidebar.modo === "nuevo" &&
       sidebar.lat !== null &&
       sidebar.lng !== null &&
       mapRef.current
     ) {
-      // Ensure mapRef.current is available before adding the marker
       const newMarker = L.marker([sidebar.lat, sidebar.lng], {
-        icon: L.icon({
-          iconUrl: "/icons/marker-blue.png",
-          iconSize: [32, 32],
-          iconAnchor: [16, 32],
-          shadowUrl:
-            "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-        }),
+        icon: getIconByDificultad("blue"), // Use a blue icon for the temporary marker
         interactive: false, // The marker should not be clickable
         zIndexOffset: 1000, // Ensure it's above other markers
-      }).addTo(mapRef.current as Map); // Cast to Map for clarity
-
-      currentSidebarTempMarker = newMarker; // Store this specific marker
-    }
-
-    // Cleanup function: This will remove the marker created by *this specific effect run*
-    return () => {
-      if (currentSidebarTempMarker && mapRef.current) {
-        mapRef.current.removeLayer(currentSidebarTempMarker);
-      }
-    };
-  }, [sidebar.open, sidebar.lat, sidebar.lng, mapRef.current]); // Added mapRef.current to dependencies
-
-  useEffect(() => {
-    // Si hay un marcador temporal previo, lo eliminamos primero
-    if (tempMarker) {
-      mapRef.current?.removeLayer(tempMarker);
-      setTempMarker(null);
-    }
-
-    // Si la barra está abierta y tiene coordenadas, creamos un nuevo marcador
-    if (sidebar.open && sidebar.lat && sidebar.lng) {
-      const newMarker = L.marker([sidebar.lat, sidebar.lng], {
-        icon: L.icon({
-          iconUrl: "/icons/marker-blue.png",
-          iconSize: [32, 32],
-          iconAnchor: [16, 32],
-          shadowUrl:
-            "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-        }),
-        interactive: false, // El marcador no debe ser clickeable
-        zIndexOffset: 1000, // Asegura que esté por encima de otros marcadores
       }).addTo(mapRef.current as Map);
 
-      setTempMarker(newMarker);
+      setTempNewReportMarker(newMarker);
     }
 
-    // La función de limpieza se ejecutará cuando el componente se desmonte
-    // o cuando las dependencias (sidebar.open, etc.) cambien.
+    // Cleanup function: This will remove the marker when component unmounts
+    // or when dependencies change and the condition for creation is no longer met.
     return () => {
-      if (tempMarker && mapRef.current) {
-        mapRef.current.removeLayer(tempMarker);
+      if (tempNewReportMarker && mapRef.current) {
+        mapRef.current.removeLayer(tempNewReportMarker);
+        setTempNewReportMarker(null); // Clear state on cleanup
       }
     };
-  }, [sidebar.open, sidebar.lat, sidebar.lng]);
+  }, [sidebar.open, sidebar.lat, sidebar.lng, sidebar.modo, mapRef.current]);
+
   function openEditSidebar(rep: Reporte): void {
     // Use imported Reporte
     setSidebar({
@@ -291,15 +262,7 @@ export default function Mapa() {
       modo: "editar",
       reporte: rep,
     });
-    // The useEffect for sidebar temp marker will now automatically create it based on updated sidebar state
   }
-
-  useEffect(() => {
-    if (!sidebar.open && tempMarker && mapRef.current) {
-      mapRef.current.removeLayer(tempMarker);
-      setTempMarker(null);
-    }
-  }, [sidebar.open, tempMarker]);
 
   // Use the aliased updateReporte from api.ts
   const updateReporte = useCallback(
@@ -362,150 +325,132 @@ export default function Mapa() {
     markersRef.current = [];
 
     reportes.forEach((rep) => {
-  if (
-    rep.latitud !== null &&
-    typeof rep.latitud === 'number' &&
-    !isNaN(rep.latitud) &&
-    rep.longitud !== null &&
-    typeof rep.longitud === 'number' &&
-    !isNaN(rep.longitud)
-  )
-      if (mapRef.current) {
-        const icono = getIconByDificultad(rep.dificultad || "media");
-        const emoji = getEmojiByDificultad(rep.dificultad || "media");
-        const incidenciaEmoji = getIncidenciaEmoji(rep.descripción || "");
-        let imagenHtml = "";
-        if (rep.imagen) {
-          let imgSrc = rep.imagen;
-          // No need for base64 check if Firebase stores URLs
-          // The image URL from Firebase Storage will be a direct HTTP/HTTPS link.
-          imagenHtml = `<div style="margin:6px 0; text-align:center;"><img src='${imgSrc}' alt="Imagen de la incidencia" style="max-width:100%;max-height:60px;border-radius:6px;box-shadow:0 1px 4px #0002;object-fit:contain;background:#eee;display:block;margin:0 auto;" /></div>`;
-        }
+      if (
+        rep.latitud !== null &&
+        typeof rep.latitud === "number" &&
+        !isNaN(rep.latitud) &&
+        rep.longitud !== null &&
+        typeof rep.longitud === "number" &&
+        !isNaN(rep.longitud)
+      ) {
+        if (mapRef.current) {
+          const icono = getIconByDificultad(rep.dificultad || "media");
+          const emoji = getEmojiByDificultad(rep.dificultad || "media");
+          const incidenciaEmoji = getIncidenciaEmoji(rep.descripción || "");
+          let imagenHtml = "";
+          if (rep.imagen) {
+            let imgSrc = rep.imagen;
+            imagenHtml = `<div style="margin:6px 0; text-align:center;"><img src='${imgSrc}' alt="Imagen de la incidencia" style="max-width:100%;max-height:60px;border-radius:6px;box-shadow:0 1px 4px #0002;object-fit:contain;background:#eee;display:block;margin:0 auto;" /></div>`;
+          }
 
-        const comentarios = Array.isArray(rep.comentarios)
-          ? rep.comentarios
-          : [];
-        const popupId = `popup-${rep.id}`;
-        const popupHtml = `
-      <div style="position:relative;width:auto;max-width:98vw;min-width:140px;min-height:80px;padding-bottom:8px;">
-        <button id="${popupId}-close" style="position:absolute;top:2px;right:2px;background:none;border:none;font-size:1rem;cursor:pointer;color:#888;">❌</button>
-        <div style="font-size:1.1rem;line-height:1.1;margin-bottom:0.15em;">
-          ${emoji} ${incidenciaEmoji}
-        </div>
-        <strong style="font-size:0.98rem;">${
-          rep.calle || "Ubicación sin calle"
-        }</strong><br/>
-        <span style="font-size:0.91rem;">
-          📝 ${rep.descripción}<br/>
-          Nivel: ${rep.dificultad?.toUpperCase() || "MEDIA"}<br/>
-          ${rep.informaciónExtra ? "📌 " + rep.informaciónExtra + "<br/>" : ""}
-          ${imagenHtml}
-        </span>
-        <hr style="margin:0.3em 0"/>
-        <div id="${popupId}-comentarios" style="font-size:0.88em;">
-          <strong>Comentarios:</strong>
-          <ul style="padding-left:1em;margin:0;">
-            ${
-              comentarios.map((c) => `<li>${c}</li>`).join("") ||
-              "<li style='color:#888'>Sin comentarios</li>"
-            }
-          </ul>
-        </div>
-        <form id="${popupId}-form" style="margin-top:0.2em;display:flex;gap:0.2em;">
-          <input type="text" name="comentario" placeholder="Agregar comentario..." style="flex:1;padding:0.15em;border-radius:5px;border:1px solid #ccc;font-size:0.88em;" />
-          <button type="submit" style="padding:0.15em 0.5em;border-radius:5px;background:#2aa198;color:#fff;border:none;cursor:pointer;">Enviar</button>
-        </form>
-        <div style="margin-top:0.3em;display:flex;gap:0.3em;">
-          <button id="${popupId}-edit" style="padding:0.15em 0.5em;border-radius:5px;background:#ffb300;color:#fff;border:none;cursor:pointer;">Editar</button>
-          <button id="${popupId}-delete" style="padding:0.15em 0.5em;border-radius:5px;background:#e53935;color:#fff;border:none;cursor:pointer;">Borrar</button>
-        </div>
-      </div>
-    `;
-        reportes.forEach((reporte) => {
-          // Comprobación robusta:
-          // 1. Que no sean null
-          // 2. Que sean de tipo 'number'
-          // 3. Que no sean NaN (Not-a-Number)
-          if (
-            reporte.latitud !== null &&
-            typeof reporte.latitud === "number" &&
-            !isNaN(reporte.latitud) &&
-            reporte.longitud !== null &&
-            typeof reporte.longitud === "number" &&
-            !isNaN(reporte.longitud)
-          ) {
-            // Si todas las condiciones se cumplen, entonces son números válidos y seguros para Leaflet.
-            L.marker([reporte.latitud, reporte.longitud])
-              .addTo(mapRef.current!) // Asegúrate que mapRef.current no sea null aquí tampoco.
-              .bindPopup(`<b>${reporte.calle}</b><br>${reporte.descripción}`)
-              .openPopup();
-          } else {
-            // Si alguna de las coordenadas no es válida, no creamos el marcador.
-            // Esto es muy útil para depurar qué reporte está causando el problema.
-            console.warn(
-              `Reporte con ID ${
-                reporte.id || "N/A"
-              } tiene coordenadas inválidas: ` +
-                `Latitud: ${reporte.latitud}, Longitud: ${reporte.longitud}. No se añadirá marcador.`
-            );
-          }
-        });
+          const comentarios = Array.isArray(rep.comentarios)
+            ? rep.comentarios
+            : [];
+          const popupId = `popup-${rep.id}`;
+          const popupHtml = `
+            <div style="position:relative;width:auto;max-width:98vw;min-width:140px;min-height:80px;padding-bottom:8px;">
+              <button id="${popupId}-close" style="position:absolute;top:2px;right:2px;background:none;border:none;font-size:1rem;cursor:pointer;color:#888;">❌</button>
+              <div style="font-size:1.1rem;line-height:1.1;margin-bottom:0.15em;">
+                ${emoji} ${incidenciaEmoji}
+              </div>
+              <strong style="font-size:0.98rem;">${
+                rep.calle || "Ubicación sin calle"
+              }</strong><br/>
+              <span style="font-size:0.91rem;">
+                📝 ${rep.descripción}<br/>
+                Nivel: ${rep.dificultad?.toUpperCase() || "MEDIA"}<br/>
+                ${
+                  rep.informaciónExtra
+                    ? "📌 " + rep.informaciónExtra + "<br/>"
+                    : ""
+                }
+                ${imagenHtml}
+              </span>
+              <hr style="margin:0.3em 0"/>
+              <div id="${popupId}-comentarios" style="font-size:0.88em;">
+                <strong>Comentarios:</strong>
+                <ul style="padding-left:1em;margin:0;">
+                  ${
+                    comentarios.map((c) => `<li>${c}</li>`).join("") ||
+                    "<li style='color:#888'>Sin comentarios</li>"
+                  }
+                </ul>
+              </div>
+              <form id="${popupId}-form" style="margin-top:0.2em;display:flex;gap:0.2em;">
+                <input type="text" name="comentario" placeholder="Agregar comentario..." style="flex:1;padding:0.15em;border-radius:5px;border:1px solid #ccc;font-size:0.88em;" />
+                <button type="submit" style="padding:0.15em 0.5em;border-radius:5px;background:#2aa198;color:#fff;border:none;cursor:pointer;">Enviar</button>
+              </form>
+              <div style="margin-top:0.3em;display:flex;gap:0.3em;">
+                <button id="${popupId}-edit" style="padding:0.15em 0.5em;border-radius:5px;background:#ffb300;color:#fff;border:none;cursor:pointer;">Editar</button>
+                <button id="${popupId}-delete" style="padding:0.15em 0.5em;border-radius:5px;background:#e53935;color:#fff;border:none;cursor:pointer;">Borrar</button>
+              </div>
+            </div>
+          `;
 
-        
-        
-        
-        const marker = L.marker([rep.latitud, rep.longitud], { icon: icono })
-          .addTo(mapRef.current)
-          .bindPopup(popupHtml, {
-            maxWidth: 400,
-            minWidth: 140,
-            closeButton: false,
-          } as L.PopupOptions);
+          const marker = L.marker([rep.latitud, rep.longitud], { icon: icono })
+            .addTo(mapRef.current)
+            .bindPopup(popupHtml, {
+              maxWidth: 400,
+              minWidth: 140,
+              closeButton: false,
+            } as L.PopupOptions);
 
-        marker.on("popupopen", () => {
-          const closeBtn = document.getElementById(`${popupId}-close`);
-          if (closeBtn) {
-            closeBtn.onclick = () => {
-              mapRef.current?.closePopup();
-            };
-          }
-          const editBtn = document.getElementById(`${popupId}-edit`);
-          if (editBtn) {
-            editBtn.onclick = () => {
-              mapRef.current?.closePopup();
-              openEditSidebar(rep);
-            };
-          }
-          const form = document.getElementById(
-            `${popupId}-form`
-          ) as HTMLFormElement;
-          if (form) {
-            form.onsubmit = async (evt) => {
-              evt.preventDefault();
-              const input = form.comentario as HTMLInputElement;
-              const comentario = input.value.trim();
-              if (!comentario) return;
-              const nuevosComentarios = [
-                ...(rep.comentarios || []),
-                comentario,
-              ];
-              // Use the imported updateReporte for comments
-              await updateReporte(rep.id, { comentarios: nuevosComentarios });
-              input.value = "";
-            };
-          }
-          const delBtn = document.getElementById(`${popupId}-delete`);
-          if (delBtn) {
-            delBtn.onclick = async () => {
-              if (window.confirm("¿Seguro que quieres borrar este reporte?")) {
-                await deleteReporte(rep.id);
+          marker.on("popupopen", () => {
+            const closeBtn = document.getElementById(`${popupId}-close`);
+            if (closeBtn) {
+              closeBtn.onclick = () => {
                 mapRef.current?.closePopup();
-              }
-            };
-          }
-        });
+              };
+            }
+            const editBtn = document.getElementById(`${popupId}-edit`);
+            if (editBtn) {
+              editBtn.onclick = () => {
+                mapRef.current?.closePopup();
+                openEditSidebar(rep);
+              };
+            }
+            const form = document.getElementById(
+              `${popupId}-form`
+            ) as HTMLFormElement;
+            if (form) {
+              form.onsubmit = async (evt) => {
+                evt.preventDefault();
+                const input = form.comentario as HTMLInputElement;
+                const comentario = input.value.trim();
+                if (!comentario) return;
+                const nuevosComentarios = [
+                  ...(rep.comentarios || []),
+                  comentario,
+                ];
+                // Use the imported updateReporte for comments
+                await updateReporte(rep.id, {
+                  comentarios: nuevosComentarios,
+                });
+                input.value = "";
+              };
+            }
+            const delBtn = document.getElementById(`${popupId}-delete`);
+            if (delBtn) {
+              delBtn.onclick = async () => {
+                if (
+                  window.confirm("¿Seguro que quieres borrar este reporte?")
+                ) {
+                  await deleteReporte(rep.id);
+                  mapRef.current?.closePopup();
+                }
+              };
+            }
+          });
 
-        markersRef.current.push(marker);
+          markersRef.current.push(marker);
+        }
+      } else {
+        console.warn(
+          `Reporte con ID ${
+            rep.id || "N/A"
+          } tiene coordenadas inválidas: ` +
+            `Latitud: ${rep.latitud}, Longitud: ${rep.longitud}. No se añadirá marcador.`
+        );
       }
     });
   }, [reportes, updateReporte, deleteReporte, openEditSidebar]);
@@ -528,12 +473,10 @@ export default function Mapa() {
     async function handleSubmit(e: FormEvent<HTMLFormElement>): Promise<void> {
       e.preventDefault();
 
-      // 👇 AÑADIR ESTA COMPROBACIÓN (GUARD CLAUSE)
-      // Si no hay coordenadas, no podemos continuar.
       if (sidebar.lat === null || sidebar.lng === null) {
         console.error("Intento de enviar un reporte sin coordenadas.");
         alert("❌ Error: No se ha podido determinar la ubicación del reporte.");
-        return; // Detiene la ejecución de la función aquí.
+        return;
       }
 
       setSending(true);
@@ -564,8 +507,8 @@ export default function Mapa() {
           calle: sidebar.calle,
           descripción: desc.trim() || `Incidencia de tipo ${tipo}`,
           informaciónExtra: "",
-          latitud: sidebar.lat, // ✅ Ya no hay error
-          longitud: sidebar.lng, // ✅ Ya no hay error
+          latitud: sidebar.lat,
+          longitud: sidebar.lng,
           fecha: new Date().toISOString(),
           tipo,
           dificultad,
