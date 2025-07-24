@@ -73,7 +73,7 @@ a {
 }
 
 a:hover {
-  color: var(--turquesa-claro);
+  color: var(--turquesa-oscuro);
 }
 
 /* a:focus, button:focus, input:focus, textarea:focus, select:focus {
@@ -113,7 +113,7 @@ input[type="text"]:focus, textarea:focus, select:focus {
 
 button {
   background: linear-gradient(90deg, var(--turquesa-medio), var(--turquesa-claro));
-  color: #fff;
+  color: #000;
   border: none;
   border-radius: var(--radius);
   padding: 0.9rem 2rem;

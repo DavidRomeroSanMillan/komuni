@@ -1,5 +1,5 @@
 :root {
-  --turquesa-medio: #2aa198;
+  --turquesa-medio: #33C7BA;
   --turquesa-oscuro: #20706e;
   --turquesa-claro: #3ecfcf;
   --gris-suave: #f6f8fa;
@@ -55,7 +55,7 @@
 }
 
 .menu_link.active {
-  color: white ;
+  color:  whitesmoke;
 }
 
 .header {

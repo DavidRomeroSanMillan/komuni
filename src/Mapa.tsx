@@ -703,15 +703,15 @@ export default function Mapa() {
               <button
                 type="button"
                 onClick={centerOnUser}
-                style={{
-                  padding: "0.5em 1em",
-                  borderRadius: 8,
-                  background: "#2aa198",
-                  color: "#fff",
-                  border: "none",
-                  fontWeight: 600,
-                  cursor: "pointer",
-                }}
+                // style={{
+                //   padding: "0.5em 1em",
+                //   borderRadius: 8,
+                //   background: "#2aa198",
+                //   color: "#fff",
+                //   border: "none",
+                //   fontWeight: 600,
+                //   cursor: "pointer",
+                // }}
               >
                 📍 Mi ubicación
               </button>
