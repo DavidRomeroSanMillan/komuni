@@ -30,13 +30,13 @@ interface SidebarState {
   reporte: Reporte | null; // Use the imported Reporte interface
 }
 
-function getIconByDificultad(nivel: "alta" | "media" | "baja" | string): Icon {
+function getIconByDificultad(nivel: "permanente" | "temporal" | "solucionado" | string): Icon {
   const color =
-    nivel === "alta"
+    nivel === "permanente"
       ? "red"
-      : nivel === "media"
+      : nivel === "temporal"
       ? "orange"
-      : nivel === "baja"
+      : nivel === "solucionado"
       ? "green"
       : "blue"; // Default to blue for the temporary marker
 
@@ -49,11 +49,11 @@ function getIconByDificultad(nivel: "alta" | "media" | "baja" | string): Icon {
 }
 
 function getEmojiByDificultad(
-  nivel: "alta" | "media" | "baja" | string
+  nivel: "permanente" | "temporal" | "solucionado" | string
 ): string {
-  if (nivel === "alta") return "🔴";
-  if (nivel === "media") return "🟡";
-  if (nivel === "baja") return "🟢";
+  if (nivel === "permanente") return "🔴";
+  if (nivel === "temporal") return "🟡";
+  if (nivel === "solucionado") return "🟢";
   return "🔵";
 }
 
@@ -334,8 +334,8 @@ export default function Mapa() {
         !isNaN(rep.longitud)
       ) {
         if (mapRef.current) {
-          const icono = getIconByDificultad(rep.dificultad || "media");
-          const emoji = getEmojiByDificultad(rep.dificultad || "media");
+          const icono = getIconByDificultad(rep.dificultad || "temporal");
+          const emoji = getEmojiByDificultad(rep.dificultad || "temporal");
           const incidenciaEmoji = getIncidenciaEmoji(rep.descripción || "");
           let imagenHtml = "";
           if (rep.imagen) {
@@ -358,7 +358,7 @@ export default function Mapa() {
               }</strong><br/>
               <span style="font-size:0.91rem;">
                 📝 ${rep.descripción}<br/>
-                Nivel: ${rep.dificultad?.toUpperCase() || "MEDIA"}<br/>
+                Estado: ${rep.dificultad?.toUpperCase() || "TEMPORAL"}<br/>
                 ${
                   rep.informaciónExtra
                     ? "📌 " + rep.informaciónExtra + "<br/>"
@@ -462,7 +462,7 @@ export default function Mapa() {
       editando ? rep?.tipo || "escalera" : "escalera"
     );
     const [dificultad, setDificultad] = useState<Reporte["dificultad"]>(
-      editando ? rep?.dificultad || "media" : "media"
+      editando ? rep?.dificultad || "temporal" : "temporal"
     );
     const [desc, setDesc] = useState<string>(
       editando ? rep?.descripción || "" : ""
@@ -607,7 +607,7 @@ export default function Mapa() {
             </select>
           </label>
           <label>
-            Nivel:
+            Estado:
             <select
               value={dificultad}
               onChange={(e: ChangeEvent<HTMLSelectElement>) =>
@@ -615,9 +615,9 @@ export default function Mapa() {
               }
               required
             >
-              <option value="baja">🟢 Baja</option>
-              <option value="media">🟡 Media</option>
-              <option value="alta">🔴 Alta</option>
+              <option value="solucionado">🟢 Solucionado</option>
+              <option value="temporal">🟡 Temporal</option>
+              <option value="permanente">🔴 Permanente</option>
             </select>
           </label>
           <label>

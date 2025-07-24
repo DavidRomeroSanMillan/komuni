@@ -21,7 +21,7 @@ interface BaseReportFields {
   longitud: number | null;
   fecha: string;
   tipo?: 'escalera' | 'rampa' | 'bache' | 'acera' | 'calle' | 'obstaculo' | 'cruce' | 'señal';
-  dificultad?: 'baja' | 'media' | 'alta';
+  dificultad?: 'solucionado' | 'temporal' | 'permanente';
   comentarios?: string[];
 }
 
