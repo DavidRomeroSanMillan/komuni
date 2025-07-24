@@ -30,7 +30,9 @@ interface SidebarState {
   reporte: Reporte | null; // Use the imported Reporte interface
 }
 
-function getIconByDificultad(nivel: "permanente" | "temporal" | "solucionado" | string): Icon {
+function getIconByDificultad(
+  nivel: "permanente" | "temporal" | "solucionado" | string
+): Icon {
   const color =
     nivel === "permanente"
       ? "red"
@@ -139,8 +141,9 @@ export default function Mapa() {
     reporte: null,
   });
   // tempMarker will now only manage the NEW report marker
-  const [tempNewReportMarker, setTempNewReportMarker] =
-    useState<Marker | null>(null);
+  const [tempNewReportMarker, setTempNewReportMarker] = useState<Marker | null>(
+    null
+  );
 
   function centerOnUser(): void {
     if (!mapRef.current) return;
@@ -236,7 +239,7 @@ export default function Mapa() {
       const newMarker = L.marker([sidebar.lat, sidebar.lng], {
         icon: getIconByDificultad("blue"), // Use a blue icon for the temporary marker
         interactive: false, // The marker should not be clickable
-        zIndexOffset: 1000, // Ensure it's above other markers
+        zIndexOffset: 2000, // Ensure it's above other markers
       }).addTo(mapRef.current as Map);
 
       setTempNewReportMarker(newMarker);
@@ -446,9 +449,7 @@ export default function Mapa() {
         }
       } else {
         console.warn(
-          `Reporte con ID ${
-            rep.id || "N/A"
-          } tiene coordenadas inválidas: ` +
+          `Reporte con ID ${rep.id || "N/A"} tiene coordenadas inválidas: ` +
             `Latitud: ${rep.latitud}, Longitud: ${rep.longitud}. No se añadirá marcador.`
         );
       }
@@ -552,7 +553,10 @@ export default function Mapa() {
           borderRadius: "12px 0 0 12px",
           minHeight: 320,
           transition: "transform 0.2s",
-          transform: sidebar.open ? "translateX(0)" : "translateX(100%)", // Sidebar slide effect
+          transform: sidebar.open ? "translateX(0)" : "translateX(100%)",
+          // NUEVAS PROPIEDADES AÑADIDAS:
+          maxHeight: "calc(100vh - 90px - 1.5rem - 10px)", // Altura del viewport - top - padding inferior - margen de seguridad
+          overflowY: "auto",
         }}
       >
         <button
@@ -644,6 +648,12 @@ export default function Mapa() {
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setFoto(e.target.files ? e.target.files[0] : null)
               }
+              style={{
+                width: "100%", 
+                boxSizing: "border-box", 
+                overflow: "hidden", 
+                textOverflow: "ellipsis",
+              }}
             />
           </label>
           <button type="submit" disabled={sending} style={{ marginTop: 10 }}>

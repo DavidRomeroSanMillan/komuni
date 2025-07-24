@@ -55,7 +55,8 @@
 }
 
 .menu_link.active {
-  color:  whitesmoke;
+  color:  var(--turquesa-oscuro);
+  border-bottom: 2px solid var(--turquesa-oscuro);
 }
 
 .header {

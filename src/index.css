@@ -47,6 +47,7 @@ main {
   border-radius: var(--radius);
   box-shadow: var(--sombra);
   padding: 2.5rem 2rem 2.5rem 2rem;
+  padding-top: 100px;
   min-height: 60vh;
 }
 
@@ -176,7 +177,6 @@ ul {
   padding: 0.3em 0.3em 0.1em 0.3em !important;
   min-width: 110px;
   max-width: 400px;
-  /* Elimina el scroll forzado */
   max-height: none;
   overflow-y: visible;
   resize: both;

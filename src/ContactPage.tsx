@@ -175,20 +175,7 @@ export default function ContactPage() {
         <button
           type="submit"
           disabled={sending}
-          style={{
-            background: "linear-gradient(90deg, #2aa198, #3ecfcf)",
-            color: "#fff",
-            border: "none",
-            borderRadius: 10,
-            padding: "1rem 2.2rem",
-            fontSize: "1.18rem",
-            fontWeight: 800,
-            cursor: "pointer",
-            boxShadow: "0 2px 12px #2aa19822",
-            letterSpacing: "0.04em",
-            marginTop: 12,
-            transition: "background 0.2s"
-          }}
+
         >
           {sending ? "Enviando..." : "Enviar"}
         </button>
