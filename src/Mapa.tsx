@@ -672,7 +672,7 @@ export default function Mapa() {
 
   return (
     <section>
-      <div className="textalign">
+      <div className="textalign" >
         <h1>Mapa de accesibilidad</h1>
         <div className="juntar">
           <div

@@ -10,7 +10,7 @@
   --max-width: 1000px;
   --radius: 12px;
   --sombra: 0 4px 24px rgba(0, 0, 0, 0.08);
-  --header-height: 70px;
+  --header-height: 100px;
 }
 
 .topbar {
@@ -66,6 +66,7 @@
   background: var(--turquesa-medio);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
   min-height: var(--header-height);
+  z-index: 4000;
 }
 
 .contmini-icono {
