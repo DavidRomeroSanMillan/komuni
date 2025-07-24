@@ -7,6 +7,9 @@ import Mapa from "./Mapa";
 import Privacidad from "./Privacidad";
 import ContactPage from "./ContactPage";
 import Faq from "./Faq";
+import Blog from "./Blog";
+import BlogPostDetail from "./pages/BlogPostDetail";
+
 function App() {
   return (
     <Routes>
@@ -16,7 +19,8 @@ function App() {
         <Route path="mapa" element={<Mapa />} />
         <Route path="privacidad" element={<Privacidad />} />
         <Route path="contacto" element={<ContactPage />} />
-        <Route path="blog" element={<ContactPage />} />
+        <Route path="blog" element={<Blog />} />
+        <Route path="/blog/:slug" element={<BlogPostDetail />} />
         <Route path="faq" element={<Faq />} />
 
       </Route>

@@ -93,13 +93,13 @@ function Header() {
 
               <li className="menu_item">
                 <NavLink
-                  to="/foro"
+                  to="/blog"
                   className={({ isActive }: { isActive: boolean }) =>
                     "menu_link" + (isActive ? " active" : "")
                   }
                   onClick={() => setIsMenuOpen(false)} // Cierra el menú al hacer clic en el enlace
                 >
-                  Foro/Comunidad
+                  Blog
                 </NavLink>
               </li>
               <li className="menu_item">
