@@ -682,7 +682,7 @@ export default function Mapa() {
               marginBottom: 16,
               alignItems: "center",
               flexWrap: "wrap",
-            }}
+                         }}
           >
             <form onSubmit={handleSearch} style={{ display: "flex", gap: 6 }}>
               <p>Usa el buscador para localizar una dirección.</p>
@@ -751,7 +751,7 @@ export default function Mapa() {
       <div style={{ position: "relative" }}>
         <div
           id="map"
-          style={{ height: "60vh", borderRadius: 10, overflow: "hidden" }}
+          style={{ height: "calc(100vh - 100px)", width: "100vw", borderRadius: 10, overflow: "hidden" }}
           aria-label="Mapa de reportes"
         />
         {sidebar.open && <ReportSidebar />}

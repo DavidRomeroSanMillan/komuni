@@ -61,7 +61,7 @@ const FAQ: React.FC = () => {
 
   return (
     <section className="faq-section">
-      <h1>Preguntas Frecuentes (FAQ)</h1>
+      <h1>Preguntas Frecuentes</h1>
       <div className="faq-list">
         {faqData.map((item, index) => (
           <FAQItem key={index} question={item.question} answer={item.answer} />
