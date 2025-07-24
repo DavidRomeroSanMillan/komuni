@@ -126,7 +126,7 @@ button {
 }
 
 button:hover, button:focus {
-  background: linear-gradient(90deg, var(--turquesa-oscuro), var(--turquesa-claro));
+  background: linear-gradient(90deg, #f4760fea, var(--turquesa-claro));
   box-shadow: 0 4px 16px #2aa19833;
 }
 
@@ -160,7 +160,6 @@ ul {
     flex: 1 1 100% !important; /* Hace que las tarjetas ocupen todo el ancho */
   }
 
-  /* --- Nueva regla para el párrafo principal en Home.tsx --- */
   .textalign p { /* Apunta al párrafo con el estilo inline */
     font-size: 1em !important; /* Reduce el tamaño de fuente */
     margin-bottom: 1rem !important; /* Ajusta el margen inferior */

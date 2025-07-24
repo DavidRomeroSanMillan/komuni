@@ -55,7 +55,7 @@
 }
 
 .menu_link.active {
-  color: orange;
+  color: white ;
 }
 
 .header {
@@ -143,10 +143,7 @@
     font-size: 1em; /* Ajusta el tamaño de fuente para móviles */
   }
 }
-/* -------------------------------------------------------------------------- */
-/* ... Tus estilos existentes en App.css ... */
 
-/* --- Nuevas reglas Responsivas para el Header --- */
 
 /* Estilos para el botón de menú de hamburguesa */
 .hamburger-menu {
@@ -267,5 +264,152 @@
 
   .menu_link {
     font-size: 1.3rem; /* Ajusta el tamaño de fuente para pantallas más pequeñas */
+  }
+}
+
+/*Estilos del FAQ*/
+/* Estilos generales para la sección de FAQ */
+.faq-section {
+  max-width: var(--max-width); 
+  margin: 2.5rem auto; 
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--sombra);
+}
+
+.faq-section h1 {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  color: var(--turquesa-medio);
+}
+
+/* Contenedor de la lista de preguntas */
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* Espacio entre cada pregunta */
+}
+
+/* Estilos para cada item de FAQ */
+.faq-item {
+  border: 1px solid var(--gris-medio);
+  border-radius: var(--radius);
+  overflow: hidden; 
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para el botón de la pregunta */
+.faq-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 1.2rem 1.5rem;
+  background-color: #f9f9f9;
+  border: none;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--texto-principal);
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.3s ease;
+}
+
+.faq-question:hover {
+  background-color: #f0f0f0;
+}
+
+.faq-question:focus {
+  outline: 2px solid orange;
+  outline-offset: -2px;
+}
+
+/* Estilos para el icono de flecha */
+.faq-icon {
+  font-size: 1.2rem;
+  margin-left: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.faq-icon.open {
+  transform: rotate(180deg); /* Gira la flecha cuando la respuesta está abierta */
+}
+
+/* Estilos para la respuesta */
+.faq-answer {
+  padding: 0 1.5rem 1.2rem 1.5rem;
+  background-color: #fff;
+  border-top: 1px solid var(--gris-medio);
+}
+
+.faq-answer p {
+  margin: 0.8rem 0 0 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #555;
+}
+
+/*Estilos responsive de movil*/
+@media (max-width: 768px) {
+  .faq-section {
+    margin: 1.5rem auto;
+    padding: 1.5rem;
+  }
+
+  .faq-section h1 {
+    font-size: 2em;
+    margin-bottom: 2rem;
+  }
+
+  .faq-question {
+    font-size: 1rem;
+    padding: 1rem 1.2rem;
+  }
+
+  .faq-icon {
+    font-size: 1rem;
+  }
+
+  .faq-answer {
+    padding: 0 1.2rem 1rem 1.2rem;
+  }
+
+  .faq-answer p {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .faq-section {
+    margin: 1rem auto;
+    padding: 1rem;
+  }
+
+  .faq-section h1 {
+    font-size: 1.8em;
+    margin-bottom: 1.5rem;
+  }
+
+  .faq-question {
+    font-size: 0.95rem;
+    padding: 0.8rem 1rem;
+  }
+
+  .faq-icon {
+    font-size: 0.9rem;
+  }
+
+  .faq-answer {
+    padding: 0 1rem 0.8rem 1rem;
+  }
+
+  .faq-answer p {
+    font-size: 0.9rem;
   }
 }

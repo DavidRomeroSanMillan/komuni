@@ -37,22 +37,29 @@ function Footer() {
                   Contacto
                 </NavLink>
             </li>
+                        <li className="menu_item">
+               <NavLink
+                  to="/faq"
+                  className={({ isActive }: { isActive: boolean }) =>
+                    "menu_link" + (isActive ? " active" : "")
+                  }
+                >
+                  Preguntas frecuentes
+                </NavLink>
+            </li>
           </ul>
         </div>
 
         <div className="">
           <p className="">
-            {" "}
             <span>Email: </span>
             <span>
-              {" "}
               <a href="#0" className="">
                 komunitgn@gmail.com{" "}
               </a>
             </span>
           </p>
           <p className="">
-        {" "}
         <small>
           &copy; {new Date().getFullYear()} Komuni. Plataforma colaborativa de
           accesibilidad.
