@@ -156,7 +156,16 @@ ul {
   }
   .card {
     padding: 1rem 0.5rem;
+    min-width: unset !important; /* Elimina el min-width fijo que pueda haber */
+    flex: 1 1 100% !important; /* Hace que las tarjetas ocupen todo el ancho */
   }
+
+  /* --- Nueva regla para el párrafo principal en Home.tsx --- */
+  .textalign p { /* Apunta al párrafo con el estilo inline */
+    font-size: 1em !important; /* Reduce el tamaño de fuente */
+    margin-bottom: 1rem !important; /* Ajusta el margen inferior */
+  }
+  /* ------------------------------------------------------- */
 }
 
 /* Mejorar los popups de Leaflet */

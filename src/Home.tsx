@@ -54,14 +54,8 @@ const Home = () => {
           <p className="legend">Reporta barreras y haz la diferencia</p>
         </div>
       </Carousel>
-      <div style={{
-        marginTop: '2rem',
-        textAlign: 'center',
-        padding: '1.5rem 0',
-        background: 'linear-gradient(90deg, #2aa19811 0%, #3ecfcf11 100%)',
-        borderRadius: 12
-      }}>
-        <span style={{ fontSize: '1.25rem', color: '#2aa198', fontWeight: 600 }}>
+      <div className="komuni-quote-container">
+        <span className="komuni-quote-text">
           Tu ciudad no es solo calles: es el reflejo de quién la habita.
         </span>
       </div>
