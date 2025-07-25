@@ -4,7 +4,7 @@ export interface BlogPost {
   id: string;
   title: string;
   slug: string; // Para URLs amigables (ej: /blog/primer-post-de-komuni)
-  date: string; // Formato legible o ISO (ej: "2025-07-24" o "24 de julio de 2025")
+  date: string;
   author: string;
   excerpt: string; // Un resumen corto para la lista de posts
   content: string; // El contenido completo del post (puede ser HTML o Markdown)
@@ -33,7 +33,7 @@ const blogPosts: BlogPost[] = [
         <li>Comparte tus experiencias y sugerencias.</li>
       </ul>
     `,
-    imageUrl: '../src/assets/img/barrier-icon.png', // Ejemplo de ruta de imagen
+    imageUrl: '../public/icons/logo-solo.png', 
     tags: ['accesibilidad', 'comunidad', 'lanzamiento', 'inclusión'],
   },
   {
@@ -54,7 +54,7 @@ const blogPosts: BlogPost[] = [
       </ol>
       <p>Cada reporte ayuda a construir una base de datos más completa y a concienciar sobre los desafíos de accesibilidad en nuestras ciudades.</p>
     `,
-    imageUrl: '/images/blog/post2-featured.png',
+    imageUrl: '../public/icons/marker-green.png',
     tags: ['guía', 'reporte', 'mapa', 'tutorial'],
   },
   {

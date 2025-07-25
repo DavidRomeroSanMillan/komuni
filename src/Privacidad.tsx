@@ -94,7 +94,7 @@ const Privacidad = () => {
             contra actividades fraudulentas o maliciosas.
           </li>
         </ul>
-        <h4>3. Compartir tu Información</h4>
+        <h4><u>3. Compartir tu Información</u></h4>
         <p>
           En KOMUNI, no vendemos ni alquilamos tu información personal a
           terceros. Podemos compartir tu información en las siguientes
