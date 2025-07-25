@@ -1,5 +1,7 @@
 import { Link, NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
+import LoginButton from "../components/LoginButton"; // Importa el LoginButton
+
 
 // Asegúrate de que tu App.css esté importado en algún lugar de tu proyecto
 // que afecte a este componente, por ejemplo, en tu archivo principal index.tsx o App.tsx.
@@ -108,10 +110,13 @@ function Header() {
                   className={({ isActive }: { isActive: boolean }) =>
                     "menu_link" + (isActive ? " active" : "")
                   }
-                  onClick={() => setIsMenuOpen(false)} // Cierra el menú al hacer clic en el enlace
+                  onClick={() => setIsMenuOpen(false)}
                 >
                   Contacto
                 </NavLink>
+              </li>
+              <li className="menu_item">
+                <LoginButton onClick={() => { /* lógica de login aquí */ }} />
               </li>
             </ul>
           </nav>
