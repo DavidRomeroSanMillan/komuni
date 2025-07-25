@@ -116,7 +116,7 @@ function Header() {
                 </NavLink>
               </li>
               <li className="menu_item">
-                <LoginButton onClick={() => { /* lógica de login aquí */ }} />
+                <LoginButton />
               </li>
             </ul>
           </nav>
