@@ -57,6 +57,29 @@ export async function sendReporte(data: SendReportData): Promise<Reporte> {
 
     // Obtener información del usuario autenticado
     const currentUser = auth.currentUser;
+    
+    // Si no hay usuario de Firebase Auth, intentar obtener desde localStorage
+    let userInfo = {
+      uid: currentUser?.uid || null,
+      email: currentUser?.email || null,
+      displayName: currentUser?.displayName || null
+    };
+
+    // Si no hay datos de Firebase Auth, obtener desde localStorage
+    if (!currentUser) {
+      const loggedEmail = localStorage.getItem('loggedUser');
+      if (loggedEmail) {
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        const foundUser = users.find((u: any) => u.email === loggedEmail);
+        if (foundUser) {
+          userInfo = {
+            uid: foundUser.uid,
+            email: foundUser.email,
+            displayName: foundUser.nombre
+          };
+        }
+      }
+    }
 
     const docData: RealtimeReportPayload = {
       calle: data.calle,
@@ -69,9 +92,9 @@ export async function sendReporte(data: SendReportData): Promise<Reporte> {
       dificultad: data.dificultad,
       comentarios: data.comentarios,
       imagen: imageUrl,
-      userId: currentUser?.uid || null,
-      userEmail: currentUser?.email || null,
-      userName: currentUser?.displayName || null
+      userId: userInfo.uid,
+      userEmail: userInfo.email,
+      userName: userInfo.displayName
     };
 
     const newReportRef = push(dbRef(db, "reportes"));
@@ -79,8 +102,8 @@ export async function sendReporte(data: SendReportData): Promise<Reporte> {
     console.log("Reporte añadido con ID: ", newReportRef.key);
 
     // Si hay usuario autenticado, agregar el reporte a su lista en Firebase
-    if (currentUser) {
-      const userReportsRef = dbRef(db, `usuarios/${currentUser.uid}/reportes`);
+    if (userInfo.uid) {
+      const userReportsRef = dbRef(db, `usuarios/${userInfo.uid}/reportes`);
       const userReportsSnapshot = await get(userReportsRef);
       const currentReports = userReportsSnapshot.exists() ? userReportsSnapshot.val() : [];
       const updatedReports = [...(Array.isArray(currentReports) ? currentReports : []), newReportRef.key];

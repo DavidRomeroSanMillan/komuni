@@ -220,31 +220,47 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       console.log('Simulando envío de email de verificación a:', currentUser.email);
       
-      // En localStorage, vamos a marcar que se envió la verificación
-      const users = JSON.parse(localStorage.getItem('users') || '[]');
-      const userIndex = users.findIndex((u: any) => u.email === currentUser.email);
+      // Solo simular el envío del email, NO verificar automáticamente
+      // El usuario debe hacer clic en un enlace simulado para verificar
       
-      if (userIndex !== -1) {
-        // Simular que después de 3 segundos el email se "verifica"
-        setTimeout(() => {
-          const updatedUsers = [...users];
-          updatedUsers[userIndex].emailVerified = true;
-          localStorage.setItem('users', JSON.stringify(updatedUsers));
-          
-          // Actualizar el estado actual
-          setCurrentUser((prev: any) => prev ? { ...prev, emailVerified: true } : null);
-          setUserProfile((prev: any) => prev ? { ...prev, emailVerified: true } : null);
-          
-          console.log('Email verificado automáticamente (simulación)');
-        }, 3000);
-      }
-      
-      console.log('Email de verificación enviado (simulado)');
+      console.log('Email de verificación enviado. Revisa tu bandeja de entrada.');
     } catch (error: any) {
       console.error('Error resending verification:', error);
       throw new Error('Error al enviar email de verificación');
     }
   };
+
+  // Función para simular verificación manual
+  const verifyEmail = async (): Promise<void> => {
+    if (!currentUser) throw new Error('No hay usuario autenticado');
+    
+    try {
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const userIndex = users.findIndex((u: any) => u.email === currentUser.email);
+      
+      if (userIndex !== -1) {
+        users[userIndex].emailVerified = true;
+        localStorage.setItem('users', JSON.stringify(users));
+        
+        // Actualizar el estado actual
+        setCurrentUser((prev: any) => prev ? { ...prev, emailVerified: true } : null);
+        setUserProfile((prev: any) => prev ? { ...prev, emailVerified: true } : null);
+        
+        console.log('Email verificado manualmente');
+      }
+    } catch (error: any) {
+      console.error('Error al verificar email:', error);
+      throw new Error('Error al verificar email');
+    }
+  };
+
+  // Exponer verifyEmail globalmente para simulación
+  useEffect(() => {
+    (window as any).verifyEmail = verifyEmail;
+    return () => {
+      delete (window as any).verifyEmail;
+    };
+  }, [currentUser]);
 
   // Actualizar perfil de usuario
   const updateUserProfile = async (updates: Partial<UserProfile>): Promise<void> => {

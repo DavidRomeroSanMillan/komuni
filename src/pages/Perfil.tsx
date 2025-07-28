@@ -125,11 +125,24 @@ const Perfil: React.FC = () => {
 
     try {
       await resendVerification();
-      setMessage({ type: 'success', text: 'Email de verificación enviado. El email se verificará automáticamente en 3 segundos.' });
+      setMessage({ 
+        type: 'success', 
+        text: 'Email de verificación enviado. Revisa tu bandeja de entrada y haz clic en el enlace para verificar tu cuenta.' 
+      });
     } catch (error: any) {
       setMessage({ type: 'error', text: error.message });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleVerifyEmail = () => {
+    if ((window as any).verifyEmail) {
+      (window as any).verifyEmail();
+      setMessage({ 
+        type: 'success', 
+        text: '¡Email verificado correctamente!' 
+      });
     }
   };
 
@@ -183,22 +196,34 @@ const Perfil: React.FC = () => {
         {message && (
           <div className={`alert alert-${message.type}`}>
             {message.text}
+            {message.type === 'success' && message.text.includes('Revisa tu bandeja') && (
+              <div style={{ marginTop: '10px' }}>
+                <button 
+                  onClick={handleVerifyEmail}
+                  className="btn-primary"
+                  style={{ fontSize: '0.9rem', padding: '8px 16px' }}
+                >
+                  🔗 Simular clic en enlace de verificación
+                </button>
+              </div>
+            )}
           </div>
         )}
 
         <div className="perfil-body">
           <div className="section">
-            <div className="section-header">
-              <h2>Información Personal</h2>
+            <div className="section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h2 style={{ margin: 0 }}>Información Personal</h2>
               {!isEditing ? (
                 <button 
                   onClick={() => setIsEditing(true)}
                   className="btn-secondary"
+                  style={{ marginLeft: '20px' }}
                 >
                   Editar
                 </button>
               ) : (
-                <div className="edit-buttons">
+                <div className="edit-buttons" style={{ display: 'flex', gap: '10px' }}>
                   <button 
                     onClick={handleSave}
                     className="btn-primary"
