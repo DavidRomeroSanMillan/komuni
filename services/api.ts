@@ -78,7 +78,7 @@ export async function sendReporte(data: SendReportData): Promise<Reporte> {
     await set(newReportRef, docData);
     console.log("Reporte añadido con ID: ", newReportRef.key);
 
-    // Si hay usuario autenticado, agregar el reporte a su lista
+    // Si hay usuario autenticado, agregar el reporte a su lista en Firebase
     if (currentUser) {
       const userReportsRef = dbRef(db, `usuarios/${currentUser.uid}/reportes`);
       const userReportsSnapshot = await get(userReportsRef);
@@ -86,6 +86,15 @@ export async function sendReporte(data: SendReportData): Promise<Reporte> {
       const updatedReports = [...(Array.isArray(currentReports) ? currentReports : []), newReportRef.key];
       
       await set(userReportsRef, updatedReports);
+      
+      // También actualizar el localStorage si está disponible la función global
+      if ((window as any).addReportToUser && typeof (window as any).addReportToUser === 'function') {
+        try {
+          (window as any).addReportToUser(newReportRef.key);
+        } catch (error) {
+          console.warn('Error al actualizar localStorage:', error);
+        }
+      }
     }
 
     return { id: newReportRef.key!, ...docData };

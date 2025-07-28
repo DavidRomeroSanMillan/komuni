@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { auth } from '../firebaseConfig';
+import { signInAnonymously, updateProfile } from 'firebase/auth';
 import type { ReactNode } from 'react';
 
 export interface UserProfile {
@@ -216,6 +218,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (!currentUser) throw new Error('No hay usuario autenticado');
     
     try {
+      console.log('Simulando envío de email de verificación a:', currentUser.email);
+      
+      // En localStorage, vamos a marcar que se envió la verificación
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const userIndex = users.findIndex((u: any) => u.email === currentUser.email);
+      
+      if (userIndex !== -1) {
+        // Simular que después de 3 segundos el email se "verifica"
+        setTimeout(() => {
+          const updatedUsers = [...users];
+          updatedUsers[userIndex].emailVerified = true;
+          localStorage.setItem('users', JSON.stringify(updatedUsers));
+          
+          // Actualizar el estado actual
+          setCurrentUser((prev: any) => prev ? { ...prev, emailVerified: true } : null);
+          setUserProfile((prev: any) => prev ? { ...prev, emailVerified: true } : null);
+          
+          console.log('Email verificado automáticamente (simulación)');
+        }, 3000);
+      }
+      
       console.log('Email de verificación enviado (simulado)');
     } catch (error: any) {
       console.error('Error resending verification:', error);
@@ -247,6 +270,78 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       throw new Error('Error al actualizar perfil');
     }
   };
+
+  // Función para agregar un reporte al usuario
+  const addReportToUser = async (reportId: string): Promise<void> => {
+    if (!currentUser || !userProfile) return;
+    
+    try {
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const userIndex = users.findIndex((u: any) => u.email === currentUser.email);
+      
+      if (userIndex !== -1) {
+        if (!users[userIndex].reportes) {
+          users[userIndex].reportes = [];
+        }
+        
+        // Agregar el ID del reporte si no existe ya
+        if (!users[userIndex].reportes.includes(reportId)) {
+          users[userIndex].reportes.push(reportId);
+          localStorage.setItem('users', JSON.stringify(users));
+          
+          // Actualizar estado local
+          setUserProfile({
+            ...userProfile, 
+            reportes: [...(userProfile.reportes || []), reportId]
+          });
+          
+          console.log('Reporte agregado al usuario:', reportId);
+        }
+      }
+    } catch (error: any) {
+      console.error('Error al agregar reporte al usuario:', error);
+    }
+  };
+
+  // Sincronizar Firebase Auth cuando hay localStorage user
+  useEffect(() => {
+    const syncFirebaseAuth = async () => {
+      if (currentUser && userProfile) {
+        try {
+          // Solo sincronizar si no hay usuario de Firebase Auth
+          if (!auth.currentUser) {
+            const userCredential = await signInAnonymously(auth);
+            
+            // Actualizar el perfil con información del localStorage
+            await updateProfile(userCredential.user, {
+              displayName: userProfile.nombre || 'Usuario'
+            });
+            
+            console.log('Usuario Firebase Auth sincronizado para reportes');
+          }
+        } catch (error) {
+          console.warn('Error al sincronizar con Firebase Auth:', error);
+        }
+      }
+    };
+
+    syncFirebaseAuth();
+  }, [currentUser, userProfile]);
+
+  // Limpiar Firebase Auth cuando se hace logout
+  useEffect(() => {
+    if (!currentUser && auth.currentUser) {
+      auth.signOut().catch(console.warn);
+    }
+  }, [currentUser]);
+
+  // Exponer addReportToUser globalmente para que api.ts pueda usarlo
+  useEffect(() => {
+    (window as any).addReportToUser = addReportToUser;
+    return () => {
+      delete (window as any).addReportToUser;
+    };
+  }, [currentUser, userProfile]);
 
   const value: AuthContextType = {
     currentUser,

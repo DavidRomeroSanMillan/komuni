@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContextLocalStorage';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { getReportes } from '../../services/api';
 import './Perfil.css';
 
 const Perfil: React.FC = () => {
   const { currentUser, userProfile, logout, updateUserProfile, resendVerification } = useAuth();
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [userReports, setUserReports] = useState<any[]>([]);
+  const [loadingReports, setLoadingReports] = useState(false);
   const [formData, setFormData] = useState({
     nombre: '',
     apellidos: '',
@@ -25,6 +29,36 @@ const Perfil: React.FC = () => {
       });
     }
   }, [userProfile]);
+
+  // Cargar reportes del usuario
+  useEffect(() => {
+    const loadUserReports = async () => {
+      if (!userProfile || !userProfile.reportes || userProfile.reportes.length === 0) {
+        setUserReports([]);
+        return;
+      }
+
+      setLoadingReports(true);
+      try {
+        const allReports = await getReportes();
+        const userReportDetails = allReports.filter(report => 
+          userProfile.reportes.includes(report.id)
+        );
+        setUserReports(userReportDetails);
+      } catch (error) {
+        console.error('Error al cargar reportes del usuario:', error);
+        setUserReports([]);
+      } finally {
+        setLoadingReports(false);
+      }
+    };
+
+    loadUserReports();
+  }, [userProfile?.reportes]);
+
+  const handleCreateReport = () => {
+    navigate('/mapa');
+  };
 
   // Redirigir si no está autenticado
   if (!currentUser) {
@@ -91,7 +125,7 @@ const Perfil: React.FC = () => {
 
     try {
       await resendVerification();
-      setMessage({ type: 'success', text: 'Email de verificación enviado' });
+      setMessage({ type: 'success', text: 'Email de verificación enviado. El email se verificará automáticamente en 3 segundos.' });
     } catch (error: any) {
       setMessage({ type: 'error', text: error.message });
     } finally {
@@ -275,21 +309,28 @@ const Perfil: React.FC = () => {
 
           <div className="section">
             <h2>Mis Reportes</h2>
-            {userProfile.reportes.length === 0 ? (
+            {(!userProfile.reportes || userProfile.reportes.length === 0) ? (
               <div className="empty-state">
                 <p>Aún no has realizado ningún reporte</p>
-                <button className="btn-primary">Crear mi primer reporte</button>
+                <button className="btn-primary" onClick={handleCreateReport}>Crear mi primer reporte</button>
+              </div>
+            ) : loadingReports ? (
+              <div className="loading-state">
+                <p>Cargando reportes...</p>
               </div>
             ) : (
               <div className="reportes-list">
-                {userProfile.reportes.map((reporte, index) => (
-                  <div key={index} className="reporte-item">
+                {userReports.map((reporte, index) => (
+                  <div key={reporte.id || index} className="reporte-item">
                     <div className="reporte-content">
-                      <h4>Reporte #{index + 1}</h4>
-                      <p>{reporte}</p>
+                      <h4>{reporte.calle || `Reporte #${index + 1}`}</h4>
+                      <p><strong>Descripción:</strong> {reporte.descripción}</p>
+                      <p><strong>Tipo:</strong> {reporte.tipo}</p>
+                      <p><strong>Dificultad:</strong> {reporte.dificultad}</p>
+                      <p><strong>Fecha:</strong> {new Date(reporte.fecha).toLocaleDateString()}</p>
                     </div>
                     <div className="reporte-actions">
-                      <button className="btn-link">Ver detalles</button>
+                      <button className="btn-link">Ver en mapa</button>
                     </div>
                   </div>
                 ))}
@@ -298,7 +339,6 @@ const Perfil: React.FC = () => {
           </div>
 
           <div className="section danger-zone">
-            <h2>Zona de Peligro</h2>
             <button 
               onClick={handleLogout}
               className="btn-danger"
