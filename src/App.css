@@ -477,7 +477,7 @@ button {
 }
 
 .accessibility-button {
-  background: var(--turquesa-oscuro);
+  background: var(--turquesa-claro);
   color: #fff;
   border: none;
   border-radius: 50%;
@@ -493,7 +493,7 @@ button {
 }
 
 .accessibility-button:hover {
-  background: var(--turquesa-claro);
+  background: var(--turquesa-oscuro);
 }
 
 .accessibility-menu {
@@ -509,7 +509,21 @@ button {
   gap: 0.5rem;
   width: 200px;
 }
+.acceso-icon {
+  /* Tamaño del icono */
+  width: 25px;
+  height: 25px;
 
+  /* Asegura que la imagen no se deforme y ocupe el espacio */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  
+  /* Centra la imagen dentro del botón circular */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .accessibility-menu.open {
   display: flex; /* Se muestra cuando tiene la clase 'open' */
 }
