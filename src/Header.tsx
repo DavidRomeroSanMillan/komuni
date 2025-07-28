@@ -1,6 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
-import LoginButton from "../components/LoginButton"; // Importa el LoginButton
+import LoginButton from "../components/LoginButtonSimple"; // Importa el LoginButton simplificado para debug
 
 
 // Asegúrate de que tu App.css esté importado en algún lugar de tu proyecto

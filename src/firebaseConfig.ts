@@ -1,8 +1,8 @@
 import { initializeApp } from 'firebase/app';
 import { getDatabase } from "firebase/database";
-// import { getFirestore } from 'firebase/firestore'
+import { getFirestore } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 import { getStorage } from 'firebase/storage';
-// import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 
 //npm i fireabase
@@ -20,10 +20,11 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-
 const db = getDatabase(app);
+const firestore = getFirestore(app);
+const auth = getAuth(app);
 const storage = getStorage(app);
 
-export  { app, db, storage };
+export { app, db, firestore, auth, storage };
 
 
