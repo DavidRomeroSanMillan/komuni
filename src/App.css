@@ -455,10 +455,10 @@ button {
   color: #fff;
 }
 /*CSS de blog*/
-.blog-post-card {
+/* .blog-post-card {
 }
 .blog-posts-cont {
-}
+} */
 .blog-post-card h3 {
   font-size: 1.5rem; /* Usar rem en lugar de px */
 }
