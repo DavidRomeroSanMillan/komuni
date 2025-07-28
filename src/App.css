@@ -439,23 +439,185 @@
     color: #fff;
   }
 }
-  button {
-    background: var(--turquesa-oscuro);
-    color: #fff;
-    border-radius: 6px;
-    padding: 8px 18px;
-    border: none;
-    font-weight: 600;
-    font-size: 1rem;
-    transition: background 1s, color 1s;
-    cursor: pointer;
-  }
-  .button:hover,
-  .button:focus {
-    background: var(--turquesa-claro);
-    color: #fff;}
+button {
+  background: var(--turquesa-oscuro);
+  color: #fff;
+  border-radius: 6px;
+  padding: 8px 18px;
+  border: none;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background 1s, color 1s;
+  cursor: pointer;
+}
+.button:hover,
+.button:focus {
+  background: var(--turquesa-claro);
+  color: #fff;
+}
 /*CSS de blog*/
 .blog-post-card {
 }
 .blog-posts-cont {
+}
+.blog-post-card h3 {
+  font-size: 1.5rem; /* Usar rem en lugar de px */
+}
+
+.blog-post-card p {
+  font-size: 1rem; /* Usar rem en lugar de px */
+}
+
+/* Estilos para el botón de accesibilidad y el menú */
+.accessibility-container {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 5000; /* Asegura que esté por encima de todos los demás elementos */
+}
+
+.accessibility-button {
+  background: var(--turquesa-oscuro);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--sombra);
+  transition: background 0.3s ease;
+}
+
+.accessibility-button:hover {
+  background: var(--turquesa-claro);
+}
+
+.accessibility-menu {
+  display: none; /* Oculto por defecto */
+  position: absolute;
+  bottom: 60px;
+  right: 0;
+  background-color: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--sombra);
+  padding: 1rem;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 200px;
+}
+
+.accessibility-menu.open {
+  display: flex; /* Se muestra cuando tiene la clase 'open' */
+}
+
+.acceso-option {
+  background-color: var(--gris-suave);
+  border: 1px solid var(--gris-medio);
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--texto-principal);
+  transition: background-color 0.3s ease;
+}
+
+.acceso-option:hover {
+  background-color: var(--gris-medio);
+}
+
+/* Clases para los cambios de accesibilidad */
+body.large-text {
+  font-size: 1.25rem; /* O el tamaño que prefieras */
+}
+
+.large-text h1 {
+  font-size: calc(2em * 1.2); /* Aumenta los títulos también */
+}
+
+.large-text h2 {
+  font-size: calc(1.5em * 1.2);
+}
+
+body.high-contrast * {
+  background-color: #000 !important;
+  color: #fff !important;
+  border-color: #fff !important;
+}
+
+body.high-contrast h1,
+body.high-contrast h2,
+body.high-contrast h3,
+body.high-contrast h4,
+body.high-contrast h5,
+body.high-contrast h6 {
+  color: #fff !important;
+}
+
+body.high-contrast a,
+body.high-contrast .menu_link {
+  color: #ffff00 !important; /* Enlaces en amarillo para alto contraste */
+}
+
+body.high-contrast .header,
+body.high-contrast .footer {
+  background-color: #333 !important;
+  color: #fff !important;
+}
+
+body.high-contrast .faq-item,
+body.high-contrast .faq-question,
+body.high-contrast .faq-answer,
+body.high-contrast .blog-post-card, /* Selecciona la tarjeta del blog */
+body.high-contrast .acceso-option, /* Opciones del menú de accesibilidad */
+body.high-contrast button ,
+body.high-contrast .komuni-quote-container, /* Contenedor de la cita del footer */
+body.high-contrast .komuni-quote-text,
+body.high-contrast .blog-post-card a, /* Enlaces dentro de las tarjetas */
+body.high-contrast .blog-post-card h3, /* Títulos dentro de las tarjetas */
+body.high-contrast .komuni-quote-container, /* Contenedor de la cita del footer */
+body.high-contrast .komuni-quote-text
+{
+  background-color: #333 !important;
+  color: #fff !important;
+  border: 1px solid #fff !important;
+}
+body.high-contrast .faq-question:hover,
+body.high-contrast .acceso-option:hover {
+  background-color: #222 !important;
+}
+body.high-contrast .blog-post-card a {
+  color: #ffff00 !important;
+}
+
+body.high-contrast .blog-post-card h3 {
+  color: #fff !important;
+}
+body.high-contrast .komuni-quote-container {
+  background-color: #000 !important; /* Fondo negro */
+  border: 2px solid #fff !important; /* Borde blanco para contraste */
+}
+
+body.high-contrast .komuni-quote-text {
+  color: #ffff00 !important; /* Texto en amarillo para alto contraste */
+  background: none !important; /* Elimina cualquier fondo degradado */
+}
+
+
+@media (max-width: 768px) {
+  body.large-text {
+    font-size: 1.3rem; /* Letra aún más grande en móviles para mejor legibilidad */
+  }
+
+  .blog-post-card p {
+    font-size: 1.1rem; /* Tamaño de fuente base para párrafos del blog en móvil */
+  }
+
+  body.large-text .blog-post-card p {
+    font-size: 1.3em !important; /* Letra más grande en blog cuando la opción está activa */
+  }
 }
