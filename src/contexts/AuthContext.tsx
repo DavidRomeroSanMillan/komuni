@@ -10,8 +10,8 @@ import {
   sendEmailVerification
 } from 'firebase/auth';
 import type { User } from 'firebase/auth';
-import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
-import { auth, firestore as db } from '../firebaseConfig';
+import { ref, set, get, update, push } from 'firebase/database';
+import { auth, db } from '../firebaseConfig';
 
 export interface UserProfile {
   uid: string;
@@ -23,8 +23,8 @@ export interface UserProfile {
   reportes: string[];
   emailVerified: boolean;
   photoURL?: string;
-  createdAt: Date;
-  lastLogin: Date;
+  createdAt: Date | string;
+  lastLogin: Date | string;
 }
 
 interface AuthContextType {
@@ -67,20 +67,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Obtener perfil de usuario desde Firestore
+  // Obtener perfil de usuario desde Firebase Realtime Database
   const fetchUserProfile = async (user: User): Promise<UserProfile | null> => {
     try {
-      const userDoc = await getDoc(doc(db, 'usuarios', user.uid));
-      if (userDoc.exists()) {
-        const data = userDoc.data();
+      const userRef = ref(db, `usuarios/${user.uid}`);
+      const snapshot = await get(userRef);
+      
+      if (snapshot.exists()) {
+        const data = snapshot.val();
         return {
           uid: user.uid,
           email: user.email!,
           emailVerified: user.emailVerified,
           photoURL: user.photoURL || undefined,
           ...data,
-          createdAt: data.createdAt?.toDate() || new Date(),
-          lastLogin: data.lastLogin?.toDate() || new Date(),
+          createdAt: data.createdAt ? new Date(data.createdAt) : new Date(),
+          lastLogin: data.lastLogin ? new Date(data.lastLogin) : new Date(),
         } as UserProfile;
       }
       return null;
@@ -100,7 +102,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         displayName: `${userData.nombre} ${userData.apellidos}`
       });
 
-      // Crear documento en Firestore
+      // Crear documento en Firebase Realtime Database
       const userProfile: Omit<UserProfile, 'uid' | 'emailVerified' | 'photoURL'> = {
         email: userData.email,
         nombre: userData.nombre,
@@ -108,11 +110,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         fechaNacimiento: userData.fechaNacimiento,
         genero: userData.genero,
         reportes: [],
-        createdAt: new Date(),
-        lastLogin: new Date(),
+        createdAt: new Date().toISOString(),
+        lastLogin: new Date().toISOString(),
       };
 
-      await setDoc(doc(db, 'usuarios', user.uid), userProfile);
+      const userRef = ref(db, `usuarios/${user.uid}`);
+      await set(userRef, userProfile);
 
       // Enviar email de verificación
       await sendEmailVerification(user);
@@ -129,9 +132,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       await signInWithEmailAndPassword(auth, email, password);
       
       // Actualizar último login
-      if (currentUser) {
-        await updateDoc(doc(db, 'usuarios', currentUser.uid), {
-          lastLogin: new Date()
+      if (auth.currentUser) {
+        const userRef = ref(db, `usuarios/${auth.currentUser.uid}`);
+        await update(userRef, {
+          lastLogin: new Date().toISOString()
         });
       }
     } catch (error: any) {
@@ -178,7 +182,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (!currentUser) throw new Error('No hay usuario autenticado');
     
     try {
-      await updateDoc(doc(db, 'usuarios', currentUser.uid), updates);
+      const userRef = ref(db, `usuarios/${currentUser.uid}`);
+      await update(userRef, updates);
       
       // Actualizar estado local
       if (userProfile) {

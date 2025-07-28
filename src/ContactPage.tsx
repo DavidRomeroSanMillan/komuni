@@ -1,4 +1,5 @@
 import { useRef, useState, type FormEvent } from "react";
+import { sendContactMessage } from "../services/firebaseService";
 
 export default function ContactPage() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -9,33 +10,32 @@ export default function ContactPage() {
     e.preventDefault();
     setSending(true);
     setMsg("");
+    
     const data = new FormData(formRef.current!);
-    const nombre = data.get("nombre");
-    const email = data.get("email");
-    const asunto = data.get("asunto") || "Contacto Komuni";
-    const mensaje = data.get("mensaje");
+    const nombre = data.get("nombre") as string;
+    const email = data.get("email") as string;
+    const mensaje = data.get("mensaje") as string;
 
-    // Aquí hemos de poner la url de nuestra base de datos en Firebase
+    if (!nombre || !email || !mensaje) {
+      setMsg("Por favor completa todos los campos obligatorios.");
+      setSending(false);
+      return;
+    }
+
     try {
-      const res = await fetch("https://komuni-app-default-rtdb.europe-west1.firebasedatabase.app/contactpage.json", {
-        method: "POST",
-        headers: { Accept: "application/json" },
-        body: JSON.stringify({
-          nombre,
-          email,
-          asunto,
-          mensaje,
-        }),
+      await sendContactMessage({
+        nombre,
+        email,
+        mensaje
       });
-      if (res.ok) {
-        setMsg("¡Mensaje enviado correctamente! Te responderemos pronto.");
-        formRef.current?.reset();
-      } else {
-        setMsg("No se pudo enviar el mensaje. Inténtalo más tarde.");
-      }
-    } catch {
+      
+      setMsg("¡Mensaje enviado correctamente! Te responderemos pronto.");
+      formRef.current?.reset();
+    } catch (error) {
+      console.error("Error al enviar mensaje:", error);
       setMsg("No se pudo enviar el mensaje. Inténtalo más tarde.");
     }
+    
     setSending(false);
   }
 

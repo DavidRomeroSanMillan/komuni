@@ -12,6 +12,7 @@ import BlogPostDetail from "./pages/BlogPostDetail";
 import Login from "./pages/Login";
 import Registro from "./pages/Registro";
 import Perfil from "./pages/Perfil";
+import AdminPanel from "./components/AdminPanel";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./contexts/AuthContextLocalStorage";
 
@@ -33,6 +34,11 @@ function App() {
           <Route path="perfil" element={
             <ProtectedRoute>
               <Perfil />
+            </ProtectedRoute>
+          } />
+          <Route path="admin" element={
+            <ProtectedRoute>
+              <AdminPanel />
             </ProtectedRoute>
           } />
         </Route>

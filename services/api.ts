@@ -1,6 +1,6 @@
 // api.ts
 
-import { db, storage } from '../src/firebaseConfig';
+import { db, storage, auth } from '../src/firebaseConfig';
 import {
   ref as dbRef,
   push,
@@ -27,6 +27,9 @@ interface BaseReportFields {
 
 interface RealtimeReportPayload extends BaseReportFields {
   imagen?: string | null;
+  userId?: string | null;
+  userEmail?: string | null;
+  userName?: string | null;
 }
 
 export interface Reporte extends RealtimeReportPayload {
@@ -52,6 +55,9 @@ export async function sendReporte(data: SendReportData): Promise<Reporte> {
       imageUrl = await getDownloadURL(snapshot.ref);
     }
 
+    // Obtener información del usuario autenticado
+    const currentUser = auth.currentUser;
+
     const docData: RealtimeReportPayload = {
       calle: data.calle,
       descripción: data.descripción,
@@ -62,12 +68,25 @@ export async function sendReporte(data: SendReportData): Promise<Reporte> {
       tipo: data.tipo,
       dificultad: data.dificultad,
       comentarios: data.comentarios,
-      imagen: imageUrl
+      imagen: imageUrl,
+      userId: currentUser?.uid || null,
+      userEmail: currentUser?.email || null,
+      userName: currentUser?.displayName || null
     };
 
     const newReportRef = push(dbRef(db, "reportes"));
     await set(newReportRef, docData);
     console.log("Reporte añadido con ID: ", newReportRef.key);
+
+    // Si hay usuario autenticado, agregar el reporte a su lista
+    if (currentUser) {
+      const userReportsRef = dbRef(db, `usuarios/${currentUser.uid}/reportes`);
+      const userReportsSnapshot = await get(userReportsRef);
+      const currentReports = userReportsSnapshot.exists() ? userReportsSnapshot.val() : [];
+      const updatedReports = [...(Array.isArray(currentReports) ? currentReports : []), newReportRef.key];
+      
+      await set(userReportsRef, updatedReports);
+    }
 
     return { id: newReportRef.key!, ...docData };
 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { getAdmins, type AdminProfile } from "../services/firebaseService";
 
 export interface Equipo {
   id: number;
@@ -9,29 +10,24 @@ export interface Equipo {
   descripción: string;
 }
 
+// Mantener interfaz original para compatibilidad
+export type { AdminProfile };
+
 export const useEquipo = () => {
-  const [equipo, setEquipo] = useState<Equipo[]>([]);
+  const [equipo, setEquipo] = useState<AdminProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null); 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          "https://komuni-app-default-rtdb.europe-west1.firebasedatabase.app/admins.json"
-        );
-
-        if (!response.ok) {
-          throw new Error("Error al conectar con la base de datos.");
-        }
-
-        const data = await response.json();
-
-
-        const perfilesArray: Equipo[] = Object.values(data);
-
-        setEquipo(perfilesArray);
+        setLoading(true);
+        setError(null);
+        
+        const equipoData = await getAdmins();
+        setEquipo(equipoData);
       } catch (err) {
+        console.error("Error al cargar el equipo:", err);
         setError(
           err instanceof Error ? err.message : "Ocurrió un error desconocido"
         );
