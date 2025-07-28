@@ -13,7 +13,7 @@ import Login from "./pages/Login";
 import Registro from "./pages/Registro";
 import Perfil from "./pages/Perfil";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { AuthProvider } from "./contexts/AuthContext";
+import { AuthProvider } from "./contexts/AuthContextLocalStorage";
 
 function App() {
   return (
