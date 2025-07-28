@@ -39,10 +39,9 @@ const Home = () => {
           }}
         >
           <div className="card" style={{ minWidth: 260, flex: 1 }}>
-            <h2 style={{ marginTop: 0 }}>🤝 Comunidad</h2>
+            <h2 style={{ marginTop: 0 }}>📚 Blog Komuni</h2>
             <p>
-              Comparte tu experiencia, ayuda a otras personas y forma parte de
-              una red global comprometida con la accesibilidad.
+              Sigue la actualidad de nuestra comunidad y lee sobre temas relacionados con la accesibilidad en el área de Tarragona.
             </p>
             <Link to="/blog">
               <button style={{ marginTop: 12, width: "100%" }}>
@@ -51,14 +50,13 @@ const Home = () => {
             </Link>
           </div>{" "}
           <div className="card" style={{ minWidth: 260, flex: 1 }}>
-            <h2 style={{ marginTop: 0 }}>📚 Educación</h2>
+            <h2 style={{ marginTop: 0 }}>🤝¡Queremos tu opinión!</h2>
             <p>
-              Descubre recursos, buenas prácticas y experiencias sobre
-              accesibilidad urbana e inclusión social.
+               Estamos a disposición de la comunidad para seguir mejorando día a día.
             </p>
-            <Link to="/educacion">
+            <Link to="/contacto">
               <button style={{ marginTop: 12, width: "100%" }}>
-                Ver recursos
+                Contacta con Komuni
               </button>
             </Link>
           </div>
@@ -77,7 +75,7 @@ const Home = () => {
             alt="Accesibilidad urbana"
             className="imgcarousel"
           />
-          <p className="legend">Mejora la accesibilidad en tu ciudad</p>
+          <p className="legend">Construyamos una comunidad más inclusiva</p>
         </div>
         <div>
           <img
@@ -85,7 +83,7 @@ const Home = () => {
             alt="Comunidad inclusiva"
             className="imgcarousel"
           />
-          <p className="legend">Construyamos una comunidad más inclusiva</p>
+          <p className="legend">Mejora la accesibilidad en tu ciudad</p>
         </div>
         <div>
           <img

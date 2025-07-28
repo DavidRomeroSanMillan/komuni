@@ -122,7 +122,6 @@
   max-width: 100%; /* Asegura que la imagen no se desborde del contenedor */
 }
 
-/* --- Nuevas clases para el texto final "Tu ciudad no es solo calles..." --- */
 .komuni-quote-container {
   margin-top: 2rem;
   text-align: center;
