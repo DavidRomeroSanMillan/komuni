@@ -634,3 +634,7 @@ body.high-contrast .komuni-quote-text {
     font-size: 1.3em !important; /* Letra más grande en blog cuando la opción está activa */
   }
 }
+.img-card{
+  max-width: 450px;
+  
+}
