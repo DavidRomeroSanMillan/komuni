@@ -81,7 +81,7 @@ const Home = () => {
         </div>
         <div>
           <img
-            src="/images/America.jpg"
+            src="/images/escalestgn.jpg"
             alt="Comunidad inclusiva"
             className="imgcarousel"
           />
