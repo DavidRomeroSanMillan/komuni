@@ -10,7 +10,7 @@ import {
   sendEmailVerification
 } from 'firebase/auth';
 import type { User } from 'firebase/auth';
-import { ref, set, get, update, push } from 'firebase/database';
+import { ref, set, get, update } from 'firebase/database';
 import { auth, db } from '../firebaseConfig';
 
 export interface UserProfile {
