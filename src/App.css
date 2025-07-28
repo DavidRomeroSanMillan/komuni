@@ -118,7 +118,7 @@
 }
 
 .imgcarousel {
-  height: auto; /* Cambia a auto para que la altura se ajuste proporcionalmente */
+  height:350px; 
   max-width: 100%; /* Asegura que la imagen no se desborde del contenedor */
 }
 
