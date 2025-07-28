@@ -103,21 +103,29 @@ export async function sendReporte(data: SendReportData): Promise<Reporte> {
 
     // Si hay usuario autenticado, agregar el reporte a su lista en Firebase
     if (userInfo.uid) {
+      console.log('🔵 Guardando reporte para usuario:', userInfo);
       const userReportsRef = dbRef(db, `usuarios/${userInfo.uid}/reportes`);
       const userReportsSnapshot = await get(userReportsRef);
       const currentReports = userReportsSnapshot.exists() ? userReportsSnapshot.val() : [];
       const updatedReports = [...(Array.isArray(currentReports) ? currentReports : []), newReportRef.key];
       
       await set(userReportsRef, updatedReports);
+      console.log('✅ Reporte guardado en Firebase para usuario');
       
       // También actualizar el localStorage si está disponible la función global
       if ((window as any).addReportToUser && typeof (window as any).addReportToUser === 'function') {
+        console.log('🔵 Llamando a addReportToUser con ID:', newReportRef.key);
         try {
           (window as any).addReportToUser(newReportRef.key);
+          console.log('✅ addReportToUser ejecutada correctamente');
         } catch (error) {
-          console.warn('Error al actualizar localStorage:', error);
+          console.warn('❌ Error al actualizar localStorage:', error);
         }
+      } else {
+        console.warn('⚠️ addReportToUser no está disponible en window');
       }
+    } else {
+      console.log('⚠️ No hay userInfo.uid, no se guardará en perfil de usuario');
     }
 
     return { id: newReportRef.key!, ...docData };
