@@ -1,5 +1,5 @@
 :root {
-  --turquesa-medio: #33C7BA;
+  --turquesa-medio: #33c7ba;
   --turquesa-oscuro: #20706e;
   --turquesa-claro: #3ecfcf;
   --gris-suave: #f6f8fa;
@@ -56,7 +56,7 @@
 }
 
 .menu_link.active {
-  color:  var(--turquesa-oscuro);
+  color: var(--turquesa-oscuro);
   border-bottom: 2px solid var(--turquesa-oscuro);
 }
 
@@ -80,7 +80,7 @@
   padding-bottom: 20px;
 }
 
-.textalign{
+.textalign {
   padding-left: 10%;
   padding-right: 10%;
 }
@@ -101,23 +101,23 @@
 }
 /* ------------------------------------------------ */
 
-.footer{
+.footer {
   display: flex;
   justify-content: center;
   padding: 25px;
   background-color: var(--turquesa-medio);
 }
 
-.juntar{
+.juntar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap:25px;
+  gap: 25px;
   margin-bottom: 16px;
   justify-content: space-evenly;
 }
 
-.imgcarousel{
+.imgcarousel {
   height: auto; /* Cambia a auto para que la altura se ajuste proporcionalmente */
   max-width: 100%; /* Asegura que la imagen no se desborde del contenedor */
 }
@@ -146,7 +146,6 @@
     font-size: 1em; /* Ajusta el tamaño de fuente para móviles */
   }
 }
-
 
 /* Estilos para el botón de menú de hamburguesa */
 .hamburger-menu {
@@ -182,7 +181,6 @@
   transform: translateY(-11px) rotate(-45deg);
 }
 
-
 /* Media Query para pantallas más pequeñas (ej: tablets y móviles) */
 @media (max-width: 768px) {
   .topbar {
@@ -217,7 +215,9 @@
     flex-direction: column; /* Apila los ítems del menú verticalmente */
     justify-content: center; /* Centra los ítems verticalmente */
     align-items: center; /* Centra los ítems horizontalmente */
-    transform: translateX(100%); /* Inicialmente fuera de la pantalla (a la derecha) */
+    transform: translateX(
+      100%
+    ); /* Inicialmente fuera de la pantalla (a la derecha) */
     transition: transform 0.3s ease-in-out; /* Animación de deslizamiento */
     z-index: 99; /* Por debajo del botón de hamburguesa, por encima del contenido */
   }
@@ -247,7 +247,9 @@
   }
 
   .menu_link.active {
-    color: var(--turquesa-oscuro); /* Color del enlace activo en el menú móvil */
+    color: var(
+      --turquesa-oscuro
+    ); /* Color del enlace activo en el menú móvil */
   }
 
   .hamburger-menu {
@@ -273,8 +275,8 @@
 /*Estilos del FAQ*/
 /* Estilos generales para la sección de FAQ */
 .faq-section {
-  max-width: var(--max-width); 
-  margin: 2.5rem auto; 
+  max-width: var(--max-width);
+  margin: 2.5rem auto;
   padding: 2rem;
   background-color: #fff;
   border-radius: var(--radius);
@@ -298,7 +300,7 @@
 .faq-item {
   border: 1px solid var(--gris-medio);
   border-radius: var(--radius);
-  overflow: hidden; 
+  overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
 }
@@ -341,7 +343,9 @@
 }
 
 .faq-icon.open {
-  transform: rotate(180deg); /* Gira la flecha cuando la respuesta está abierta */
+  transform: rotate(
+    180deg
+  ); /* Gira la flecha cuando la respuesta está abierta */
 }
 
 /* Estilos para la respuesta */
@@ -417,29 +421,41 @@
   }
 
   /* Botón principal reutilizable */
-.btn-primary {
-  background: var(--turquesa-oscuro);
-  color: #fff;
-  border-radius: 6px;
-  padding: 8px 18px;
-  border: none;
-  font-weight: 600;
-  font-size: 1rem;
-  transition: background 0.2s, color 0.2s;
-  cursor: pointer;
-}
+  button {
+    background: var(--turquesa-oscuro);
+    color: #fff;
+    border-radius: 6px;
+    padding: 8px 18px;
+    border: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: background 1s, color 1s;
+    cursor: pointer;
+  }
 
-.btn-primary:hover,
-.btn-primary:focus {
-  background: var(--turquesa-claro);
-  color: #fff;
+  .button:hover,
+  .button:focus {
+    background: var(--turquesa-claro);
+    color: #fff;
+  }
 }
-}
-
+  button {
+    background: var(--turquesa-oscuro);
+    color: #fff;
+    border-radius: 6px;
+    padding: 8px 18px;
+    border: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: background 1s, color 1s;
+    cursor: pointer;
+  }
+  .button:hover,
+  .button:focus {
+    background: var(--turquesa-claro);
+    color: #fff;}
 /*CSS de blog*/
-.blog-post-card{
-
+.blog-post-card {
 }
-.blog-posts-cont{
-
+.blog-posts-cont {
 }
