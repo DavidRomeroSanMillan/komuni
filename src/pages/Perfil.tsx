@@ -61,6 +61,21 @@ const Perfil: React.FC = () => {
     navigate('/mapa');
   };
 
+  // Función para ver un reporte específico en el mapa
+  const handleViewOnMap = (reporte: any) => {
+    if (reporte.latitud && reporte.longitud) {
+      // Navegar al mapa con los parámetros de ubicación
+      navigate(`/mapa?lat=${reporte.latitud}&lng=${reporte.longitud}&reportId=${reporte.id}`);
+    } else {
+      // Si no tiene coordenadas, simplemente ir al mapa
+      navigate('/mapa');
+      setMessage({ 
+        type: 'error', 
+        text: 'Este reporte no tiene ubicación específica registrada.' 
+      });
+    }
+  };
+
   // Redirigir si no está autenticado
   if (!currentUser) {
     return <Navigate to="/login" replace />;
@@ -415,7 +430,12 @@ const Perfil: React.FC = () => {
                       <p><strong>Fecha:</strong> {new Date(reporte.fecha).toLocaleDateString()}</p>
                     </div>
                     <div className="reporte-actions">
-                      <button className="btn-link">Ver en mapa</button>
+                      <button 
+                        className="btn-link"
+                        onClick={() => handleViewOnMap(reporte)}
+                      >
+                        Ver en mapa
+                      </button>
                     </div>
                   </div>
                 ))}

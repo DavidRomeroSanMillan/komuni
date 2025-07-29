@@ -7,6 +7,7 @@ import {
   type ChangeEvent,
   type FormEvent,
 } from "react";
+import { useSearchParams } from "react-router-dom";
 import L, { Map, Marker, Icon } from "leaflet";
 import "leaflet/dist/leaflet.css";
 // Importa tu nuevo archivo CSS
@@ -129,6 +130,7 @@ async function getStreetName(lat: number, lng: number): Promise<string> {
 }
 
 export default function Mapa() {
+  const [searchParams] = useSearchParams();
   const mapRef = useRef<Map | null>(null);
   const markersRef = useRef<Marker[]>([]);
   const [reportes, setReportes] = useState<Reporte[]>([]); // Use the imported Reporte
@@ -324,6 +326,42 @@ export default function Mapa() {
       map.remove();
     };
   }, [onMapClick]); // Added onMapClick as a dependency
+
+  // Nuevo useEffect para manejar parámetros de URL (centrar en reporte específico)
+  useEffect(() => {
+    if (!mapRef.current) return;
+    
+    const lat = searchParams.get('lat');
+    const lng = searchParams.get('lng');
+    const reportId = searchParams.get('reportId');
+    
+    if (lat && lng) {
+      const latitude = parseFloat(lat);
+      const longitude = parseFloat(lng);
+      
+      if (!isNaN(latitude) && !isNaN(longitude)) {
+        // Centrar el mapa en la ubicación específica
+        mapRef.current.setView([latitude, longitude], 16);
+        
+        // Si hay un reportId, resaltar ese reporte específico
+        if (reportId) {
+          // Buscar el reporte específico y abrir su popup
+          setTimeout(() => {
+            const targetReport = reportes.find(rep => rep.id === reportId);
+            if (targetReport) {
+              // Encontrar el marcador correspondiente y abrir su popup
+              markersRef.current.forEach(marker => {
+                const markerLatLng = marker.getLatLng();
+                if (markerLatLng.lat === latitude && markerLatLng.lng === longitude) {
+                  marker.openPopup();
+                }
+              });
+            }
+          }, 500); // Pequeño delay para asegurar que los marcadores estén renderizados
+        }
+      }
+    }
+  }, [searchParams, reportes]); // Dependencias: searchParams y reportes
 
   useEffect(() => {
     if (!mapRef.current) return;
