@@ -1,15 +1,14 @@
 import { Link, NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
-import LoginButton from "../components/LoginButtonLocalStorage"; // Importa el LoginButton con localStorage
-
+import LoginButton from "../components/LoginButtonLocalStorage";
 
 function Header() {
   const [scrolled, setScrolled] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // Nuevo estado para el menú móvil
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => {
-      setScrolled(window.scrollY > 2); // Ajusta el umbral según sea necesario
+      setScrolled(window.scrollY > 2);
     };
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
@@ -19,12 +18,11 @@ function Header() {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  // Efecto para controlar el scroll del body cuando el menú está abierto
   useEffect(() => {
     if (isMenuOpen) {
-      document.body.style.overflow = "hidden"; // Evita el scroll del fondo
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "unset"; // Permite el scroll del fondo
+      document.body.style.overflow = "unset";
     }
   }, [isMenuOpen]);
 
@@ -37,42 +35,34 @@ function Header() {
         <div className="topbar">
           <h1 className="logo">
             <Link to="/" onClick={() => setIsMenuOpen(false)}>
-              {" "}
-              {/* Cierra el menú al hacer clic en el logo */}
               <img
-                className="logo-komuni"
                 src="/icons/barrier-icon.png"
-                alt="Logo de KOMUNI, con una imagen de una chincheta de mapa con una silla de ruedas en azul."
+                alt="Logo Komuni"
+                className="logo-komuni"
               />
             </Link>
           </h1>
-
-          {/* Botón de menú de hamburguesa para móvil */}
+          {/* Hamburger menu button */}
           <button
-            className="hamburger-menu"
+            className={`hamburger-menu ${isMenuOpen ? "open" : ""}`}
             onClick={toggleMenu}
-            aria-label="Toggle navigation menu"
+            aria-label="Toggle menu"
           >
-            <div className={`bar ${isMenuOpen ? "open" : ""}`}></div>
-            <div className={`bar ${isMenuOpen ? "open" : ""}`}></div>
-            <div className={`bar ${isMenuOpen ? "open" : ""}`}></div>
+            <span className={`bar ${isMenuOpen ? "open" : ""}`}></span>
+            <span className={`bar ${isMenuOpen ? "open" : ""}`}></span>
+            <span className={`bar ${isMenuOpen ? "open" : ""}`}></span>
           </button>
-
-          {/* La navegación principal. Se le añade una clase condicional para el estado del menú móvil */}
-          <nav className={`navi ${isMenuOpen ? "navi--open" : ""}`}>
-            <ul className={`menu ${isMenuOpen ? "menu--open" : ""}`}>
-              {" "}
-              {/* Se le añade una clase condicional para el estado del menú móvil */}
+          <nav className={`navi${isMenuOpen ? " navi--open" : ""}`}> {/* Changed 'active' to 'navi--open' for clarity with CSS */}
+            <ul className="menu">
               <li className="menu_item">
                 <NavLink
                   to="/"
-                  end
                   className={({ isActive }: { isActive: boolean }) =>
                     "menu_link" + (isActive ? " active" : "")
                   }
-                  onClick={() => setIsMenuOpen(false)} // Cierra el menú al hacer clic en el enlace
+                  onClick={() => setIsMenuOpen(false)}
                 >
-                  Komuni
+                  Home
                 </NavLink>
               </li>
               <li className="menu_item">
@@ -81,44 +71,59 @@ function Header() {
                   className={({ isActive }: { isActive: boolean }) =>
                     "menu_link" + (isActive ? " active" : "")
                   }
-                  onClick={() => setIsMenuOpen(false)} // Cierra el menú al hacer clic en el enlace
+                  onClick={() => setIsMenuOpen(false)}
                 >
-                  Mapa de accesibilidad
+                  Mapa
                 </NavLink>
-              </li>{" "}
+              </li>
               <li className="menu_item">
                 <NavLink
                   to="/blog"
                   className={({ isActive }: { isActive: boolean }) =>
                     "menu_link" + (isActive ? " active" : "")
                   }
-                  onClick={() => setIsMenuOpen(false)} // Cierra el menú al hacer clic en el enlace
+                  onClick={() => setIsMenuOpen(false)}
                 >
                   Blog
                 </NavLink>
               </li>
-              <li className="menu_item">
+
+              <li className="menu_item has-submenu">
                 <NavLink
                   to="/about"
                   className={({ isActive }: { isActive: boolean }) =>
                     "menu_link" + (isActive ? " active" : "")
                   }
-                  onClick={() => setIsMenuOpen(false)} // Cierra el menú al hacer clic en el enlace
-                >
-                  Sobre nosotros
-                </NavLink>
-              </li>
-              {/* <li className="menu_item">
-                <NavLink
-                  to="/contacto"
-                  className={({ isActive }: { isActive: boolean }) =>
-                    "menu_link" + (isActive ? " active" : "")
-                  }
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Contacto
+                  Sobre nosotros <span className="submenu-arrow">▼</span>
                 </NavLink>
-              </li> */}
+                <ul className="submenu">
+                  <li className="submenu_item">
+                    <NavLink
+                      to="/about"
+                      className={({ isActive }: { isActive: boolean }) =>
+                        "menu_link" + (isActive ? " active" : "")
+                      }
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Sobre KOMUNI
+                    </NavLink>
+                  </li>
+                  <li className="submenu_item">
+                    <NavLink
+                      to="/about/mision-vision-valores"
+                      className={({ isActive }: { isActive: boolean }) =>
+                        "menu_link" + (isActive ? " active" : "")
+                      }
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Misión, Visión y Valores
+                    </NavLink>
+                  </li>
+                </ul>
+              </li>
+
               <li className="menu_item">
                 <LoginButton />
               </li>

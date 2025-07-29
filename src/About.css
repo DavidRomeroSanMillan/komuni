@@ -1,8 +1,7 @@
 
 .about-container {
-  padding: 1rem var(--page-horizontal-padding); /* <-- Cambiado: 1rem arriba/abajo, variable a izquierda/derecha */
-  max-width: var(--max-width); /* <-- Cambiado: Usa el max-width global */
-  margin: 0 auto;
+  max-width: var(--max-width); 
+  margin: 0 auto; /* Centra el contenedor horizontalmente */
   font-family: Arial, sans-serif;
   color: #333;
   font-weight: bold;

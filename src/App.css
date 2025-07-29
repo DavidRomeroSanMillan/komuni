@@ -23,10 +23,14 @@
   max-width: var(--max-width);
   margin: 0 auto;
 }
-
+.page-content-wrapper {
+  max-width: var(--max-width); /* Limita el ancho al máximo global */
+  margin: 0 auto; /* Centra el contenedor en la página */
+  padding: 2rem var(--content-horizontal-padding); /* Padding vertical y horizontal consistente */
+}
 .logo {
   /* position: absolute; */
-  left: 21%;
+  /* left: 21%; */
   /* transform: translateX(-50%); */
   margin: 0;
 }
@@ -636,4 +640,81 @@ body.high-contrast .komuni-quote-text {
 }
 .img-card {
   max-width: 450px;
+}
+/* App.css (o Header.css) */
+
+/* Estilos para el elemento padre del submenú */
+.menu_item.has-submenu {
+  position: relative; /* Crucial para posicionar el submenú absolutamente */
+}
+
+/* Estilos del submenú (oculto por defecto) */
+.submenu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  top: 100%; /* Coloca el submenú justo debajo del enlace padre */
+  left: 0;
+  background-color: var(--turquesa-medio); /* Color de fondo del submenú */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para darle profundidad */
+  min-width: 200px; /* Ancho mínimo del submenú */
+  z-index: 1000; /* Asegura que el submenú aparezca por encima de otros elementos */
+  display: none; /* Oculto por defecto */
+  flex-direction: column; /* Apila los elementos del submenú verticalmente */
+  border-radius: var(--radius); /* Borde redondeado consistente */
+  overflow: hidden; /* Importante para que los bordes redondeados se apliquen bien a los elementos internos */
+}
+
+/* Estilos para los elementos individuales del submenú */
+.submenu_item {
+  margin: 0;
+  padding: 0;
+}
+
+.submenu_item .menu_link {
+  padding: 0.8rem 1.2rem; /* Espaciado interno para los enlaces del submenú */
+  display: block; /* Hace que toda el área del elemento sea clicable */
+  white-space: nowrap; /* Evita que el texto se envuelva en varias líneas */
+  color: #ecf0f1; /* Color del texto de los enlaces del submenú */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.submenu_item .menu_link:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Efecto sutil al pasar el ratón */
+  color: white;
+}
+
+/* Mostrar el submenú al pasar el ratón por el elemento padre */
+.menu_item.has-submenu:hover > .submenu {
+  display: flex; /* Muestra el submenú al hacer hover sobre el elemento padre */
+}
+
+/* Estilos opcionales para la flecha del submenú */
+.submenu-arrow {
+  margin-left: 0.5rem;
+  font-size: 0.7em;
+  transition: transform 0.2s ease;
+}
+
+.menu_item.has-submenu:hover .submenu-arrow {
+  transform: rotate(180deg); /* Rota la flecha al hacer hover */
+}
+
+/* Ajustes para dispositivos móviles (dentro de tu media query existente para 768px) */
+@media (max-width: 768px) {
+  /* ... tus otros estilos de menú móvil ... */
+
+  .menu_item.has-submenu .submenu {
+    position: static; /* En móviles, el submenú se apila normalmente, no es absoluto */
+    box-shadow: none;
+    background-color: transparent; /* Sin fondo en el menú móvil */
+    width: 100%;
+    padding-left: 1.5rem; /* Indenta los elementos del submenú en móvil */
+    border-left: none;
+  }
+
+  /* Si quieres que el submenú se vea en móvil, el "display: flex" es controlado por el estado 'isMenuOpen' del navi */
+  /* El 'onClick' del NavLink padre en Header.tsx ya maneja el cierre del menú completo,
+     lo que es una aproximación sencilla para móvil. */
 }

@@ -2,13 +2,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import blogPosts, { type BlogPost } from '../src/data/blogPosts';
-import './Blog.css'; // Importa tu nuevo archivo CSS
+import './Blog.css'; 
 
 const Blog: React.FC = () => {
   return (
-    <section className="blog-page-section"> {/* Aplica la clase aquí */}
+    <section className="blog-page-section"> {/* Changed class from page-content-wrapper */}
       <h1>Nuestro Blog</h1>
-      <p className="blog-intro-text"> {/* Aplica la clase aquí */}
+      <p style={{ fontSize: "1.2rem", color: "#20706e", marginBottom: 32 }}> 
         Aquí encontrarás las últimas noticias, artículos y actualizaciones sobre accesibilidad y nuestra comunidad.
       </p>
 
@@ -16,13 +16,13 @@ const Blog: React.FC = () => {
         {blogPosts.map((post: BlogPost) => (
           <div
             key={post.id}
-            className="blog-post-card" // La clase ya existía, ahora sus estilos están en CSS
+            className="blog-post-card" 
           >
             {post.imageUrl && (
               <img
                 src={post.imageUrl}
                 alt={post.title}
-                className="blog-post-card-image" // Aplica la clase aquí
+                className="blog-post-card-image" 
               />
             )}
             <div>

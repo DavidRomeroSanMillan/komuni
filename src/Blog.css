@@ -1,19 +1,16 @@
-/* Blog.css */
-
 /* Estilos para la sección principal del blog */
 .blog-page-section {
-  padding: 2rem var(--page-horizontal-padding); /* <-- Cambiado: 2rem arriba/abajo, variable a izquierda/derecha */
-  max-width: var(--max-width); /* <-- Cambiado: Usa el max-width global */
-  margin: 0 auto; /* Centra la sección en la página */
+  padding: 2rem; 
+  max-width: var(--max-width); 
+  margin: 0 auto;
 }
 
 /* Estilos para el título principal del blog */
 .blog-page-section h1 {
-  margin-top: 0; /* Asegura que no haya un margen superior extra si no lo deseas */
+  margin-top: 0; 
   margin-bottom: 1.5rem;
 }
 
-/* Estilos para el texto introductorio */
 .blog-intro-text {
   font-size: 1.1rem;
   color: #555;
@@ -21,7 +18,6 @@
 }
 
 
-/* Estilos para cada tarjeta de post individual */
 .blog-post-card {
   margin-bottom: 1.5rem;
   padding: 1.2rem;
@@ -31,29 +27,29 @@
   display: flex;
   gap: 1rem;
   align-items: flex-start;
-  background-color: #fff; /* Fondo blanco para las tarjetas */
+  background-color: #fff; 
 }
 
 /* Estilos para la imagen del post */
 .blog-post-card-image {
   width: 120px;
-  height: auto; /* Altura automática para mantener la proporción */
+  height: auto; 
   border-radius: 4px;
-  object-fit: cover; /* Asegura que la imagen cubra el área sin distorsionarse */
+  object-fit: cover; 
 }
 
 /* Estilos para el título del post dentro de la tarjeta */
 .blog-post-card h2 {
   margin-top: 0;
-  color: #2aa198; /* Color principal de KOMUNI */
-  font-size: 1.25rem; /* Tamaño de fuente ligeramente más grande para los títulos */
+  color: #2aa198;
+  font-size: 1.25rem;
 }
 
 /* Estilos para la fecha y autor del post */
 .blog-post-date-author {
   font-size: 0.9rem;
   color: #777;
-  margin-bottom: 0.8rem; /* Espacio debajo de la fecha/autor */
+  margin-bottom: 0.8rem; 
 }
 
 /* Estilos para el enlace "Leer más" */
@@ -69,16 +65,62 @@
   text-decoration: underline;
 }
 
-/* Media queries para responsividad (opcional) */
-@media (max-width: 600px) {
+/* Responsive adjustments for Blog.css */
+@media (max-width: 768px) {
+  .blog-page-section {
+    /* Increased horizontal padding for better "margins" on smaller screens */
+    padding: 1.5rem; 
+  }
+
+  .blog-page-section h1 {
+    font-size: 2em; /* Adjust title size */
+    margin-bottom: 1rem;
+  }
+
+  .blog-intro-text {
+    font-size: 1rem; /* Adjust font size */
+    margin-bottom: 1.5rem;
+  }
+
   .blog-post-card {
-    flex-direction: column; /* Apila la imagen y el texto en pantallas pequeñas */
-    align-items: center; /* Centra el contenido apilado */
-    text-align: center;
+    flex-direction: column; /* Stack image and text vertically */
+    align-items: center; /* Center content when stacked */
+    text-align: center; /* Center text within the card */
+    padding: 1rem; /* Adjust padding */
+    gap: 0.8rem; /* Reduce gap */
   }
   .blog-post-card-image {
-    width: 100%; /* La imagen ocupa todo el ancho */
-    max-width: 200px; /* Limita el tamaño de la imagen */
-    margin-bottom: 0.8rem;
+    width: 80%; /* Make image wider on small screens */
+    max-width: 250px; /* Limit max width of image */
+    margin-bottom: 0.5rem; /* Add some space below the image */
+  }
+  .blog-post-card h2 {
+    font-size: 1.15rem; /* Adjust title size */
+  }
+  .blog-post-date-author {
+    font-size: 0.85rem; /* Adjust date/author font size */
+  }
+  .blog-post-read-more {
+    font-size: 0.9rem; /* Adjust read more link font size */
+  }
+}
+
+@media (max-width: 480px) {
+  .blog-page-section {
+    /* Further increased horizontal padding for very small screens */
+    padding: 1rem 1.5rem; /* Adjusted: Increased horizontal padding to 1.5rem for better margins */
+  }
+  .blog-post-card {
+    padding: 0.8rem;
+  }
+  .blog-post-card-image {
+    width: 90%;
+    max-width: 200px;
+  }
+  .blog-post-card h2 {
+    font-size: 1rem;
+  }
+  .blog-post-date-author {
+    font-size: 0.8rem;
   }
 }

@@ -19,6 +19,7 @@ import "./About.css"
 import "./Footer.css";
 import "./Mapa.css";
 import "./Blog.css"
+import MVS from "./MVS";
 function App() {
   return (
     <AuthProvider>
@@ -26,6 +27,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="about" element={<About />} />
+          <Route path="about/mision-vision-valores" element={<MVS />} />
           <Route path="mapa" element={<Mapa />} />
           <Route path="privacidad" element={<Privacidad />} />
           <Route path="contacto" element={<ContactPage />} />

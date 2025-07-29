@@ -4,7 +4,7 @@ const About = () => {
   const { equipo } = useEquipo();
 
   return (
-    <div className="about-container"> {/* Add a class for overall styling */}
+    <div className="page-content-wrapper"> {/* Add a class for overall styling */}
       <h1 className="about-title">Sobre nuestro equipo</h1> {/* Add a class for the title */}
       <br />
       <div className="team-cards-container"> {/* Add a class for the team cards container */}

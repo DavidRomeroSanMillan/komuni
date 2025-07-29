@@ -122,6 +122,7 @@
     width: 100%; /* Ocupa todo el ancho disponible */
     text-align: center; /* Centra el texto en las secciones */
     padding: 1rem 0; /* Ajusta el padding */
+    min-width: unset; /* Remove min-width to allow full width */
   }
 
   .scroll_to_top_button {
@@ -136,7 +137,34 @@
     flex-direction: column;
     align-items: center;
   }
+  
+  .menu_link {
+    font-size: 1rem; /* Slightly larger font for better readability on mobile */
+  }
 }
+
+@media (max-width: 480px) {
+  .footer {
+    padding: 2rem 1rem; /* Adjust overall footer padding */
+  }
+  
+  .footer_section h4 {
+    font-size: 1rem; /* Adjust heading size */
+  }
+
+  .menu_link {
+    font-size: 0.95rem; /* Further adjust font size for very small screens */
+  }
+
+  .email_info {
+    font-size: 0.9rem;
+  }
+
+  .social_links a {
+    font-size: 1.3rem; /* Adjust social icon size */
+  }
+}
+
 .contact_list {
   list-style: none; /* Quita los puntos de la lista */
   padding: 0; /* Quita el padding por defecto de la UL */
