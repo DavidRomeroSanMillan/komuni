@@ -1,6 +1,6 @@
 // api.ts
 
-import { db, storage, auth } from '../src/firebaseConfig';
+import { db, storage } from '../src/firebaseConfig'; // Temporarily removed auth to avoid config errors
 import {
   ref as dbRef,
   push,
@@ -55,18 +55,18 @@ export async function sendReporte(data: SendReportData): Promise<Reporte> {
       imageUrl = await getDownloadURL(snapshot.ref);
     }
 
-    // Obtener información del usuario autenticado
-    const currentUser = auth.currentUser;
+    // Obtener información del usuario autenticado - Temporarily disabled
+    // const currentUser = auth.currentUser;
     
     // Si no hay usuario de Firebase Auth, intentar obtener desde localStorage
     let userInfo = {
-      uid: currentUser?.uid || null,
-      email: currentUser?.email || null,
-      displayName: currentUser?.displayName || null
+      uid: null, // currentUser?.uid || null,
+      email: null, // currentUser?.email || null,
+      displayName: null // currentUser?.displayName || null
     };
 
     // Si no hay datos de Firebase Auth, obtener desde localStorage
-    if (!currentUser) {
+    // if (!currentUser) {
       const loggedEmail = localStorage.getItem('loggedUser');
       if (loggedEmail) {
         const users = JSON.parse(localStorage.getItem('users') || '[]');
@@ -79,7 +79,7 @@ export async function sendReporte(data: SendReportData): Promise<Reporte> {
           };
         }
       }
-    }
+    // }
 
     const docData: RealtimeReportPayload = {
       calle: data.calle,

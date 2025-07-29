@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { auth } from '../firebaseConfig';
-import { signInAnonymously, updateProfile } from 'firebase/auth';
+// import { auth } from '../firebaseConfig'; // Temporarily disabled to avoid config errors
+// import { signInAnonymously, updateProfile } from 'firebase/auth'; // Commented out for now
 import type { ReactNode } from 'react';
 
 export interface UserProfile {
@@ -337,35 +337,36 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   // Sincronizar Firebase Auth cuando hay localStorage user
   useEffect(() => {
-    const syncFirebaseAuth = async () => {
-      if (currentUser && userProfile) {
-        try {
-          // Solo sincronizar si no hay usuario de Firebase Auth
-          if (!auth.currentUser) {
-            const userCredential = await signInAnonymously(auth);
-            
-            // Actualizar el perfil con información del localStorage
-            await updateProfile(userCredential.user, {
-              displayName: userProfile.nombre || 'Usuario'
-            });
-            
-            console.log('Usuario Firebase Auth sincronizado para reportes');
-          }
-        } catch (error) {
-          console.warn('Error al sincronizar con Firebase Auth:', error);
-        }
-      }
-    };
+    // Commented out Firebase Auth sync to avoid authentication errors
+    // const syncFirebaseAuth = async () => {
+    //   if (currentUser && userProfile) {
+    //     try {
+    //       // Solo sincronizar si no hay usuario de Firebase Auth
+    //       if (!auth.currentUser) {
+    //         const userCredential = await signInAnonymously(auth);
+    //         
+    //         // Actualizar el perfil con información del localStorage
+    //         await updateProfile(userCredential.user, {
+    //           displayName: userProfile.nombre || 'Usuario'
+    //         });
+    //         
+    //         console.log('Usuario Firebase Auth sincronizado para reportes');
+    //       }
+    //     } catch (error) {
+    //       console.warn('Error al sincronizar con Firebase Auth:', error);
+    //     }
+    //   }
+    // };
 
-    syncFirebaseAuth();
+    // syncFirebaseAuth();
   }, [currentUser, userProfile]);
 
-  // Limpiar Firebase Auth cuando se hace logout
-  useEffect(() => {
-    if (!currentUser && auth.currentUser) {
-      auth.signOut().catch(console.warn);
-    }
-  }, [currentUser]);
+  // Limpiar Firebase Auth cuando se hace logout - Temporarily disabled
+  // useEffect(() => {
+  //   if (!currentUser && auth.currentUser) {
+  //     auth.signOut().catch(console.warn);
+  //   }
+  // }, [currentUser]);
 
   // Exponer addReportToUser globalmente para que api.ts pueda usarlo
   useEffect(() => {

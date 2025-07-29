@@ -1,11 +1,8 @@
 import { initializeApp } from 'firebase/app';
 import { getDatabase } from "firebase/database";
 import { getFirestore } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
+// import { getAuth } from 'firebase/auth'; // Temporarily commented out to avoid config errors
 import { getStorage } from 'firebase/storage';
-
-
-//npm i fireabase
 
 const firebaseConfig = {
   apiKey: "AIzaSyDY4x8s6HJO5O8zfR5oeJRjW8iy9mJakHo",
@@ -22,9 +19,11 @@ const app = initializeApp(firebaseConfig);
 
 const db = getDatabase(app);
 const firestore = getFirestore(app);
-const auth = getAuth(app);
 const storage = getStorage(app);
 
-export { app, db, firestore, auth, storage };
+// Temporarily disable auth export to avoid configuration errors
+// const auth = getAuth(app);
+
+export { app, db, firestore, storage };
 
 
