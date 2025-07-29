@@ -1,15 +1,15 @@
 
 .about-container {
-  padding: 2rem; 
+  padding: 1rem; 
   max-width: 1200px; 
   margin: 0 auto; 
   font-family: Arial, sans-serif; 
   color: #333; 
+  font-weight: bold;
 }
 
 .about-title {
   text-align: center;
-  color: var(--turquesa-claro); 
   margin-bottom: 2rem;
   font-size: 2.5rem; 
   font-weight: bold;
