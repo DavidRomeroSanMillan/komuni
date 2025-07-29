@@ -260,7 +260,7 @@ const Perfil: React.FC = () => {
             </div>
           </div>
           <div className="user-info">
-            <h1>{userProfile.nombre} {userProfile.apellidos}</h1>
+            <h1 className='nombre-principal'>{userProfile.nombre} {userProfile.apellidos}</h1>
             <p className="email">{userProfile.email}</p>
             {!currentUser.emailVerified && (
               <div className="verification-warning">
