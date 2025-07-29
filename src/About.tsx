@@ -5,7 +5,7 @@ const About = () => {
 
   return (
     <div className="page-content-wrapper"> {/* Add a class for overall styling */}
-      <h1 className="about-title">Sobre nuestro equipo</h1> {/* Add a class for the title */}
+      <h1>Sobre nuestro equipo</h1> {/* Add a class for the title */}
       <br />
       <div className="team-cards-container"> {/* Add a class for the team cards container */}
         {equipo.map((member) => (

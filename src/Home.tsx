@@ -4,7 +4,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 const Home = () => {
   return (
-    <section className="textalign">
+    <section className="page-content-wrapper">
       <h1>Bienvenido a Komuni</h1>
       <p style={{ fontSize: "1.2rem", color: "#20706e", marginBottom: 32 }}>
         Plataforma global para reportar barreras urbanas, mejorar la

@@ -6,7 +6,7 @@ import './Blog.css';
 
 const Blog: React.FC = () => {
   return (
-    <section className="blog-page-section"> {/* Changed class from page-content-wrapper */}
+    <section className="page-content-wrapper"> 
       <h1>Nuestro Blog</h1>
       <p style={{ fontSize: "1.2rem", color: "#20706e", marginBottom: 32 }}> 
         Aquí encontrarás las últimas noticias, artículos y actualizaciones sobre accesibilidad y nuestra comunidad.

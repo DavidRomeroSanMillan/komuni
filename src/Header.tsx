@@ -124,7 +124,7 @@ function Header() {
                 </ul>
               </li>
 
-              <li className="menu_item">
+              <li className="menu_item login-button-container"> {/* Add this new class */}
                 <LoginButton />
               </li>
             </ul>

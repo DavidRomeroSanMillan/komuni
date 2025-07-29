@@ -307,7 +307,7 @@ const Perfil: React.FC = () => {
                   Editar
                 </button>
               ) : (
-                <div className="edit-buttons" style={{ display: 'flex', gap: '10px' }}>
+                <div className="edit-buttons">
                   <button 
                     onClick={handleSave}
                     className="btn-primary"

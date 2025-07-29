@@ -24,14 +24,11 @@
   margin: 0 auto;
 }
 .page-content-wrapper {
-  max-width: var(--max-width); /* Limita el ancho al máximo global */
-  margin: 0 auto; /* Centra el contenedor en la página */
-  padding: 2rem var(--content-horizontal-padding); /* Padding vertical y horizontal consistente */
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 2rem var(--content-horizontal-padding); /* This variable is not defined anywhere in the provided CSS. If it's intended to be var(--page-horizontal-padding), it should be updated. */
 }
 .logo {
-  /* position: absolute; */
-  /* left: 21%; */
-  /* transform: translateX(-50%); */
   margin: 0;
 }
 
@@ -69,7 +66,7 @@
 .header {
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 100; /* This z-index is overridden later by z-index: 4000; Consider keeping only one. */
   background: var(--turquesa-medio);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
   min-height: var(--header-height);
@@ -124,7 +121,7 @@
 }
 
 .imgcarousel {
-  max-width: 100%; /* Asegura que la imagen no se desborde del contenedor */
+  max-width: 100%;
 }
 
 .komuni-quote-container {
@@ -147,13 +144,13 @@
     margin-top: 1.5rem;
   }
   .komuni-quote-text {
-    font-size: 1em; /* Ajusta el tamaño de fuente para móviles */
+    font-size: 1em;
   }
 }
 
 /* Estilos para el botón de menú de hamburguesa */
 .hamburger-menu {
-  display: none; /* Oculto por defecto en escritorio */
+  display: none;
   flex-direction: column;
   justify-content: space-around;
   width: 30px;
@@ -162,16 +159,16 @@
   border: none;
   cursor: pointer;
   padding: 0;
-  z-index: 101; /* Asegura que esté por encima de otros elementos del header */
-  position: relative; /* Necesario para la animación de las barras */
+  z-index: 101;
+  position: relative;
 }
 
 .hamburger-menu .bar {
   width: 100%;
   height: 3px;
-  background-color: var(--texto-principal); /* O un color que contraste bien */
+  background-color: var(--texto-principal);
   border-radius: 5px;
-  transition: all 0.3s ease-in-out; /* Transición suave para las barras */
+  transition: all 0.3s ease-in-out;
 }
 
 /* Animación de las barras del icono de hamburguesa cuando está "open" */
@@ -188,76 +185,78 @@
 /* Media Query para pantallas más pequeñas (ej: tablets y móviles) */
 @media (max-width: 768px) {
   .topbar {
-    height: auto; /* Permite que la altura del topbar se ajuste dinámicamente */
-    flex-wrap: wrap; /* Permite que los elementos se envuelvan si no caben */
-    justify-content: space-between; /* Espacia los elementos */
-    padding: 1rem; /* Ajusta el padding para móviles */
+    height: auto;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 1rem;
   }
 
   .logo {
-    position: static; /* Elimina el posicionamiento absoluto */
-    transform: none; /* Elimina la transformación */
+    position: static;
+    transform: none;
     left: auto;
-    width: auto; /* Permite que el logo tome su ancho natural */
-    margin-right: auto; /* Empuja el logo a la izquierda, y el menú a la derecha */
+    width: auto;
+    margin-right: auto;
     display: flex;
     align-items: center;
   }
 
   .logo-komuni {
-    max-height: 60px; /* Tamaño más pequeño del logo en móviles */
+    max-height: 60px;
   }
 
   .navi {
-    display: none; /* Oculta la navegación estándar en móviles */
-    position: fixed; /* Posiciona la navegación fija cuando está abierta */
+    display: none;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100vh; /* Ocupa toda la altura de la ventana */
-    background: var(--turquesa-medio); /* Color de fondo para el menú móvil */
-    flex-direction: column; /* Apila los ítems del menú verticalmente */
-    justify-content: center; /* Centra los ítems verticalmente */
-    align-items: center; /* Centra los ítems horizontalmente */
-    transform: translateX(
-      100%
-    ); /* Inicialmente fuera de la pantalla (a la derecha) */
-    transition: transform 0.3s ease-in-out; /* Animación de deslizamiento */
-    z-index: 99; /* Por debajo del botón de hamburguesa, por encima del contenido */
+    height: 100vh;
+    background: var(--turquesa-medio);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 99;
   }
 
   .navi--open {
-    display: flex; /* Muestra la navegación cuando está abierta */
-    transform: translateX(0); /* Desliza la navegación a la vista */
+    display: flex;
+    transform: translateX(0);
   }
 
   .menu {
-    flex-direction: column; /* Apila los ítems del menú verticalmente */
-    padding: 0; /* Elimina el padding de la lista */
-    width: 100%; /* Ocupa todo el ancho disponible */
+    flex-direction: column;
+    padding: 0;
+    width: 100%;
     text-align: center;
+    display: flex;
   }
 
   .menu_item {
-    margin: 1rem 0; /* Añade espaciado vertical entre los ítems del menú */
+    margin: 1rem 0;
     width: 100%;
   }
-
+  .navi--open .menu .menu_item.login-button-container {
+    order: -1;
+    margin-bottom: 2rem;
+    text-align: left;
+    padding-left: 2rem;
+  }
   .menu_link {
-    font-size: 1.5rem; /* Tamaño de fuente más grande para enlaces móviles */
-    display: block; /* Hace que los enlaces ocupen todo el ancho para facilitar el clic */
+    font-size: 1.5rem;
+    display: block;
     padding: 0.5rem 0;
-    color: #fff; /* Color blanco para los enlaces en el fondo turquesa */
+    color: #fff;
   }
 
   .menu_link.active {
-    color: var(
-      --turquesa-oscuro
-    ); /* Color del enlace activo en el menú móvil */
+    color: var(--turquesa-oscuro);
   }
 
   .hamburger-menu {
-    display: flex; /* Muestra el botón de hamburguesa en móviles */
+    display: flex;
   }
 }
 
@@ -268,11 +267,11 @@
   }
 
   .logo-komuni {
-    max-height: 50px; /* Logo aún más pequeño en pantallas muy pequeñas */
+    max-height: 50px;
   }
 
   .menu_link {
-    font-size: 1.3rem; /* Ajusta el tamaño de fuente para pantallas más pequeñas */
+    font-size: 1.3rem;
   }
 }
 
@@ -297,7 +296,7 @@
 .faq-list {
   display: flex;
   flex-direction: column;
-  gap: 1rem; /* Espacio entre cada pregunta */
+  gap: 1rem;
 }
 
 /* Estilos para cada item de FAQ */
@@ -347,9 +346,7 @@
 }
 
 .faq-icon.open {
-  transform: rotate(
-    180deg
-  ); /* Gira la flecha cuando la respuesta está abierta */
+  transform: rotate(180deg);
 }
 
 /* Estilos para la respuesta */
@@ -424,7 +421,11 @@
     font-size: 0.9rem;
   }
 
-  /* Botón principal reutilizable */
+  /*
+  * This button style is duplicated below. It can be removed from here
+  * and rely on the global button style definition.
+  */
+  /*
   button {
     background: var(--turquesa-oscuro);
     color: #fff;
@@ -442,6 +443,7 @@
     background: var(--turquesa-claro);
     color: #fff;
   }
+  */
 }
 button {
   background: var(--turquesa-oscuro);
@@ -460,16 +462,12 @@ button {
   color: #fff;
 }
 /*CSS de blog*/
-/* .blog-post-card {
-}
-.blog-posts-cont {
-} */
 .blog-post-card h3 {
-  font-size: 1.5rem; /* Usar rem en lugar de px */
+  font-size: 1.5rem;
 }
 
 .blog-post-card p {
-  font-size: 1rem; /* Usar rem en lugar de px */
+  font-size: 1rem;
 }
 
 /* Estilos para el botón de accesibilidad y el menú */
@@ -477,7 +475,7 @@ button {
   position: fixed;
   bottom: 2rem;
   right: 2rem;
-  z-index: 5000; /* Asegura que esté por encima de todos los demás elementos */
+  z-index: 5000;
 }
 
 .accessibility-button {
@@ -501,7 +499,7 @@ button {
 }
 
 .accessibility-menu {
-  display: none; /* Oculto por defecto */
+  display: none;
   position: absolute;
   bottom: 60px;
   right: 0;
@@ -514,22 +512,17 @@ button {
   width: 200px;
 }
 .acceso-icon {
-  /* Tamaño del icono */
   width: 25px;
   height: 25px;
-
-  /* Asegura que la imagen no se deforme y ocupe el espacio */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-
-  /* Centra la imagen dentro del botón circular */
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .accessibility-menu.open {
-  display: flex; /* Se muestra cuando tiene la clase 'open' */
+  display: flex;
 }
 
 .acceso-option {
@@ -547,14 +540,63 @@ button {
 .acceso-option:hover {
   background-color: var(--gris-medio);
 }
+@media (max-width: 768px) {
+  .accessibility-container {
+    bottom: 1rem;
+    right: 1rem;
+  }
 
+  .accessibility-button {
+    width: 45px;
+    height: 45px;
+    font-size: 1.3rem;
+  }
+
+  .accessibility-menu {
+    bottom: 55px;
+    right: 0;
+    width: 180px;
+    padding: 0.8rem;
+    left: auto;
+  }
+
+  .acceso-option {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .accessibility-container {
+    bottom: 0.8rem;
+    right: 0.8rem;
+  }
+
+  .accessibility-button {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+
+  .accessibility-menu {
+    bottom: 50px;
+    right: 0;
+    width: 160px;
+    padding: 0.7rem;
+  }
+
+  .acceso-option {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.85rem;
+  }
+}
 /* Clases para los cambios de accesibilidad */
 body.large-text {
-  font-size: 1.25rem; /* O el tamaño que prefieras */
+  font-size: 1.25rem;
 }
 
 .large-text h1 {
-  font-size: calc(2em * 1.2); /* Aumenta los títulos también */
+  font-size: calc(2em * 1.2);
 }
 
 .large-text h2 {
@@ -578,7 +620,7 @@ body.high-contrast h6 {
 
 body.high-contrast a,
 body.high-contrast .menu_link {
-  color: #ffff00 !important; /* Enlaces en amarillo para alto contraste */
+  color: #ffff00 !important;
 }
 
 body.high-contrast .header,
@@ -590,19 +632,26 @@ body.high-contrast .footer {
 body.high-contrast .faq-item,
 body.high-contrast .faq-question,
 body.high-contrast .faq-answer,
-body.high-contrast .blog-post-card, /* Selecciona la tarjeta del blog */
-body.high-contrast .acceso-option, /* Opciones del menú de accesibilidad */
-body.high-contrast button ,
-body.high-contrast .komuni-quote-container, /* Contenedor de la cita del footer */
-body.high-contrast .komuni-quote-text,
-body.high-contrast .blog-post-card a, /* Enlaces dentro de las tarjetas */
-body.high-contrast .blog-post-card h3, /* Títulos dentro de las tarjetas */
-body.high-contrast .komuni-quote-container, /* Contenedor de la cita del footer */
+body.high-contrast .blog-post-card,
+body.high-contrast .acceso-option,
+body.high-contrast button,
+body.high-contrast .komuni-quote-container, /* Redundant with the next line */
+body.high-contrast .komuni-quote-text, /* Redundant with the next line */
+body.high-contrast .blog-post-card a,
+body.high-contrast .blog-post-card h3 {
+  background-color: #333 !important;
+  color: #fff !important;
+  border: 1px solid #fff !important;
+}
+/* The following two rules can be removed as they are covered by the combined rule above */
+/*
+body.high-contrast .komuni-quote-container,
 body.high-contrast .komuni-quote-text {
   background-color: #333 !important;
   color: #fff !important;
   border: 1px solid #fff !important;
 }
+*/
 body.high-contrast .faq-question:hover,
 body.high-contrast .acceso-option:hover {
   background-color: #222 !important;
@@ -615,22 +664,22 @@ body.high-contrast .blog-post-card h3 {
   color: #fff !important;
 }
 body.high-contrast .komuni-quote-container {
-  background-color: #000 !important; /* Fondo negro */
-  border: 2px solid #fff !important; /* Borde blanco para contraste */
+  background-color: #000 !important;
+  border: 2px solid #fff !important;
 }
 
 body.high-contrast .komuni-quote-text {
-  color: #ffff00 !important; /* Texto en amarillo para alto contraste */
-  background: none !important; /* Elimina cualquier fondo degradado */
+  color: #ffff00 !important;
+  background: none !important;
 }
 
 @media (max-width: 768px) {
   body.large-text {
-    font-size: 1.3rem; /* Letra aún más grande en móviles para mejor legibilidad */
+    font-size: 1.3rem;
   }
 
   .blog-post-card p {
-    font-size: 1.1rem; /* Tamaño de fuente base para párrafos del blog en móvil */
+    font-size: 1.1rem;
   }
 
   body.large-text .blog-post-card p {
@@ -644,25 +693,27 @@ body.high-contrast .komuni-quote-text {
 }
 
 .menu_item.has-submenu {
-  position: relative; /* Crucial para posicionar el submenú absolutamente */
+  position: relative;
 }
-
+.page-content-wrapper {
+  padding: 1.5rem 1rem;
+}
 /* Estilos del submenú (oculto por defecto) */
 .submenu {
   list-style: none;
   padding: 0;
   margin: 0;
   position: absolute;
-  top: 100%; /* Coloca el submenú justo debajo del enlace padre */
+  top: 100%;
   left: 0;
-  background-color: var(--turquesa-claro); /* Color de fondo del submenú */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para darle profundidad */
-  min-width: 200px; /* Ancho mínimo del submenú */
-  z-index: 1000; /* Asegura que el submenú aparezca por encima de otros elementos */
-  display: none; /* Oculto por defecto */
-  flex-direction: column; /* Apila los elementos del submenú verticalmente */
-  border-radius: var(--radius); /* Borde redondeado consistente */
-  overflow: hidden; /* Importante para que los bordes redondeados se apliquen bien a los elementos internos */
+  background-color: var(--turquesa-claro);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  min-width: 200px;
+  z-index: 1000;
+  display: none;
+  flex-direction: column;
+  border-radius: var(--radius);
+  overflow: hidden;
 }
 
 /* Estilos para los elementos individuales del submenú */
@@ -672,26 +723,21 @@ body.high-contrast .komuni-quote-text {
 }
 
 .submenu_item .menu_link {
-  padding: 0.8rem 1.2rem; /* Espaciado interno para los enlaces del submenú */
-  display: block; /* Hace que toda el área del elemento sea clicable */
-  white-space: nowrap; /* Evita que el texto se envuelva en varias líneas */
-  color: #ecf0f1; /* Color del texto de los enlaces del submenú */
+  padding: 0.8rem 1.2rem;
+  display: block;
+  white-space: nowrap;
+  color: #ecf0f1;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .submenu_item .menu_link:hover {
-  background-color: rgba(
-    255,
-    255,
-    255,
-    0.1
-  ); /* Efecto sutil al pasar el ratón */
+  background-color: rgba(255, 255, 255, 0.1);
   color: white;
 }
 
 /* Mostrar el submenú al pasar el ratón por el elemento padre */
 .menu_item.has-submenu:hover > .submenu {
-  display: flex; /* Muestra el submenú al hacer hover sobre el elemento padre */
+  display: flex;
 }
 
 /* Estilos opcionales para la flecha del submenú */
@@ -702,19 +748,16 @@ body.high-contrast .komuni-quote-text {
 }
 
 .menu_item.has-submenu:hover .submenu-arrow {
-  transform: rotate(180deg); /* Rota la flecha al hacer hover */
+  transform: rotate(180deg);
 }
 
-/* Ajustes para dispositivos móviles (dentro de tu media query existente para 768px) */
 @media (max-width: 768px) {
-  /* ... tus otros estilos de menú móvil ... */
-
   .menu_item.has-submenu .submenu {
-    position: static; /* En móviles, el submenú se apila normalmente, no es absoluto */
+    position: static;
     box-shadow: none;
-    background-color: transparent; /* Sin fondo en el menú móvil */
+    background-color: transparent;
     width: 100%;
-    padding-left: 1.5rem; /* Indenta los elementos del submenú en móvil */
+    padding-left: 1.5rem;
     border-left: none;
   }
 }
