@@ -33,7 +33,7 @@ const blogPosts: BlogPost[] = [
         <li>Comparte tus experiencias y sugerencias.</li>
       </ul>
     `,
-    imageUrl: '../public/icons/logo-solo.png', 
+    imageUrl: '/icons/logo-solo.png', 
     tags: ['accesibilidad', 'comunidad', 'lanzamiento', 'inclusión'],
   },
   {
@@ -54,7 +54,7 @@ const blogPosts: BlogPost[] = [
       </ol>
       <p>Cada reporte ayuda a construir una base de datos más completa y a concienciar sobre los desafíos de accesibilidad en nuestras ciudades.</p>
     `,
-    imageUrl: '../public/icons/marker-green.png',
+    imageUrl: '/icons/marker-green.png',
     tags: ['guía', 'reporte', 'mapa', 'tutorial'],
   },
   {
@@ -70,7 +70,7 @@ const blogPosts: BlogPost[] = [
       <p>En Komuni, entendemos esta interconexión. Nuestra plataforma está diseñada para ser accesible desde el primer día, y abogamos por la implementación de soluciones digitales inclusivas que complementen la infraestructura física.</p>
       <p>La verdadera accesibilidad es un ecosistema donde lo físico y lo digital se unen para crear una experiencia fluida y equitativa para todos.</p>
     `,
-    imageUrl: '/images/blog/post3-featured.jpeg',
+    imageUrl: '/icons/accesibilidad.png',
     tags: ['inclusión digital', 'tecnología', 'accesibilidad'],
   },
 ];
