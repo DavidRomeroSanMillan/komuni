@@ -32,7 +32,7 @@ h3 {
 
 .perfil-container {
   min-height: 100vh;
-  background-color: #f8f9fa;
+  background-color: var(--gris-claro);
   padding: 1.25rem; /* 20px */
 }
 
@@ -46,7 +46,8 @@ h3 {
 }
 
 .perfil-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+  background: linear-gradient( 145deg, #f4760fea, var(--turquesa-claro));
   color: white;
   padding: 2.5rem 1.875rem; /* 40px 30px */
   display: flex;
