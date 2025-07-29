@@ -1,7 +1,9 @@
+// src/firebaseConfig.ts
+
 import { initializeApp } from 'firebase/app';
 import { getDatabase } from "firebase/database";
 import { getFirestore } from 'firebase/firestore';
-// import { getAuth } from 'firebase/auth'; // Temporarily commented out to avoid config errors
+import { getAuth } from 'firebase/auth'; // <-- UNCOMMENT THIS LINE
 import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
@@ -22,8 +24,6 @@ const firestore = getFirestore(app);
 const storage = getStorage(app);
 
 // Temporarily disable auth export to avoid configuration errors
-// const auth = getAuth(app);
+const auth = getAuth(app); // <-- UNCOMMENT THIS LINE AND INITIALIZE AUTH
 
-export { app, db, firestore, storage };
-
-
+export { app, db, firestore, storage, auth }; // <-- ADD 'auth' TO THE EXPORT LIST
