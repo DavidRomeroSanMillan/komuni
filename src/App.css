@@ -45,7 +45,7 @@
   list-style: none;
   padding-right: 0;
   margin: 0;
-  align-items: center;
+  align-items: center !important;
 }
 
 .menu_item {
@@ -237,18 +237,20 @@
   .menu_item {
     margin: 1rem 0;
     width: 100%;
+    text-align: center; /* ADDED: Explicitly center text within each menu item */
   }
   .navi--open .menu .menu_item.login-button-container {
     order: -1;
     margin-bottom: 2rem;
-    text-align: left;
-    padding-left: 2rem;
+    text-align: center; /* CHANGED: Center the login button as well */
+    padding-left: 0; /* CHANGED: Remove padding-left to ensure full centering */
   }
   .menu_link {
     font-size: 1.5rem;
     display: block;
     padding: 0.5rem 0;
     color: #fff;
+    text-align: center; /* ADDED: Explicitly center the text of the link */
   }
 
   .menu_link.active {
@@ -643,15 +645,7 @@ body.high-contrast .blog-post-card h3 {
   color: #fff !important;
   border: 1px solid #fff !important;
 }
-/* The following two rules can be removed as they are covered by the combined rule above */
-/*
-body.high-contrast .komuni-quote-container,
-body.high-contrast .komuni-quote-text {
-  background-color: #333 !important;
-  color: #fff !important;
-  border: 1px solid #fff !important;
-}
-*/
+
 body.high-contrast .faq-question:hover,
 body.high-contrast .acceso-option:hover {
   background-color: #222 !important;
@@ -698,7 +692,6 @@ body.high-contrast .komuni-quote-text {
 .page-content-wrapper {
   padding: 1.5rem 1rem;
 }
-/* Estilos del submenú (oculto por defecto) */
 .submenu {
   list-style: none;
   padding: 0;
@@ -716,7 +709,6 @@ body.high-contrast .komuni-quote-text {
   overflow: hidden;
 }
 
-/* Estilos para los elementos individuales del submenú */
 .submenu_item {
   margin: 0;
   padding: 0;
@@ -735,12 +727,10 @@ body.high-contrast .komuni-quote-text {
   color: white;
 }
 
-/* Mostrar el submenú al pasar el ratón por el elemento padre */
 .menu_item.has-submenu:hover > .submenu {
   display: flex;
 }
 
-/* Estilos opcionales para la flecha del submenú */
 .submenu-arrow {
   margin-left: 0.5rem;
   font-size: 0.7em;

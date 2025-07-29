@@ -14,42 +14,42 @@ function Footer() {
         {/* Sección de enlaces de navegación (ESTA YA ESTÁ BIEN) */}
         <div className="footer_section footer_links">
           <h4>Explora</h4>
-          <ul className="menu">
-            <li className="menu_item">
+          <ul className="menu-foot">
+            <li className="menu_item_foot">
               <NavLink
                 to="/privacidad"
                 className={({ isActive }: { isActive: boolean }) =>
-                  "menu_link" + (isActive ? " active" : "")
+                  "menu_link_foot" + (isActive ? " active" : "")
                 }
               >
                 Política de privacidad
               </NavLink>
             </li>
-            <li className="menu_item">
+            <li className="menu_item_foot">
               <NavLink
                 to="/about"
                 className={({ isActive }: { isActive: boolean }) =>
-                  "menu_link" + (isActive ? " active" : "")
+                  "menu_link_foot" + (isActive ? " active" : "")
                 }
               >
                 Sobre KOMUNI
               </NavLink>
             </li>
-            <li className="menu_item">
+            <li className="menu_item_foot">
               <NavLink
                 to="/contacto"
                 className={({ isActive }: { isActive: boolean }) =>
-                  "menu_link" + (isActive ? " active" : "")
+                  "menu_link_foot" + (isActive ? " active" : "")
                 }
               >
                 Contacto
               </NavLink>
             </li>
-            <li className="menu_item">
+            <li className="menu_item_foot">
               <NavLink
                 to="/faq"
                 className={({ isActive }: { isActive: boolean }) =>
-                  "menu_link" + (isActive ? " active" : "")
+                  "menu_link_foot" + (isActive ? " active" : "")
                 }
               >
                 Preguntas Frecuentes
@@ -58,10 +58,9 @@ function Footer() {
           </ul>
         </div>
 
-        {/* Sección de contacto (CAMBIADO A UL LI) */}
-        <div className="footer_section footer_contact">
+        <div className="footer_section footer_links">
           <h4>Contacto</h4>
-          <ul className="contact_list"> {/* Nueva UL para los elementos de contacto */}
+          <ul className="menu-foot"> {/* Nueva UL para los elementos de contacto */}
             <li>Email: komunitgn@gmail.com</li> 
 
           </ul>
