@@ -83,15 +83,15 @@ const Home = () => {
             alt="Comunidad inclusiva"
             className="imgcarousel"
           />
-          <p className="legend">Mejora la accesibilidad en tu ciudad</p>
+          <p className="legend">Reporta barreras y haz la diferencia</p>
         </div>
         <div>
           <img
-            src="/images/China.png"
+            src="/images/rambla-nova.jpg"
             alt="Reporta barreras"
             className="imgcarousel"
           />
-          <p className="legend">Reporta barreras y haz la diferencia</p>
+          <p className="legend">Mejora la accesibilidad en tu ciudad</p>
         </div>
       </Carousel>
       <div className="komuni-quote-container">
