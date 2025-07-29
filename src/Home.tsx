@@ -71,7 +71,7 @@ const Home = () => {
       >
         <div>
           <img
-            src="/images/Argentina.png"
+            src="/images/bus-tgn.png"
             alt="Accesibilidad urbana"
             className="imgcarousel"
           />
