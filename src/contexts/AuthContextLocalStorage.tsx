@@ -289,16 +289,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   // Función para agregar un reporte al usuario
   const addReportToUser = async (reportId: string): Promise<void> => {
-    if (!currentUser || !userProfile) return;
+    console.log('🔵 addReportToUser llamada con reportId:', reportId);
+    console.log('🔵 currentUser:', currentUser);
+    console.log('🔵 userProfile:', userProfile);
+    
+    if (!currentUser || !userProfile) {
+      console.log('❌ No hay currentUser o userProfile, abortando');
+      return;
+    }
     
     try {
       const users = JSON.parse(localStorage.getItem('users') || '[]');
       const userIndex = users.findIndex((u: any) => u.email === currentUser.email);
       
+      console.log('🔵 userIndex encontrado:', userIndex);
+      
       if (userIndex !== -1) {
         if (!users[userIndex].reportes) {
           users[userIndex].reportes = [];
         }
+        
+        console.log('🔵 reportes actuales del usuario:', users[userIndex].reportes);
         
         // Agregar el ID del reporte si no existe ya
         if (!users[userIndex].reportes.includes(reportId)) {
@@ -311,11 +322,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             reportes: [...(userProfile.reportes || []), reportId]
           });
           
-          console.log('Reporte agregado al usuario:', reportId);
+          console.log('✅ Reporte agregado al usuario:', reportId);
+          console.log('🔵 nuevos reportes:', users[userIndex].reportes);
+        } else {
+          console.log('⚠️ Reporte ya existe en la lista del usuario');
         }
+      } else {
+        console.log('❌ Usuario no encontrado en localStorage');
       }
     } catch (error: any) {
-      console.error('Error al agregar reporte al usuario:', error);
+      console.error('❌ Error al agregar reporte al usuario:', error);
     }
   };
 
