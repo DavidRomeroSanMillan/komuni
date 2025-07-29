@@ -2,7 +2,6 @@ import { Link, NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
 import LoginButton from "../components/LoginButtonLocalStorage"; // Importa el LoginButton con localStorage
 
-
 // Asegúrate de que tu App.css esté importado en algún lugar de tu proyecto
 // que afecte a este componente, por ejemplo, en tu archivo principal index.tsx o App.tsx.
 
@@ -25,9 +24,9 @@ function Header() {
   // Efecto para controlar el scroll del body cuando el menú está abierto
   useEffect(() => {
     if (isMenuOpen) {
-      document.body.style.overflow = 'hidden'; // Evita el scroll del fondo
+      document.body.style.overflow = "hidden"; // Evita el scroll del fondo
     } else {
-      document.body.style.overflow = 'unset'; // Permite el scroll del fondo
+      document.body.style.overflow = "unset"; // Permite el scroll del fondo
     }
   }, [isMenuOpen]);
 
@@ -39,7 +38,9 @@ function Header() {
       >
         <div className="topbar">
           <h1 className="logo">
-            <Link to="/" onClick={() => setIsMenuOpen(false)}> {/* Cierra el menú al hacer clic en el logo */}
+            <Link to="/" onClick={() => setIsMenuOpen(false)}>
+              {" "}
+              {/* Cierra el menú al hacer clic en el logo */}
               <img
                 className="logo-komuni"
                 src="/icons/barrier-icon.png"
@@ -49,15 +50,21 @@ function Header() {
           </h1>
 
           {/* Botón de menú de hamburguesa para móvil */}
-          <button className="hamburger-menu" onClick={toggleMenu} aria-label="Toggle navigation menu">
-            <div className={`bar ${isMenuOpen ? 'open' : ''}`}></div>
-            <div className={`bar ${isMenuOpen ? 'open' : ''}`}></div>
-            <div className={`bar ${isMenuOpen ? 'open' : ''}`}></div>
+          <button
+            className="hamburger-menu"
+            onClick={toggleMenu}
+            aria-label="Toggle navigation menu"
+          >
+            <div className={`bar ${isMenuOpen ? "open" : ""}`}></div>
+            <div className={`bar ${isMenuOpen ? "open" : ""}`}></div>
+            <div className={`bar ${isMenuOpen ? "open" : ""}`}></div>
           </button>
 
           {/* La navegación principal. Se le añade una clase condicional para el estado del menú móvil */}
-          <nav className={`navi ${isMenuOpen ? 'navi--open' : ''}`}>
-            <ul className={`menu ${isMenuOpen ? 'menu--open' : ''}`}> {/* Se le añade una clase condicional para el estado del menú móvil */}
+          <nav className={`navi ${isMenuOpen ? "navi--open" : ""}`}>
+            <ul className={`menu ${isMenuOpen ? "menu--open" : ""}`}>
+              {" "}
+              {/* Se le añade una clase condicional para el estado del menú móvil */}
               <li className="menu_item">
                 <NavLink
                   to="/"
@@ -67,7 +74,7 @@ function Header() {
                   }
                   onClick={() => setIsMenuOpen(false)} // Cierra el menú al hacer clic en el enlace
                 >
-                  Home
+                  Komuni
                 </NavLink>
               </li>
               <li className="menu_item">
@@ -80,19 +87,7 @@ function Header() {
                 >
                   Mapa
                 </NavLink>
-              </li>
-              <li className="menu_item">
-                <NavLink
-                  to="/about"
-                  className={({ isActive }: { isActive: boolean }) =>
-                    "menu_link" + (isActive ? " active" : "")
-                  }
-                  onClick={() => setIsMenuOpen(false)} // Cierra el menú al hacer clic en el enlace
-                >
-                  Sobre nosotros
-                </NavLink>
-              </li>
-
+              </li>{" "}
               <li className="menu_item">
                 <NavLink
                   to="/blog"
@@ -106,6 +101,17 @@ function Header() {
               </li>
               <li className="menu_item">
                 <NavLink
+                  to="/about"
+                  className={({ isActive }: { isActive: boolean }) =>
+                    "menu_link" + (isActive ? " active" : "")
+                  }
+                  onClick={() => setIsMenuOpen(false)} // Cierra el menú al hacer clic en el enlace
+                >
+                  Sobre nosotros
+                </NavLink>
+              </li>
+              {/* <li className="menu_item">
+                <NavLink
                   to="/contacto"
                   className={({ isActive }: { isActive: boolean }) =>
                     "menu_link" + (isActive ? " active" : "")
@@ -114,7 +120,7 @@ function Header() {
                 >
                   Contacto
                 </NavLink>
-              </li>
+              </li> */}
               <li className="menu_item">
                 <LoginButton />
               </li>

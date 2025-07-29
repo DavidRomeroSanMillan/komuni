@@ -2,81 +2,71 @@ import useEquipo from "./UseEquipo";
 
 const About = () => {
   const { equipo } = useEquipo();
-  // console.log('Datos que llegan al componente:', equipo);
-  // if (loading) return <p>Cargando equipo...</p>;
-  // if (error) return <p>Error: {error}</p>;
+
   return (
-    <div className="textalign">
-      <h1 >Sobre nuestro equipo</h1>
+    <div className="about-container"> {/* Add a class for overall styling */}
+      <h1 className="about-title">Sobre nuestro equipo</h1> {/* Add a class for the title */}
       <br />
-      <div
-        style={{
-          display: "flex",
-          gap: "2rem",
-          flexWrap: "wrap",
-          justifyContent: "space-evenly",
-        }}
-      >
+      <div className="team-cards-container"> {/* Add a class for the team cards container */}
         {equipo.map((member) => (
           <div
             key={member.nombre}
-            style={{
-              width: "300px",
-              textAlign: "center",
-            }}
-            className="card"
+            className="team-member-card" // Use a class for the card
           >
             <img
               src={member.imagen}
               alt={"Foto de perfil de " + member.nombre}
-              style={{
-                width: "200px",
-                height: "200px",
-                borderRadius: "50%",
-                objectFit: "cover",
-                marginBottom: "1rem",
-              }}
+              className="member-profile-pic" // Use a class for the image
             />
-            <h3>{member.nombre}</h3>
-            <p style={{ fontSize: "0.95rem", color: "" }}>
+            <h3 className="member-name">{member.nombre}</h3> {/* Add a class for the name */}
+            <p className="member-description"> {/* Add a class for the description */}
               {member.descripción}
             </p>
-            <div className="contmini-icono">
-              <a href={member.Github}>
+            <div className="social-icons-container"> {/* Add a class for the social icons */}
+              <a href={member.Github} target="_blank" rel="noopener noreferrer"> {/* Add target and rel for external links */}
                 <img
                   src="/icons/github.png"
                   alt="Logo de Github"
-                  style={{ height: "30px" }}
+                  className="social-icon" // Use a class for the social icons
                 />
               </a>
-              <a href={member.Linkedin}>
+              <a href={member.Linkedin} target="_blank" rel="noopener noreferrer"> {/* Add target and rel for external links */}
                 <img
                   src="/icons/linkedin.png"
                   alt="Logo de Linkedin"
-                  style={{ height: "30px" }}
+                  className="social-icon" // Use a class for the social icons
                 />
               </a>
             </div>
           </div>
         ))}
       </div>
-      <ul style={{ marginTop: "3rem", listStyle: "none", padding: 0 }}>
-        <li style={{ marginBottom: "1.5rem" }}>
-          <h3>🚀 Misión</h3>
-          <p>
-            Crear una comunidad digital colaborativa que visibilice, reporte y mejore los espacios públicos para personas con discapacidad o movilidad reducida, facilitando el acceso a información útil, precisa y actualizada sobre zonas accesibles en tiempo real.
+      <ul className="mission-vision-values"> {/* Add a class for the list */}
+        <li className="mision-item"> {/* Add a class for list items */}
+          <h3 className="item-title">🚀 Misión</h3> {/* Add a class for item titles */}
+          <p className="item-description"> {/* Add a class for item descriptions */}
+            Crear una comunidad digital colaborativa que visibilice, reporte y
+            mejore los espacios públicos para personas con discapacidad o
+            movilidad reducida, facilitando el acceso a información útil,
+            precisa y actualizada sobre zonas accesibles en tiempo real.
           </p>
         </li>
-        <li style={{ marginBottom: "1.5rem" }}>
-          <h3>🔭 Visión</h3>
-          <p>
-            Ser la plataforma líder en accesibilidad urbana, donde usuarios, entidades públicas y organizaciones trabajen juntos para construir ciudades más inclusivas, seguras y adaptadas para todos, sin importar sus capacidades físicas.
+        <li className="vision-item"> {/* Add a class for list items */}
+          <h3 className="item-title">🔭 Visión</h3> {/* Add a class for item titles */}
+          <p className="item-description"> {/* Add a class for item descriptions */}
+            Ser la plataforma líder en accesibilidad urbana, donde usuarios,
+            entidades públicas y organizaciones trabajen juntos para construir
+            ciudades más inclusivas, seguras y adaptadas para todos, sin
+            importar sus capacidades físicas.
           </p>
         </li>
-        <li>
-          <h3>💖 Valores</h3>
-          <p>
-           Compromiso con la inclusión, respeto por la diversidad, colaboración entre ciudadanos y transparencia en la información. En KOMUNI creemos que el acceso equitativo al espacio público es un derecho, no un privilegio.
+        <li className="valores-item"> {/* Add a class for list items */}
+          <h3 className="item-title">💖 Valores</h3> {/* Add a class for item titles */}
+          <p className="item-description"> {/* Add a class for item descriptions */}
+            Compromiso con la inclusión, respeto por la diversidad, colaboración
+            entre ciudadanos y transparencia en la información. En KOMUNI
+            creemos que el acceso equitativo al espacio público es un derecho,
+            no un privilegio.
           </p>
         </li>
       </ul>

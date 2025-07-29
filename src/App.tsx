@@ -15,6 +15,7 @@ import Perfil from "./pages/Perfil";
 import AdminPanel from "./components/AdminPanel";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./contexts/AuthContextLocalStorage";
+import "./About.css"
 function App() {
   return (
     <AuthProvider>
