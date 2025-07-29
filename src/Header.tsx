@@ -2,8 +2,6 @@ import { Link, NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
 import LoginButton from "../components/LoginButtonLocalStorage"; // Importa el LoginButton con localStorage
 
-// Asegúrate de que tu App.css esté importado en algún lugar de tu proyecto
-// que afecte a este componente, por ejemplo, en tu archivo principal index.tsx o App.tsx.
 
 function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -85,7 +83,7 @@ function Header() {
                   }
                   onClick={() => setIsMenuOpen(false)} // Cierra el menú al hacer clic en el enlace
                 >
-                  Mapa
+                  Mapa de accesibilidad
                 </NavLink>
               </li>{" "}
               <li className="menu_item">

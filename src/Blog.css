@@ -2,8 +2,8 @@
 
 /* Estilos para la sección principal del blog */
 .blog-page-section {
-  padding: 2rem 1.5rem; /* 2rem arriba/abajo, 1.5rem izquierda/derecha */
-  max-width: 800px;
+  padding: 2rem var(--page-horizontal-padding); /* <-- Cambiado: 2rem arriba/abajo, variable a izquierda/derecha */
+  max-width: var(--max-width); /* <-- Cambiado: Usa el max-width global */
   margin: 0 auto; /* Centra la sección en la página */
 }
 

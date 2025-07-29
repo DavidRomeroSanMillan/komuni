@@ -11,15 +11,17 @@
   --radius: 12px;
   --sombra: 0 4px 24px rgba(0, 0, 0, 0.08);
   --header-height: 100px;
+  --page-horizontal-padding: 1.5rem;
 }
 
 .topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.5rem 2rem;
-  /* position: relative; */
+  padding: 0.5rem var(--page-horizontal-padding);
   height: 100px;
+  max-width: var(--max-width);
+  margin: 0 auto;
 }
 
 .logo {
@@ -118,7 +120,7 @@
 }
 
 .imgcarousel {
-  height:350px; 
+  height: 350px;
   max-width: 100%; /* Asegura que la imagen no se desborde del contenedor */
 }
 
@@ -517,7 +519,7 @@ button {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  
+
   /* Centra la imagen dentro del botón circular */
   display: flex;
   align-items: center;
@@ -593,8 +595,7 @@ body.high-contrast .komuni-quote-text,
 body.high-contrast .blog-post-card a, /* Enlaces dentro de las tarjetas */
 body.high-contrast .blog-post-card h3, /* Títulos dentro de las tarjetas */
 body.high-contrast .komuni-quote-container, /* Contenedor de la cita del footer */
-body.high-contrast .komuni-quote-text
-{
+body.high-contrast .komuni-quote-text {
   background-color: #333 !important;
   color: #fff !important;
   border: 1px solid #fff !important;
@@ -620,7 +621,6 @@ body.high-contrast .komuni-quote-text {
   background: none !important; /* Elimina cualquier fondo degradado */
 }
 
-
 @media (max-width: 768px) {
   body.large-text {
     font-size: 1.3rem; /* Letra aún más grande en móviles para mejor legibilidad */
@@ -634,8 +634,6 @@ body.high-contrast .komuni-quote-text {
     font-size: 1.3em !important; /* Letra más grande en blog cuando la opción está activa */
   }
 }
-.img-card{
+.img-card {
   max-width: 450px;
-  
 }
-

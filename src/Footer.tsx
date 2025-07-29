@@ -11,9 +11,9 @@ function Footer() {
   return (
     <footer className="footer">
       <div className="footer_content">
-        {/* Sección de enlaces de navegación */}
+        {/* Sección de enlaces de navegación (ESTA YA ESTÁ BIEN) */}
         <div className="footer_section footer_links">
-          <h4>Explora</h4> {/* Título para la sección de enlaces */}
+          <h4>Explora</h4>
           <ul className="menu">
             <li className="menu_item">
               <NavLink
@@ -52,34 +52,20 @@ function Footer() {
                   "menu_link" + (isActive ? " active" : "")
                 }
               >
-                Preguntas frecuentes
+                Preguntas Frecuentes
               </NavLink>
             </li>
           </ul>
         </div>
 
-        {/* Sección de contacto y redes sociales (puedes añadir si tienes) */}
+        {/* Sección de contacto (CAMBIADO A UL LI) */}
         <div className="footer_section footer_contact">
-          <h4>Contáctanos</h4> {/* Título para la sección de contacto */}
-          <p className="email_info">
-            <span>Email: </span>
-            <span>
-              <a href="mailto:komunitgn@gmail.com" className="email_link">
-                komunitgn@gmail.com{" "}
-              </a>
-            </span>
-          </p>
-           <div className="social_links">
-            <a href="#facebook" aria-label="Facebook">
-              <i className="fab fa-facebook-f"></i>
-            </a>
-            <a href="#twitter" aria-label="Twitter">
-              <i className="fab fa-twitter"></i>
-            </a>
-            <a href="#instagram" aria-label="Instagram">
-              <i className="fab fa-instagram"></i>
-            </a>
-          </div> 
+          <h4>Contacto</h4>
+          <ul className="contact_list"> {/* Nueva UL para los elementos de contacto */}
+            <li>Email: info@komuni.com</li> {/* De <p> a <li> */}
+            <li>Teléfono: +34 123 456 789</li> {/* De <p> a <li> */}
+            <li>Dirección: Calle Falsa 123, Ciudad, País</li> {/* De <address> a <li> */}
+          </ul>
         </div>
 
         <div className="footer_section footer_bottom_area">
@@ -96,14 +82,14 @@ function Footer() {
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="24" // Tamaño ligeramente más pequeño para el botón
+              width="24"
               height="24"
               fill="currentColor"
               viewBox="0 0 16 16"
             >
               <path
                 fillRule="evenodd"
-                d="M8 12a.5.5 0 0 0 .5-.5V3.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 3.707V11.5a.5.5 0 0 0 .5.5"
+                d="M8 12a.5.5 0 0 0 .5-.5V3.707l3.146 3.147a.5.5 0 0 0 .708-.708l-3.5-3.5a.5.5 0 0 0-.708 0l-3.5 3.5a.5.5 0 0 0 .708.708L7.5 3.707V11.5a.5.5 0 0 0 .5.5z"
               />
             </svg>
           </button>
