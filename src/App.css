@@ -124,7 +124,6 @@
 }
 
 .imgcarousel {
-  height: 350px;
   max-width: 100%; /* Asegura que la imagen no se desborde del contenedor */
 }
 
@@ -635,15 +634,15 @@ body.high-contrast .komuni-quote-text {
   }
 
   body.large-text .blog-post-card p {
-    font-size: 1.3em !important; /* Letra más grande en blog cuando la opción está activa */
+    font-size: 1.3em !important;
   }
 }
 .img-card {
-  max-width: 450px;
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
-/* App.css (o Header.css) */
 
-/* Estilos para el elemento padre del submenú */
 .menu_item.has-submenu {
   position: relative; /* Crucial para posicionar el submenú absolutamente */
 }
@@ -656,7 +655,7 @@ body.high-contrast .komuni-quote-text {
   position: absolute;
   top: 100%; /* Coloca el submenú justo debajo del enlace padre */
   left: 0;
-  background-color: var(--turquesa-medio); /* Color de fondo del submenú */
+  background-color: var(--turquesa-claro); /* Color de fondo del submenú */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para darle profundidad */
   min-width: 200px; /* Ancho mínimo del submenú */
   z-index: 1000; /* Asegura que el submenú aparezca por encima de otros elementos */
@@ -681,7 +680,12 @@ body.high-contrast .komuni-quote-text {
 }
 
 .submenu_item .menu_link:hover {
-  background-color: rgba(255, 255, 255, 0.1); /* Efecto sutil al pasar el ratón */
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.1
+  ); /* Efecto sutil al pasar el ratón */
   color: white;
 }
 
@@ -713,8 +717,4 @@ body.high-contrast .komuni-quote-text {
     padding-left: 1.5rem; /* Indenta los elementos del submenú en móvil */
     border-left: none;
   }
-
-  /* Si quieres que el submenú se vea en móvil, el "display: flex" es controlado por el estado 'isMenuOpen' del navi */
-  /* El 'onClick' del NavLink padre en Header.tsx ya maneja el cierre del menú completo,
-     lo que es una aproximación sencilla para móvil. */
 }

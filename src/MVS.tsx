@@ -1,30 +1,54 @@
-import React from 'react';
+import React from "react";
 
 const MVS: React.FC = () => {
   return (
-    <section className="page-content-wrapper"> 
-      <h1>Nuestra Misión, Visión y Valores</h1>
-
-      <div style={{ marginBottom: '2rem' }}>
-        <h2>Misión</h2>
-        <p>Nuestra misión es empoderar a las personas para que reporten y visualicen las barreras de accesibilidad en sus ciudades, fomentando la colaboración para crear entornos más inclusivos para todos.</p>
-      </div>
-
-      <div style={{ marginBottom: '2rem' }}>
-        <h2>Visión</h2>
-        <p>Nos vemos como la plataforma líder global en la mejora de la accesibilidad urbana, donde cada reporte contribuye a una red de ciudades más accesibles y equitativas.</p>
-      </div>
-
-      <div>
-        <h2>Valores</h2>
-        <ul>
-          <li><strong>Inclusión:</strong> Creemos en un mundo donde todos tienen el derecho a moverse libremente y participar plenamente en la sociedad.</li>
-          <li><strong>Colaboración:</strong> Fomentamos la participación activa de la comunidad y las autoridades para lograr un cambio significativo.</li>
-          <li><strong>Transparencia:</strong> Operamos con honestidad y claridad en la recopilación y presentación de datos.</li>
-          <li><strong>Innovación:</strong> Buscamos constantemente nuevas formas de utilizar la tecnología para resolver desafíos de accesibilidad.</li>
-        </ul>
-      </div>
-
+    <section className="page-content-wrapper">
+      <ul className="mission-vision-values">
+        {" "}
+        {/* Add a class for the list */}
+        <li className="mision-item">
+          {" "}
+          {/* Add a class for list items */}
+          <h3 className="item-title">🚀 Misión</h3>{" "}
+          {/* Add a class for item titles */}
+          <p className="item-description">
+            {" "}
+            {/* Add a class for item descriptions */}
+            Crear una comunidad digital colaborativa que visibilice, reporte y
+            mejore los espacios públicos para personas con discapacidad o
+            movilidad reducida, facilitando el acceso a información útil,
+            precisa y actualizada sobre zonas accesibles en tiempo real.
+          </p>
+        </li>
+        <li className="vision-item">
+          {" "}
+          {/* Add a class for list items */}
+          <h3 className="item-title">🔭 Visión</h3>{" "}
+          {/* Add a class for item titles */}
+          <p className="item-description">
+            {" "}
+            {/* Add a class for item descriptions */}
+            Ser la plataforma líder en accesibilidad urbana, donde usuarios,
+            entidades públicas y organizaciones trabajen juntos para construir
+            ciudades más inclusivas, seguras y adaptadas para todos, sin
+            importar sus capacidades físicas.
+          </p>
+        </li>
+        <li className="valores-item">
+          {" "}
+          {/* Add a class for list items */}
+          <h3 className="item-title">💖 Valores</h3>{" "}
+          {/* Add a class for item titles */}
+          <p className="item-description">
+            {" "}
+            {/* Add a class for item descriptions */}
+            Compromiso con la inclusión, respeto por la diversidad, colaboración
+            entre ciudadanos y transparencia en la información. En KOMUNI
+            creemos que el acceso equitativo al espacio público es un derecho,
+            no un privilegio.
+          </p>
+        </li>
+      </ul>
     </section>
   );
 };

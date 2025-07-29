@@ -107,7 +107,7 @@ function Header() {
                       }
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      Sobre KOMUNI
+                      Sobre el equipo Komuni
                     </NavLink>
                   </li>
                   <li className="submenu_item">
