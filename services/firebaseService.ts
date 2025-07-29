@@ -3,7 +3,7 @@ import { db } from '../src/firebaseConfig';
 import { ref, get, set, push, update, remove } from 'firebase/database';
 
 // URLs base para cada endpoint
-const BASE_URL = 'https://komuni-app-default-rtdb.europe-west1.firebasedatabase.app';
+// const BASE_URL = 'https://komuni-app-default-rtdb.europe-west1.firebasedatabase.app';
 
 export interface ContactMessage {
   id?: string;
