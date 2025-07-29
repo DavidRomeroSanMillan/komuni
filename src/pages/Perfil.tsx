@@ -237,7 +237,7 @@ const Perfil: React.FC = () => {
                 <img src={userProfile.photoURL} alt="Avatar" />
               ) : (
                 <div className="avatar-placeholder">
-                  {userProfile.nombre.charAt(0)}{userProfile.apellidos.charAt(0)}
+                  {(userProfile.nombre || '').charAt(0)}{(userProfile.apellidos || '').charAt(0)}
                 </div>
               )}
             </div>

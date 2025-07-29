@@ -64,7 +64,7 @@ const LoginButton: React.FC = () => {
             <div className="user-menu">
               <div className="user-info">
                 <div className="user-avatar large">
-                  {userProfile.nombre.charAt(0)}{userProfile.apellidos.charAt(0)}
+                  {(userProfile.nombre || '').charAt(0)}{(userProfile.apellidos || '').charAt(0)}
                 </div>
                 <div className="user-details">
                   <h4>{userProfile.nombre} {userProfile.apellidos}</h4>
