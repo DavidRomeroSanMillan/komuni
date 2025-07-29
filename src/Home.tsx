@@ -25,7 +25,7 @@ const Home = () => {
           <p>
             Visualiza y reporta barreras urbanas en tiempo real. Ayuda a mejorar
             la accesibilidad de tu ciudad y otras ciudades del mundo.
-          </p><img src="/public/images/captura-mapa.png " alt="" className="img-card"/>
+          </p><img src="/images/captura-mapa.png " alt="" className="img-card"/>
           <Link to="/mapa">
             <button style={{ marginTop: 12, width: "100%" }}>Ir al mapa</button>
           </Link>
