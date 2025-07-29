@@ -9,6 +9,7 @@ const Perfil: React.FC = () => {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [userReports, setUserReports] = useState<any[]>([]);
   const [loadingReports, setLoadingReports] = useState(false);
@@ -106,6 +107,55 @@ const Perfil: React.FC = () => {
     }
   };
 
+  // Función para manejar la subida de foto de perfil
+  const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !userProfile) return;
+
+    // Validar tipo de archivo
+    if (!file.type.startsWith('image/')) {
+      setMessage({ type: 'error', text: 'Por favor selecciona un archivo de imagen válido.' });
+      return;
+    }
+
+    // Validar tamaño (máximo 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setMessage({ type: 'error', text: 'La imagen debe ser menor a 5MB.' });
+      return;
+    }
+
+    setUploadingPhoto(true);
+    setMessage(null);
+
+    try {
+      // Convertir la imagen a base64 para guardarla en localStorage
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const imageDataUrl = e.target?.result as string;
+        
+        try {
+          await updateUserProfile({
+            ...userProfile,
+            photoURL: imageDataUrl
+          });
+          setMessage({ type: 'success', text: 'Foto de perfil actualizada correctamente.' });
+        } catch (error: any) {
+          setMessage({ type: 'error', text: 'Error al actualizar la foto de perfil.' });
+        } finally {
+          setUploadingPhoto(false);
+        }
+      };
+      reader.onerror = () => {
+        setMessage({ type: 'error', text: 'Error al procesar la imagen.' });
+        setUploadingPhoto(false);
+      };
+      reader.readAsDataURL(file);
+    } catch (error: any) {
+      setMessage({ type: 'error', text: 'Error al subir la imagen.' });
+      setUploadingPhoto(false);
+    }
+  };
+
   const handleCancel = () => {
     if (userProfile) {
       setFormData({
@@ -166,14 +216,33 @@ const Perfil: React.FC = () => {
     <div className="perfil-container">
       <div className="perfil-card">
         <div className="perfil-header">
-          <div className="avatar">
-            {userProfile.photoURL ? (
-              <img src={userProfile.photoURL} alt="Avatar" />
-            ) : (
-              <div className="avatar-placeholder">
-                {userProfile.nombre.charAt(0)}{userProfile.apellidos.charAt(0)}
-              </div>
-            )}
+          <div className="avatar-section">
+            <div className="avatar">
+              {userProfile.photoURL ? (
+                <img src={userProfile.photoURL} alt="Avatar" />
+              ) : (
+                <div className="avatar-placeholder">
+                  {userProfile.nombre.charAt(0)}{userProfile.apellidos.charAt(0)}
+                </div>
+              )}
+            </div>
+            <div className="avatar-upload">
+              <input
+                type="file"
+                id="photo-upload"
+                accept="image/*"
+                onChange={handlePhotoUpload}
+                style={{ display: 'none' }}
+                disabled={uploadingPhoto}
+              />
+              <label htmlFor="photo-upload" className="upload-button">
+                {uploadingPhoto ? (
+                  <span>⏳ Subiendo...</span>
+                ) : (
+                  <span>📷 {userProfile.photoURL ? 'Cambiar foto' : 'Añadir foto'}</span>
+                )}
+              </label>
+            </div>
           </div>
           <div className="user-info">
             <h1>{userProfile.nombre} {userProfile.apellidos}</h1>
@@ -319,15 +388,6 @@ const Perfil: React.FC = () => {
               <div className="stat-card">
                 <div className="stat-number">{userProfile.reportes.length}</div>
                 <div className="stat-label">Reportes Realizados</div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-number">
-                  {userProfile.createdAt ? 
-                    Math.floor((new Date().getTime() - userProfile.createdAt.getTime()) / (1000 * 60 * 60 * 24))
-                    : 0
-                  }
-                </div>
-                <div className="stat-label">Días en Komuni</div>
               </div>
             </div>
           </div>
