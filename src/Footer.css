@@ -1,0 +1,139 @@
+/* Footer.css o dentro de tu archivo CSS principal */
+
+.footer {
+  background-color: var(--turquesa-medio); /* Un color oscuro que complementa el turquesa */
+  color: #ecf0f1; /* Texto claro para contraste */
+  padding: 3rem 1.5rem; /* Espaciado interno */
+  font-family: Arial, sans-serif; /* Fuente legible */
+  position: relative; /* Para el botón "volver arriba" */
+}
+
+.footer_content {
+  display: flex;
+  flex-wrap: wrap; /* Permite que las secciones se envuelvan en pantallas pequeñas */
+  justify-content: space-around; /* Distribuye el espacio entre las secciones */
+  max-width: 1200px; /* Ancho máximo del contenido del footer */
+  margin: 0 auto; /* Centra el contenido */
+  gap: 2rem; /* Espacio entre las columnas/secciones */
+}
+
+.footer_section {
+  flex: 1; /* Permite que las secciones crezcan y se encojan */
+  min-width: 200px; /* Ancho mínimo para cada sección antes de envolverse */
+  padding: 1rem;
+}
+
+.footer_section h4 {
+  color: white; /* Un color de acento turquesa */
+  margin-bottom: 1.2rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu_item {
+  margin-bottom: 0.8rem;
+}
+
+.menu_link {
+  color: #ecf0f1;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-size: 0.95rem;
+}
+
+
+
+.email_info {
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+.email_link {
+  color: #ecf0f1;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.email_link:hover {
+  color: var(--turquesa-oscuro); /* Color turquesa al pasar el ratón */
+  text-decoration: underline;
+}
+
+.social_links {
+  display: flex;
+  gap: 1rem;
+}
+
+.social_links a {
+  color: #ecf0f1;
+  font-size: 1.5rem;
+  transition: color 0.3s ease;
+}
+
+.social_links a:hover {
+  color: #40E0D0;
+}
+
+.copyright {
+  font-size: 0.8rem;
+  color: #bdc3c7; 
+  margin-top: 1.5rem;
+  text-align: center; 
+  width: 100%; 
+}
+
+.scroll_to_top_button {
+  background: rgba(64, 224, 208, 0.2); /* Fondo del botón con el turquesa de acento y transparencia */
+  border: none;
+  color: white; /* Color de la flecha */
+  font-size: 2rem;
+  cursor: pointer;
+  position: absolute; /* Posiciona el botón de forma absoluta */
+  bottom: 2rem; /* Ligeramente más arriba */
+  right: 6rem; /* Ligeramente más a la izquierda */
+  padding: 0.8rem 1.2rem;
+  border-radius: 50%; /* Hacerlo circular */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sutil sombra */
+}
+
+.scroll_to_top_button:hover {
+  background-color: rgba(64, 224, 208, 0.35); /* Un poco más opaco al pasar el ratón */
+  transform: translateY(-3px); /* Pequeño efecto de elevación al pasar el ratón */
+}
+
+/* Ajustes para pantallas pequeñas (responsividad) */
+@media (max-width: 768px) {
+  .footer_content {
+    flex-direction: column; /* Apila las secciones en columnas en pantallas pequeñas */
+    align-items: center; /* Centra el contenido de las secciones */
+  }
+
+  .footer_section {
+    width: 100%; /* Ocupa todo el ancho disponible */
+    text-align: center; /* Centra el texto en las secciones */
+    padding: 1rem 0; /* Ajusta el padding */
+  }
+
+  .scroll_to_top_button {
+    position: static; /* Cambia a posicionamiento estático en móvil */
+    margin: 1.5rem auto 0.5rem auto; /* Centra el botón si es estático */
+    border-radius: 8px; /* Cambia a un cuadrado con bordes redondeados */
+    width: fit-content; /* Ajusta el ancho al contenido */
+  }
+
+  .footer_bottom_area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}

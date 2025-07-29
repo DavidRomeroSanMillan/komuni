@@ -16,6 +16,7 @@ import AdminPanel from "./components/AdminPanel";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./contexts/AuthContextLocalStorage";
 import "./About.css"
+import "./Footer.css";
 function App() {
   return (
     <AuthProvider>

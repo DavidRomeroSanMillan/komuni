@@ -7,10 +7,13 @@ function Footer() {
       behavior: "smooth",
     });
   };
+
   return (
-    <footer className="footer ">
-      <div>
-        <div>
+    <footer className="footer">
+      <div className="footer_content">
+        {/* Sección de enlaces de navegación */}
+        <div className="footer_section footer_links">
+          <h4>Explora</h4> {/* Título para la sección de enlaces */}
           <ul className="menu">
             <li className="menu_item">
               <NavLink
@@ -55,16 +58,32 @@ function Footer() {
           </ul>
         </div>
 
-        <div className="" style={{ position: "relative" }}>
-          <p className="">
+        {/* Sección de contacto y redes sociales (puedes añadir si tienes) */}
+        <div className="footer_section footer_contact">
+          <h4>Contáctanos</h4> {/* Título para la sección de contacto */}
+          <p className="email_info">
             <span>Email: </span>
             <span>
-              <a href="#0" className="">
+              <a href="mailto:komunitgn@gmail.com" className="email_link">
                 komunitgn@gmail.com{" "}
               </a>
             </span>
           </p>
-          <p className="">
+           <div className="social_links">
+            <a href="#facebook" aria-label="Facebook">
+              <i className="fab fa-facebook-f"></i>
+            </a>
+            <a href="#twitter" aria-label="Twitter">
+              <i className="fab fa-twitter"></i>
+            </a>
+            <a href="#instagram" aria-label="Instagram">
+              <i className="fab fa-instagram"></i>
+            </a>
+          </div> 
+        </div>
+
+        <div className="footer_section footer_bottom_area">
+          <p className="copyright">
             <small>
               &copy; {new Date().getFullYear()} Komuni. Plataforma colaborativa
               de accesibilidad.
@@ -72,36 +91,16 @@ function Footer() {
           </p>
           <button
             onClick={scrollToTop}
-            style={{
-              background: 'rgba(255, 255, 255, 0.15)',
-              border: 'none',
-              color: 'white',
-              fontSize: '2rem',
-              cursor: 'pointer',
-              // NUEVAS PROPIEDADES DE POSICIONAMIENTO:
-              position: 'absolute', // Posiciona el botón de forma absoluta
-              bottom: '1rem',      // 1 rem desde la parte inferior de su contenedor relativo
-              right: '1rem',       // 1 rem desde la parte derecha de su contenedor relativo
-              // ELIMINA O COMENTA esta línea que lo centraba:
-              // margin: '1.5rem auto 0.5rem auto',
-              padding: '0.6rem 1rem',
-              borderRadius: '8px',
-              transition: 'background-color 0.3s ease',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
+            className="scroll_to_top_button"
             aria-label="Volver arriba de la página"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="32" // Puedes ajustar el tamaño aquí
-              height="32" // Puedes ajustar el tamaño aquí
-              fill="currentColor" // Usará el color definido en el estilo del botón (white)
+              width="24" // Tamaño ligeramente más pequeño para el botón
+              height="24"
+              fill="currentColor"
               viewBox="0 0 16 16"
-              style={{ display: "block" }} // Asegura que el SVG se comporte como bloque
             >
-              {/* ESTE ES EL PATH DONDE DEBES PONER EL CÓDIGO DE TU SVG */}
               <path
                 fillRule="evenodd"
                 d="M8 12a.5.5 0 0 0 .5-.5V3.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 3.707V11.5a.5.5 0 0 0 .5.5"
