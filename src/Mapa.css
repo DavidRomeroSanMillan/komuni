@@ -1,0 +1,312 @@
+/* Mapa.css */
+
+/* Estilos para el contenedor del mapa */
+.map-container {
+  height: calc(100vh - 100px);
+  width: 100%; /* Cambiado de 100vw a 100% para mejor responsividad móvil */
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Estilos para la barra lateral de reportes */
+.report-sidebar {
+  position: fixed;
+  top: 90px;
+  right: 0;
+  width: 320px;
+  max-width: 98vw;
+  background: #fff;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.1); /* Usamos rgba para transparencia */
+  border-left: 2px solid #2aa198;
+  z-index: 2000;
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  border-radius: 12px 0 0 12px;
+  min-height: 320px;
+  transition: transform 0.2s ease-in-out; /* Animación más suave */
+  max-height: calc(100vh - 90px - 1.5rem - 10px);
+  overflow-y: auto;
+}
+
+/* Estado de la barra lateral abierta/cerrada */
+.report-sidebar.sidebar-closed {
+  transform: translateX(100%);
+}
+
+.report-sidebar.sidebar-open {
+  transform: translateX(0);
+}
+
+/* Botón de cerrar la barra lateral */
+.sidebar-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: #888;
+  cursor: pointer;
+}
+
+/* Título de la barra lateral */
+.sidebar-title {
+  margin-top: 0;
+  color: #2aa198;
+}
+
+/* Formulario de la barra lateral */
+.report-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Estilos para los inputs del formulario (select y input text) */
+.report-form label select,
+.report-form label input[type="text"] {
+  width: 100%;
+  padding: 0.5em 0.8em;
+  margin-top: 5px;
+  border-radius: 8px;
+  border: 1.5px solid #e0e0e0;
+  font-size: 1rem;
+  box-sizing: border-box; /* Asegura que padding y border se incluyan en el width */
+}
+
+/* Input de tipo file */
+.report-form-file-input {
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Botón de enviar/guardar del formulario */
+.report-form-submit-btn {
+  margin-top: 10px;
+  padding: 0.7em 1em;
+  border-radius: 8px;
+  background: #2aa198; /* Color principal de KOMUNI */
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.report-form-submit-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Controles de búsqueda */
+.search-controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  align-items: center;
+  flex-wrap: wrap; /* Para que los elementos se envuelvan en pantallas pequeñas */
+}
+
+/* Input de búsqueda */
+.search-input {
+  padding: 0.5em 0.8em;
+  border-radius: 8px;
+  border: 1.5px solid #e0e0e0;
+  font-size: 1rem;
+  min-width: 180px;
+}
+
+/* Botón de búsqueda */
+.search-btn {
+  padding: 0.5em 1em;
+  border-radius: 8px;
+  background: #2aa198; /* Unifica el estilo con otros botones */
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.search-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Botón "Mi ubicación" */
+.location-btn {
+  padding: 0.5em 1em;
+  border-radius: 8px;
+  background: #2aa198;
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.location-btn:hover,
+.report-form-submit-btn:hover,
+.search-btn:hover {
+    background-color: #248a80; /* Un tono más oscuro al pasar el ratón */
+}
+
+/* Estilos de la tarjeta de información */
+.map-info-card {
+  margin-bottom: 18px;
+  background: #fafdff;
+  border: 1.5px solid #e0e0e0;
+  font-size: 1.04rem;
+  line-height: 1.7;
+  color: #20706e;
+  /* Ya tienes la clase 'card' que debería manejar padding y box-shadow */
+}
+
+.map-info-card ul {
+  margin: 0.7em 0 0 1.2em;
+  padding: 0;
+}
+
+/* Mensaje de carga */
+.loading-message {
+  color: #888;
+}
+
+/* Contenedor principal del mapa */
+.map-wrapper {
+  position: relative;
+}
+
+/* Estilos para el contenido de los popups de Leaflet */
+/* Nota: Leaflet crea los popups dinámicamente, y los estilos inline dentro de un string HTML
+   son difíciles de manejar externamente. Sin embargo, puedes estilizar las clases que ya existen
+   o añadir nuevas clases dentro del HTML del popup si lo modificas en el JS. */
+
+/* Estilo del contenedor principal del popup */
+.leaflet-popup-content-wrapper .leaflet-popup-content {
+    /* Puedes aplicar estilos a todo el contenido del popup aquí */
+    padding: 0; /* Quita el padding por defecto de Leaflet si lo manejas internamente */
+    margin: 0;
+}
+
+.custom-popup-content {
+    position:relative;
+    width:auto;
+    max-width:98vw;
+    min-width:140px;
+    min-height:80px;
+    padding-bottom:8px;
+    /* Los estilos de la sombra y borde de Leaflet se aplican automáticamente */
+}
+
+.popup-close-btn {
+    position:absolute;
+    top:2px;
+    right:2px;
+    background:none;
+    border:none;
+    font-size:1rem;
+    cursor:pointer;
+    color:#888;
+}
+
+.popup-title-section {
+    font-size:1.1rem;
+    line-height:1.1;
+    margin-bottom:0.15em;
+}
+
+.popup-street-name {
+    font-size:0.98rem;
+}
+
+.popup-details {
+    font-size:0.91rem;
+}
+
+.popup-image-container {
+    margin:6px 0;
+    text-align:center;
+}
+
+.popup-image {
+    max-width:100%;
+    max-height:60px;
+    border-radius:6px;
+    box-shadow:0 1px 4px rgba(0,0,0,0.1); /* Sombra sutil */
+    object-fit:contain;
+    background:#eee;
+    display:block;
+    margin:0 auto;
+}
+
+.popup-comments {
+    font-size:0.88em;
+}
+
+.popup-comments ul {
+    padding-left:1em;
+    margin:0;
+}
+
+.popup-comments li {
+    color:#333; /* Un color más oscuro para los comentarios */
+}
+
+.popup-comment-form {
+    margin-top:0.2em;
+    display:flex;
+    gap:0.2em;
+}
+
+.popup-comment-input {
+    flex:1;
+    padding:0.15em;
+    border-radius:5px;
+    border:1px solid #ccc;
+    font-size:0.88em;
+}
+
+.popup-comment-submit-btn {
+    padding:0.15em 0.5em;
+    border-radius:5px;
+    background:#2aa198;
+    color:#fff;
+    border:none;
+    cursor:pointer;
+}
+
+.popup-actions {
+    margin-top:0.3em;
+    display:flex;
+    gap:0.3em;
+}
+
+.popup-edit-btn {
+    padding:0.15em 0.5em;
+    border-radius:5px;
+    background:#ffb300; /* Naranja para editar */
+    color:#fff;
+    border:none;
+    cursor:pointer;
+}
+
+.popup-delete-btn {
+    padding:0.15em 0.5em;
+    border-radius:5px;
+    background:#e53935; /* Rojo para borrar */
+    color:#fff;
+    border:none;
+    cursor:pointer;
+}
+
+/* Estilos de responsividad para la barra lateral */
+@media (max-width: 600px) {
+  .report-sidebar {
+    width: 100vw; /* Ocupa todo el ancho en móviles */
+    top: 0; /* Se ancla a la parte superior */
+    border-radius: 0; /* Sin bordes redondeados en móvil */
+    max-height: 100vh; /* Ocupa toda la altura */
+  }
+}

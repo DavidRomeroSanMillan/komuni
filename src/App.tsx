@@ -17,6 +17,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./contexts/AuthContextLocalStorage";
 import "./About.css"
 import "./Footer.css";
+import "./Mapa.css";
+import "./Blog.css"
 function App() {
   return (
     <AuthProvider>

@@ -1,13 +1,14 @@
 // src/pages/Blog.tsx
 import React from 'react';
-import { Link } from 'react-router-dom'; // ¡Asegúrate de importar Link!
+import { Link } from 'react-router-dom';
 import blogPosts, { type BlogPost } from '../src/data/blogPosts';
+import './Blog.css'; // Importa tu nuevo archivo CSS
 
 const Blog: React.FC = () => {
   return (
-    <section style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
+    <section className="blog-page-section"> {/* Aplica la clase aquí */}
       <h1>Nuestro Blog</h1>
-      <p style={{ fontSize: '1.1rem', color: '#555', marginBottom: '2rem' }}>
+      <p className="blog-intro-text"> {/* Aplica la clase aquí */}
         Aquí encontrarás las últimas noticias, artículos y actualizaciones sobre accesibilidad y nuestra comunidad.
       </p>
 
@@ -15,33 +16,22 @@ const Blog: React.FC = () => {
         {blogPosts.map((post: BlogPost) => (
           <div
             key={post.id}
-            className="blog-post-card"
-            style={{
-              marginBottom: '1.5rem',
-              padding: '1.2rem',
-              border: '1px solid #eee',
-              borderRadius: '8px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
-              display: 'flex',
-              gap: '1rem',
-              alignItems: 'flex-start'
-            }}
+            className="blog-post-card" // La clase ya existía, ahora sus estilos están en CSS
           >
             {post.imageUrl && (
               <img
                 src={post.imageUrl}
                 alt={post.title}
-                style={{ width: '120px', height: 'auto', borderRadius: '4px', objectFit: 'cover' }}
+                className="blog-post-card-image" // Aplica la clase aquí
               />
             )}
             <div>
-              <h2 style={{ marginTop: 0, color: '#2aa198' }}>{post.title}</h2>
-              <p style={{ fontSize: '0.9rem', color: '#777' }}>
+              <h2>{post.title}</h2> {/* Sus estilos están ahora en .blog-post-card h2 */}
+              <p className="blog-post-date-author"> {/* Aplica la clase aquí */}
                 Publicado el {post.date} por {post.author}
               </p>
               <p>{post.excerpt}</p>
-              {/* MODIFICACIÓN AQUÍ: Usa Link y el slug para la URL */}
-              <Link to={`/blog/${post.slug}`} style={{ color: '#3ecfcf', textDecoration: 'none', fontWeight: 'bold' }}>
+              <Link to={`/blog/${post.slug}`} className="blog-post-read-more"> {/* Aplica la clase aquí */}
                 Leer más →
               </Link>
             </div>

@@ -9,6 +9,9 @@ import {
 } from "react";
 import L, { Map, Marker, Icon } from "leaflet";
 import "leaflet/dist/leaflet.css";
+// Importa tu nuevo archivo CSS
+import "./Mapa.css"; // Asegúrate de que la ruta sea correcta
+
 // Import all necessary types and functions from your Firebase-integrated API
 import {
   sendReporte,
@@ -343,7 +346,7 @@ export default function Mapa() {
           let imagenHtml = "";
           if (rep.imagen) {
             let imgSrc = rep.imagen;
-            imagenHtml = `<div style="margin:6px 0; text-align:center;"><img src='${imgSrc}' alt="Imagen de la incidencia" style="max-width:100%;max-height:60px;border-radius:6px;box-shadow:0 1px 4px #0002;object-fit:contain;background:#eee;display:block;margin:0 auto;" /></div>`;
+            imagenHtml = `<div class="popup-image-container"><img src='${imgSrc}' alt="Imagen de la incidencia" class="popup-image" /></div>`;
           }
 
           const comentarios = Array.isArray(rep.comentarios)
@@ -351,15 +354,15 @@ export default function Mapa() {
             : [];
           const popupId = `popup-${rep.id}`;
           const popupHtml = `
-            <div style="position:relative;width:auto;max-width:98vw;min-width:140px;min-height:80px;padding-bottom:8px;">
-              <button id="${popupId}-close" style="position:absolute;top:2px;right:2px;background:none;border:none;font-size:1rem;cursor:pointer;color:#888;">❌</button>
-              <div style="font-size:1.1rem;line-height:1.1;margin-bottom:0.15em;">
+            <div class="custom-popup-content">
+              <button id="${popupId}-close" class="popup-close-btn">❌</button>
+              <div class="popup-title-section">
                 ${emoji} ${incidenciaEmoji}
               </div>
-              <strong style="font-size:0.98rem;">${
+              <strong class="popup-street-name">${
                 rep.calle || "Ubicación sin calle"
               }</strong><br/>
-              <span style="font-size:0.91rem;">
+              <span class="popup-details">
                 📝 ${rep.descripción}<br/>
                 Estado: ${rep.dificultad?.toUpperCase() || "TEMPORAL"}<br/>
                 ${
@@ -370,22 +373,22 @@ export default function Mapa() {
                 ${imagenHtml}
               </span>
               <hr style="margin:0.3em 0"/>
-              <div id="${popupId}-comentarios" style="font-size:0.88em;">
+              <div id="${popupId}-comentarios" class="popup-comments">
                 <strong>Comentarios:</strong>
-                <ul style="padding-left:1em;margin:0;">
+                <ul>
                   ${
                     comentarios.map((c) => `<li>${c}</li>`).join("") ||
                     "<li style='color:#888'>Sin comentarios</li>"
                   }
                 </ul>
               </div>
-              <form id="${popupId}-form" style="margin-top:0.2em;display:flex;gap:0.2em;">
-                <input type="text" name="comentario" placeholder="Agregar comentario..." style="flex:1;padding:0.15em;border-radius:5px;border:1px solid #ccc;font-size:0.88em;" />
-                <button type="submit" style="padding:0.15em 0.5em;border-radius:5px;background:#2aa198;color:#fff;border:none;cursor:pointer;">Enviar</button>
+              <form id="${popupId}-form" class="popup-comment-form">
+                <input type="text" name="comentario" placeholder="Agregar comentario..." class="popup-comment-input" />
+                <button type="submit" class="popup-comment-submit-btn">Enviar</button>
               </form>
-              <div style="margin-top:0.3em;display:flex;gap:0.3em;">
-                <button id="${popupId}-edit" style="padding:0.15em 0.5em;border-radius:5px;background:#ffb300;color:#fff;border:none;cursor:pointer;">Editar</button>
-                <button id="${popupId}-delete" style="padding:0.15em 0.5em;border-radius:5px;background:#e53935;color:#fff;border:none;cursor:pointer;">Borrar</button>
+              <div class="popup-actions">
+                <button id="${popupId}-edit" class="popup-edit-btn">Editar</button>
+                <button id="${popupId}-delete" class="popup-delete-btn">Borrar</button>
               </div>
             </div>
           `;
@@ -396,6 +399,7 @@ export default function Mapa() {
               maxWidth: 400,
               minWidth: 140,
               closeButton: false,
+              className: 'custom-leaflet-popup' // Clase para el popup de Leaflet
             } as L.PopupOptions);
 
           marker.on("popupopen", () => {
@@ -539,25 +543,7 @@ export default function Mapa() {
 
     return (
       <aside
-        style={{
-          position: "fixed",
-          top: 90,
-          right: 0,
-          width: 320,
-          maxWidth: "98vw",
-          background: "#fff",
-          boxShadow: "0 2px 16px #0002",
-          borderLeft: "2px solid #2aa198",
-          zIndex: 2000,
-          padding: "2rem 1.5rem 1.5rem 1.5rem",
-          borderRadius: "12px 0 0 12px",
-          minHeight: 320,
-          transition: "transform 0.2s",
-          transform: sidebar.open ? "translateX(0)" : "translateX(100%)",
-          // NUEVAS PROPIEDADES AÑADIDAS:
-          maxHeight: "calc(100vh - 90px - 1.5rem - 10px)", // Altura del viewport - top - padding inferior - margen de seguridad
-          overflowY: "auto",
-        }}
+        className={`report-sidebar ${sidebar.open ? "sidebar-open" : "sidebar-closed"}`}
       >
         <button
           onClick={() =>
@@ -570,27 +556,15 @@ export default function Mapa() {
               reporte: null,
             })
           }
-          style={{
-            position: "absolute",
-            top: 12,
-            right: 16,
-            background: "none",
-            border: "none",
-            fontSize: 22,
-            color: "#888",
-            cursor: "pointer",
-          }}
+          className="sidebar-close-btn"
           aria-label="Cerrar formulario"
         >
           ✖️
         </button>
-        <h3 style={{ marginTop: 0, color: "#2aa198" }}>
+        <h3 className="sidebar-title">
           {editando ? "Editar reporte" : "Nuevo reporte"}
         </h3>
-        <form
-          onSubmit={handleSubmit}
-          style={{ display: "flex", flexDirection: "column", gap: 12 }}
-        >
+        <form onSubmit={handleSubmit} className="report-form">
           <label>
             Tipo de barrera:
             <select
@@ -648,15 +622,10 @@ export default function Mapa() {
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setFoto(e.target.files ? e.target.files[0] : null)
               }
-              style={{
-                width: "100%", 
-                boxSizing: "border-box", 
-                overflow: "hidden", 
-                textOverflow: "ellipsis",
-              }}
+              className="report-form-file-input"
             />
           </label>
-          <button type="submit" disabled={sending} style={{ marginTop: 10 }}>
+          <button type="submit" disabled={sending} className="report-form-submit-btn">
             {sending
               ? editando
                 ? "Guardando..."
@@ -675,18 +644,9 @@ export default function Mapa() {
       <div className="textalign" >
         <h1>Mapa de accesibilidad</h1>
         <div className="juntar">
-          <div
-            style={{
-              display: "flex",
-              gap: 12,
-              marginBottom: 16,
-              alignItems: "center",
-              flexWrap: "wrap",
-                         }}
-          >
+          <div className="search-controls">
             <form onSubmit={handleSearch} style={{ display: "flex", gap: 6 }}>
               <p>Usa el buscador para localizar una dirección.</p>
-
               <input
                 type="text"
                 placeholder="Buscar dirección o ciudad..."
@@ -694,64 +654,40 @@ export default function Mapa() {
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
                   setSearch(e.target.value)
                 }
-                style={{
-                  padding: "0.5em 0.8em",
-                  borderRadius: 8,
-                  border: "1.5px solid #e0e0e0",
-                  fontSize: "1rem",
-                  minWidth: 180,
-                }}
+                className="search-input"
                 aria-label="Buscar localización"
               />
               <button
                 type="submit"
                 disabled={searchLoading}
-                style={{ padding: "0.5em 1em", borderRadius: 8 }}
+                className="search-btn"
               >
                 {searchLoading ? "Buscando..." : "Buscar"}
               </button>
               <button
                 type="button"
                 onClick={centerOnUser}
-                // style={{
-                //   padding: "0.5em 1em",
-                //   borderRadius: 8,
-                //   background: "#2aa198",
-                //   color: "#fff",
-                //   border: "none",
-                //   fontWeight: 600,
-                //   cursor: "pointer",
-                // }}
+                className="location-btn"
               >
                 📍 Mi ubicación
               </button>
             </form>
           </div>
-          <div
-            className="card"
-            style={{
-              marginBottom: 18,
-              background: "#fafdff",
-              border: "1.5px solid #e0e0e0",
-              fontSize: "1.04rem",
-              lineHeight: 1.7,
-              color: "#20706e",
-            }}
-          >
+          <div className="card map-info-card">
             <strong>Guía de usuario:</strong>
-            <ul style={{ margin: "0.7em 0 0 1.2em", padding: 0 }}>
+            <ul>
               🖱️ Haz clic en el mapa para añadir un nuevo reporte. <br />
               📝 Haz clic en un marcador para ver detalles o comentar. <br />❌
               Pulsa la equis en el popup para cerrarlo.
             </ul>
           </div>
         </div>
-        {loading && <p style={{ color: "#888" }}>Cargando reportes...</p>}
+        {loading && <p className="loading-message">Cargando reportes...</p>}
       </div>
-      <div style={{ position: "relative" }}>
+      <div className="map-wrapper">
         <div
           id="map"
-          style={{ height: "calc(100vh - 100px)", width: "100vw", borderRadius: 10, overflow: "hidden" }}
+          className="map-container"
           aria-label="Mapa de reportes"
         />
         {sidebar.open && <ReportSidebar />}

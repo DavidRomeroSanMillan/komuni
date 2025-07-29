@@ -1,15 +1,13 @@
-// src/data/blogPosts.ts
-
 export interface BlogPost {
   id: string;
   title: string;
-  slug: string; // Para URLs amigables (ej: /blog/primer-post-de-komuni)
+  slug: string; 
   date: string;
   author: string;
-  excerpt: string; // Un resumen corto para la lista de posts
-  content: string; // El contenido completo del post (puede ser HTML o Markdown)
-  imageUrl?: string; // Opcional: URL de una imagen destacada
-  tags: string[]; // Opcional: Para categorizar los posts
+  excerpt: string; 
+  content: string; 
+  imageUrl?: string; 
+  tags: string[]; 
 }
 
 const blogPosts: BlogPost[] = [
@@ -54,7 +52,7 @@ const blogPosts: BlogPost[] = [
       </ol>
       <p>Cada reporte ayuda a construir una base de datos más completa y a concienciar sobre los desafíos de accesibilidad en nuestras ciudades.</p>
     `,
-    imageUrl: '/icons/marker-green.png',
+    // imageUrl: '/icons/marker-green.png',
     tags: ['guía', 'reporte', 'mapa', 'tutorial'],
   },
   {
@@ -70,7 +68,7 @@ const blogPosts: BlogPost[] = [
       <p>En Komuni, entendemos esta interconexión. Nuestra plataforma está diseñada para ser accesible desde el primer día, y abogamos por la implementación de soluciones digitales inclusivas que complementen la infraestructura física.</p>
       <p>La verdadera accesibilidad es un ecosistema donde lo físico y lo digital se unen para crear una experiencia fluida y equitativa para todos.</p>
     `,
-    imageUrl: '/icons/accesibilidad.png',
+    // imageUrl: '/icons/accesibilidad.png',
     tags: ['inclusión digital', 'tecnología', 'accesibilidad'],
   },
 ];

@@ -1,0 +1,84 @@
+/* Blog.css */
+
+/* Estilos para la sección principal del blog */
+.blog-page-section {
+  padding: 2rem 1.5rem; /* 2rem arriba/abajo, 1.5rem izquierda/derecha */
+  max-width: 800px;
+  margin: 0 auto; /* Centra la sección en la página */
+}
+
+/* Estilos para el título principal del blog */
+.blog-page-section h1 {
+  margin-top: 0; /* Asegura que no haya un margen superior extra si no lo deseas */
+  margin-bottom: 1.5rem;
+}
+
+/* Estilos para el texto introductorio */
+.blog-intro-text {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 2rem;
+}
+
+
+/* Estilos para cada tarjeta de post individual */
+.blog-post-card {
+  margin-bottom: 1.5rem;
+  padding: 1.2rem;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  background-color: #fff; /* Fondo blanco para las tarjetas */
+}
+
+/* Estilos para la imagen del post */
+.blog-post-card-image {
+  width: 120px;
+  height: auto; /* Altura automática para mantener la proporción */
+  border-radius: 4px;
+  object-fit: cover; /* Asegura que la imagen cubra el área sin distorsionarse */
+}
+
+/* Estilos para el título del post dentro de la tarjeta */
+.blog-post-card h2 {
+  margin-top: 0;
+  color: #2aa198; /* Color principal de KOMUNI */
+  font-size: 1.25rem; /* Tamaño de fuente ligeramente más grande para los títulos */
+}
+
+/* Estilos para la fecha y autor del post */
+.blog-post-date-author {
+  font-size: 0.9rem;
+  color: #777;
+  margin-bottom: 0.8rem; /* Espacio debajo de la fecha/autor */
+}
+
+/* Estilos para el enlace "Leer más" */
+.blog-post-read-more {
+  color: #3ecfcf;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.2s ease-in-out;
+}
+
+.blog-post-read-more:hover {
+  color: #2aa198; /* Cambia el color al pasar el ratón */
+  text-decoration: underline;
+}
+
+/* Media queries para responsividad (opcional) */
+@media (max-width: 600px) {
+  .blog-post-card {
+    flex-direction: column; /* Apila la imagen y el texto en pantallas pequeñas */
+    align-items: center; /* Centra el contenido apilado */
+    text-align: center;
+  }
+  .blog-post-card-image {
+    width: 100%; /* La imagen ocupa todo el ancho */
+    max-width: 200px; /* Limita el tamaño de la imagen */
+    margin-bottom: 0.8rem;
+  }
+}
