@@ -37,7 +37,7 @@ const AccessibilityButton: React.FC = () => {
         aria-label="Menú de accesibilidad"
         onClick={toggleMenu}
       >
-        <span ><img src="../public/icons/accesibilidad.png" className="acceso-icon" alt="Botón de opciones de accesibilidad" /></span>
+        <span ><img src="/icons/accesibilidad.png" className="acceso-icon" alt="Botón de opciones de accesibilidad" /></span>
       </button>
       <div id="accessibility-menu" className={`accessibility-menu ${isMenuOpen ? 'open' : ''}`}>
         <button id="increase-text" className="acceso-option" onClick={toggleLargeText}>
