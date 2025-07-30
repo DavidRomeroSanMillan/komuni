@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import { useAuth } from '../src/contexts/AuthContextLocalStorage';
+import { useUserReportsCount } from '../src/hooks/useUserReportsCount';
 import './LoginButton.css';
 
 const LoginButtonLocalStorage: React.FC = () => {
@@ -8,6 +9,7 @@ const LoginButtonLocalStorage: React.FC = () => {
   const ref = useRef<HTMLDivElement>(null);
   
   const { currentUser, userProfile, logout } = useAuth();
+  const reportsCount = useUserReportsCount(userProfile);
 
   // Cierra el menú si haces clic fuera
   useEffect(() => {
@@ -82,7 +84,7 @@ const LoginButtonLocalStorage: React.FC = () => {
               
               <div className="user-stats">
                 <div className="stat">
-                  <span className="stat-number">{userProfile.reportes.length}</span>
+                  <span className="stat-number">{reportsCount}</span>
                   <span className="stat-label">Reportes</span>
                 </div>
               </div>
