@@ -1,4 +1,5 @@
 import useEquipo from "./UseEquipo";
+import { NavLink } from "react-router-dom";
 
 const About = () => {
   const { equipo } = useEquipo();
@@ -41,7 +42,20 @@ const About = () => {
           </div>
         ))}
       </div>
-     
+           <div className="komuni-quote-container">
+        <span className="komuni-quote-text">
+          ¿Quieres dejarnos un mensaje?
+          <NavLink
+            to="/contacto"
+            className={({ isActive }: { isActive: boolean }) =>
+              "menu_link" + (isActive ? " active" : "")
+            }
+          >
+            {" "}
+            ¡Haz clic aquí!
+          </NavLink>
+        </span>
+      </div>
     </div>
   );
 };

@@ -1,16 +1,18 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 
 const MVS: React.FC = () => {
   return (
     <section className="page-content-wrapper">
       <h1>Komuni: una comunidad unida</h1>
+      <br />
       <ul className="mission-vision-values">
         <li className="mision-item">
           <h3 className="item-title">🚀 Misión</h3>
           <p className="item-description">
             Crear una <b>comunidad digital</b> colaborativa que visibilice,
             reporte y mejore los <b>espacios públicos</b> para personas con
-            discapacidad o movilidad reducida, facilitando el acceso a{" "}
+            discapacidad o movilidad reducida, facilitando el acceso a
             <b>información útil, precisa y actualizada</b> sobre zonas
             accesibles en tiempo real.
           </p>
@@ -34,6 +36,20 @@ const MVS: React.FC = () => {
           </p>
         </li>
       </ul>
+      <div className="komuni-quote-container">
+        <span className="komuni-quote-text">
+          ¿Tienes alguna sugerencia o comentario?
+          <NavLink
+            to="/contacto"
+            className={({ isActive }: { isActive: boolean }) =>
+              "menu_link" + (isActive ? " active" : "")
+            }
+          >
+            {" "}
+            ¡Haz clic aquí!
+          </NavLink>
+        </span>
+      </div>
     </section>
   );
 };
