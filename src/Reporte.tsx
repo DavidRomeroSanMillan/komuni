@@ -68,6 +68,9 @@ export default function ReportPage() {
       return;
     }
 
+    console.log('📤 Preparando envío de reporte');
+    console.log('🖼️ Imagen seleccionada:', foto ? `${foto.name} (${foto.size} bytes)` : 'Sin imagen');
+
     const payload: SendReportData = { // Use SendReportData interface
       id: generateId(), 
       calle: calle.trim(),
@@ -80,14 +83,24 @@ export default function ReportPage() {
     };
 
     try {
-      await sendReporte(payload);
-      setMsg('✅ Reporte enviado correctamente');
+      console.log('🚀 Enviando reporte...');
+      const result = await sendReporte(payload);
+      console.log('✅ Resultado del reporte:', result);
+      
+      if (result.imagen) {
+        setMsg('✅ Reporte enviado correctamente con imagen');
+      } else if (foto) {
+        setMsg('✅ Reporte enviado correctamente, pero hubo un problema con la imagen');
+      } else {
+        setMsg('✅ Reporte enviado correctamente');
+      }
+      
       setCalle('');
       setDesc('');
       setExtra('');
       setFoto(null); // Clear the file input
     } catch (err) {
-      console.error("Error sending report:", err);
+      console.error("❌ Error sending report:", err);
       setMsg('❌ Ocurrió un error al enviar');
     } finally {
       setLoading(false);
@@ -138,8 +151,23 @@ export default function ReportPage() {
           <input
             type="file"
             accept="image/*"
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setFoto(e.target.files ? e.target.files[0] : null)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+              const selectedFile = e.target.files ? e.target.files[0] : null;
+              if (selectedFile) {
+                console.log('📷 Archivo seleccionado:', {
+                  name: selectedFile.name,
+                  size: selectedFile.size,
+                  type: selectedFile.type
+                });
+              }
+              setFoto(selectedFile);
+            }}
           />
+          {foto && (
+            <div style={{ marginTop: '8px', color: 'green', fontSize: '14px' }}>
+              📷 Imagen seleccionada: {foto.name} ({Math.round(foto.size / 1024)} KB)
+            </div>
+          )}
         </label>
 
         <button type="submit" style={{ marginTop: '1rem' }} disabled={loading}>

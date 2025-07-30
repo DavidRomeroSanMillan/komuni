@@ -1,0 +1,20 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Permitir lectura y escritura para todas las imágenes de reportes
+    match /report_images/{allPaths=**} {
+      allow read, write: if true;
+    }
+    
+    // Permitir lectura y escritura para imágenes de prueba
+    match /test_images/{allPaths=**} {
+      allow read, write: if true;
+    }
+    
+    // Por defecto, solo permitir lectura
+    match /{allPaths=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}

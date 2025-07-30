@@ -1,6 +1,6 @@
 // api.ts
 
-import { db, storage } from '../src/firebaseConfig'; // Temporarily removed auth to avoid config errors
+import { db } from '../src/firebaseConfig'; // Solo usar Database, no Storage
 import {
   ref as dbRef,
   push,
@@ -11,7 +11,7 @@ import {
   onValue,
   DataSnapshot
 } from 'firebase/database';
-import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { convertImageToBase64, resizeImage } from './imageUtils';
 
 interface BaseReportFields {
   calle: string;
@@ -50,9 +50,24 @@ export async function sendReporte(data: SendReportData): Promise<Reporte> {
     let imageUrl: string | null = null;
 
     if (data.imagen instanceof File) {
-      const imageStorageRef = storageRef(storage, `report_images/${Date.now()}_${data.imagen.name}`);
-      const snapshot = await uploadBytes(imageStorageRef, data.imagen);
-      imageUrl = await getDownloadURL(snapshot.ref);
+      console.log('🔍 Procesando imagen:', data.imagen.name, 'Tamaño:', data.imagen.size);
+      try {
+        // Redimensionar la imagen para reducir tamaño
+        console.log('� Redimensionando imagen...');
+        const resizedFile = await resizeImage(data.imagen, 800, 0.7);
+        console.log('✅ Imagen redimensionada:', resizedFile.size, 'bytes');
+        
+        // Convertir a base64
+        console.log('� Convirtiendo a base64...');
+        imageUrl = await convertImageToBase64(resizedFile);
+        console.log('✅ Imagen convertida a base64 exitosamente');
+        
+      } catch (imageError: any) {
+        console.error('❌ Error al procesar imagen:', imageError);
+        console.warn('⚠️ Continuando sin imagen debido al error');
+      }
+    } else {
+      console.log('ℹ️ No se proporcionó imagen o no es un archivo válido');
     }
 
     // Obtener información del usuario autenticado - Temporarily disabled
@@ -163,9 +178,19 @@ export async function updateReporte(id: string, data: UpdateReportData): Promise
     let imageUrl: string | null | undefined;
 
     if (data.imagen instanceof File) {
-      const imageStorageRef = storageRef(storage, `report_images/${Date.now()}_${data.imagen.name}`);
-      const snapshot = await uploadBytes(imageStorageRef, data.imagen);
-      imageUrl = await getDownloadURL(snapshot.ref);
+      console.log('🔍 Procesando nueva imagen para actualización:', data.imagen.name);
+      try {
+        // Redimensionar la imagen
+        const resizedFile = await resizeImage(data.imagen, 800, 0.7);
+        console.log('📐 Imagen redimensionada para actualización');
+        
+        // Convertir a base64
+        imageUrl = await convertImageToBase64(resizedFile);
+        console.log('✅ Nueva imagen convertida a base64');
+      } catch (imageError) {
+        console.error('❌ Error al procesar nueva imagen:', imageError);
+        imageUrl = null;
+      }
     } else if (typeof data.imagen === 'string' || data.imagen === null) {
       imageUrl = data.imagen;
     }
