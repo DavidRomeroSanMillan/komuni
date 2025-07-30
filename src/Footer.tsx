@@ -60,9 +60,16 @@ function Footer() {
 
         <div className="footer_section footer_links">
           <h4>Contacto</h4>
+<<<<<<< Updated upstream
           <ul className="menu-foot"> {/* Nueva UL para los elementos de contacto */}
             <li>Email: komunitgn@gmail.com</li> 
 
+=======
+          <ul className="contact_list"> {/* Nueva UL para los elementos de contacto */}
+            <li>Email: komunitgn@gmail.com</li> {/* De <p> a <li> */}
+            <li>Teléfono: +34 123 456 789</li> {/* De <p> a <li> */}
+            <li>Dirección: Calle Falsa 123, Ciudad, País</li> {/* De <address> a <li> */}
+>>>>>>> Stashed changes
           </ul>
         </div>
 
