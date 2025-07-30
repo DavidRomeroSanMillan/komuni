@@ -53,7 +53,11 @@ const LoginButtonLocalStorage: React.FC = () => {
       >
         {currentUser ? (
           <div className="user-avatar">
-            {userProfile?.nombre?.charAt(0) || currentUser.email?.charAt(0) || '?'}
+            {userProfile?.photoURL ? (
+              <img src={userProfile.photoURL} alt="Avatar" style={{width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover'}} />
+            ) : (
+              userProfile?.nombre?.charAt(0) || currentUser.email?.charAt(0) || '?'
+            )}
           </div>
         ) : (
           "Iniciar sesión"
@@ -66,7 +70,11 @@ const LoginButtonLocalStorage: React.FC = () => {
             <div className="user-menu">
               <div className="user-info">
                 <div className="user-avatar large">
-                  {(userProfile.nombre || '').charAt(0)}{(userProfile.apellidos || '').charAt(0)}
+                  {userProfile.photoURL ? (
+                    <img src={userProfile.photoURL} alt="Avatar" style={{width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover'}} />
+                  ) : (
+                    `${(userProfile.nombre || '').charAt(0)}${(userProfile.apellidos || '').charAt(0)}`
+                  )}
                 </div>
                 <div className="user-details">
                   <h4>{userProfile.nombre} {userProfile.apellidos}</h4>
