@@ -73,7 +73,7 @@ function Header() {
                   }
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Mapa
+                  Mapa de accesibilidad
                 </NavLink>
               </li>
               <li className="menu_item">

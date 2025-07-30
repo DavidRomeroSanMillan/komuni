@@ -92,7 +92,7 @@ const LoginButtonLocalStorage: React.FC = () => {
                   <span>👤</span>
                   Ver Perfil
                 </Link>
-                <Link to="/reporte" className="menu-item" onClick={() => setOpen(false)}>
+                <Link to="/mapa" className="menu-item" onClick={() => setOpen(false)}>
                   <span>📝</span>
                   Nuevo Reporte
                 </Link>
