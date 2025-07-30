@@ -337,6 +337,84 @@ h3 {
   color: #666;
 }
 
+/* Estilos para el rol de administrador */
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 1.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.role-badge.admin {
+  background: linear-gradient(135deg, #ffd700, #ff8c00);
+  color: #8b4513;
+  border: 2px solid #ffa500;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+.role-badge.user {
+  background: linear-gradient(135deg, #e3f2fd, #90caf9);
+  color: #1565c0;
+  border: 2px solid #2196f3;
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 2px 4px rgba(255, 215, 0, 0.3);
+  }
+  to {
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.6);
+  }
+}
+
+.role-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1rem;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.toggle-role-btn {
+  font-size: 0.875rem;
+  padding: 0.75rem 1.25rem;
+  min-width: auto;
+  border-radius: 2rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.toggle-role-btn:hover {
+  background: linear-gradient(135deg, #5a6fe0, #6a4190);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  transform: translateY(-1px);
+}
+
+.toggle-role-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);
+}
+
+.toggle-role-btn:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
 
 /* Responsive (Mobile-First Approach - desde 480px y luego 768px) */
 

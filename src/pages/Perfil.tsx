@@ -5,7 +5,7 @@ import { getReportes } from '../../services/api';
 import './Perfil.css';
 
 const Perfil: React.FC = () => {
-  const { currentUser, userProfile, logout, updateUserProfile, resendVerification } = useAuth();
+  const { currentUser, userProfile, logout, updateUserProfile, resendVerification, isAdmin, toggleAdminRole } = useAuth();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -169,6 +169,32 @@ const Perfil: React.FC = () => {
 
       setMessage({ type: 'success', text: 'Perfil actualizado correctamente' });
       setIsEditing(false);
+    } catch (error: any) {
+      setMessage({ type: 'error', text: error.message });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Función para cambiar el rol de administrador
+  const handleToggleAdminRole = async () => {
+    if (!userProfile) return;
+
+    const confirmMessage = userProfile.isAdmin 
+      ? '¿Estás seguro de que quieres cambiar a rol de Usuario? Perderás permisos de administrador.'
+      : '¿Estás seguro de que quieres cambiar a rol de Administrador?';
+
+    if (!window.confirm(confirmMessage)) return;
+
+    setLoading(true);
+    setMessage(null);
+
+    try {
+      await toggleAdminRole();
+      setMessage({ 
+        type: 'success', 
+        text: `Rol cambiado a ${!userProfile.isAdmin ? 'Administrador' : 'Usuario'} correctamente` 
+      });
     } catch (error: any) {
       setMessage({ type: 'error', text: error.message });
     } finally {
@@ -447,6 +473,23 @@ const Perfil: React.FC = () => {
                 ) : (
                   <span>{userProfile.genero}</span>
                 )}
+              </div>
+              
+              <div className="form-group">
+                <label>Rol:</label>
+                <div className="role-section">
+                  <span className={`role-badge ${isAdmin() ? 'admin' : 'user'}`}>
+                    {isAdmin() ? '👑 Administrador' : '👤 Usuario'}
+                  </span>
+                  <button 
+                    onClick={handleToggleAdminRole}
+                    disabled={loading}
+                    className="btn btn-secondary toggle-role-btn"
+                    title="Cambiar entre Administrador y Usuario"
+                  >
+                    {loading ? 'Cambiando...' : (isAdmin() ? 'Cambiar a Usuario' : 'Cambiar a Administrador')}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
