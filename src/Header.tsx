@@ -76,17 +76,7 @@ function Header() {
                   Mapa de accesibilidad
                 </NavLink>
               </li>
-              <li className="menu_item">
-                <NavLink
-                  to="/blog"
-                  className={({ isActive }: { isActive: boolean }) =>
-                    "menu_link" + (isActive ? " active" : "")
-                  }
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Blog
-                </NavLink>
-              </li>
+
 
               <li className="menu_item has-submenu">
                 <NavLink
@@ -110,6 +100,17 @@ function Header() {
                       Sobre el equipo Komuni
                     </NavLink>
                   </li>
+                                <li className="submenu_item">
+                <NavLink
+                  to="/blog"
+                  className={({ isActive }: { isActive: boolean }) =>
+                    "menu_link" + (isActive ? " active" : "")
+                  }
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Blog
+                </NavLink>
+              </li>
                   <li className="submenu_item">
                     <NavLink
                       to="/about/mision-vision-valores"
