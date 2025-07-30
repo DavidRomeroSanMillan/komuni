@@ -24,6 +24,9 @@ import {
   type UpdateReportData, // Import the input type for updating reports
 } from "../services/api.ts";
 
+// Importar contexto de autenticación
+import { useAuth } from "./contexts/AuthContextLocalStorage";
+
 // Interfaz para el estado de la barra lateral
 interface SidebarState {
   open: boolean;
@@ -149,6 +152,9 @@ export default function Mapa() {
   const [tempNewReportMarker, setTempNewReportMarker] = useState<Marker | null>(
     null
   );
+
+  // Obtener contexto de autenticación
+  const { isAdmin } = useAuth();
 
   function centerOnUser(): void {
     if (!mapRef.current) return;
@@ -391,6 +397,12 @@ export default function Mapa() {
             ? rep.comentarios
             : [];
           const popupId = `popup-${rep.id}`;
+          
+          // Solo mostrar el botón de borrar si el usuario es administrador
+          const deleteButton = isAdmin() 
+            ? `<button id="${popupId}-delete" class="popup-delete-btn">Borrar</button>`
+            : '';
+          
           const popupHtml = `
             <div class="custom-popup-content">
               <button id="${popupId}-close" class="popup-close-btn">❌</button>
@@ -426,7 +438,7 @@ export default function Mapa() {
               </form>
               <div class="popup-actions">
                 <button id="${popupId}-edit" class="popup-edit-btn">Editar</button>
-                <button id="${popupId}-delete" class="popup-delete-btn">Borrar</button>
+                ${deleteButton}
               </div>
             </div>
           `;

@@ -223,6 +223,19 @@ export async function updateReporte(id: string, data: UpdateReportData): Promise
 
 export async function deleteReporte(id: string): Promise<void> {
   try {
+    // Verificar si el usuario actual es administrador
+    const loggedEmail = localStorage.getItem('loggedUser');
+    if (loggedEmail) {
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const currentUser = users.find((u: any) => u.email === loggedEmail);
+      
+      if (!currentUser?.isAdmin) {
+        throw new Error("Solo los administradores pueden eliminar reportes");
+      }
+    } else {
+      throw new Error("Debes estar autenticado para eliminar reportes");
+    }
+
     const reportRef = dbRef(db, `reportes/${id}`);
     await remove(reportRef);
     console.log("Reporte eliminado con ID: ", id);

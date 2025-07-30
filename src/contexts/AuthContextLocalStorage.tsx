@@ -15,6 +15,7 @@ export interface UserProfile {
   photoURL?: string;
   createdAt: Date;
   lastLogin: Date;
+  isAdmin?: boolean; // Campo para identificar administradores
 }
 
 interface AuthContextType {
@@ -27,6 +28,9 @@ interface AuthContextType {
   resetPassword: (email: string) => Promise<void>;
   resendVerification: () => Promise<void>;
   updateUserProfile: (updates: Partial<UserProfile>) => Promise<void>;
+  isAdmin: () => boolean; // Función para verificar si el usuario es administrador
+  makeAdmin: (email: string) => Promise<void>; // Función para convertir a un usuario en administrador
+  toggleAdminRole: () => Promise<void>; // Función para que los administradores cambien su rol
 }
 
 interface RegisterData {
@@ -67,6 +71,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           const foundUser = users.find((u: any) => u.email === loggedEmail);
           
           if (foundUser) {
+            // Hacer que ivettemdv@gmail.com sea administrador automáticamente
+            if (foundUser.email === 'ivettemdv@gmail.com' && !foundUser.hasOwnProperty('isAdmin')) {
+              foundUser.isAdmin = true;
+              const users = JSON.parse(localStorage.getItem('users') || '[]');
+              const userIndex = users.findIndex((u: any) => u.email === foundUser.email);
+              if (userIndex !== -1) {
+                users[userIndex].isAdmin = true;
+                localStorage.setItem('users', JSON.stringify(users));
+              }
+            }
+            
             // Simular estructura de Firebase User
             const mockUser = {
               uid: foundUser.uid || `uid_${Date.now()}`,
@@ -116,6 +131,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         genero: userData.genero,
         reportes: [],
         emailVerified: false, // Simular email no verificado
+        isAdmin: userData.email === 'ivettemdv@gmail.com', // Administrador automático
         createdAt: new Date().toISOString(),
         lastLogin: new Date().toISOString()
       };
@@ -158,6 +174,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       // Actualizar último login
       foundUser.lastLogin = new Date().toISOString();
+      
+      // Hacer que ivettemdv@gmail.com sea administrador automáticamente
+      if (foundUser.email === 'ivettemdv@gmail.com' && !foundUser.hasOwnProperty('isAdmin')) {
+        foundUser.isAdmin = true;
+      }
+      
       localStorage.setItem('users', JSON.stringify(users));
       localStorage.setItem('loggedUser', email);
 
@@ -385,6 +407,72 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
   }, [currentUser, userProfile]);
 
+  // Función para verificar si el usuario actual es administrador
+  const isAdmin = (): boolean => {
+    return userProfile?.isAdmin === true;
+  };
+
+  // Función para convertir a un usuario en administrador (solo para testing)
+  const makeAdmin = async (email: string): Promise<void> => {
+    try {
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const userIndex = users.findIndex((u: any) => u.email === email);
+      
+      if (userIndex !== -1) {
+        users[userIndex].isAdmin = true;
+        localStorage.setItem('users', JSON.stringify(users));
+        
+        // Si es el usuario actual, actualizar el perfil
+        if (email === currentUser?.email) {
+          setUserProfile(prev => prev ? { ...prev, isAdmin: true } : null);
+        }
+        
+        console.log(`Usuario ${email} convertido en administrador`);
+      } else {
+        throw new Error('Usuario no encontrado');
+      }
+    } catch (error) {
+      console.error('Error al convertir usuario en administrador:', error);
+      throw error;
+    }
+  };
+
+  // Función para que los usuarios cambien su propio rol entre admin y usuario
+  const toggleAdminRole = async (): Promise<void> => {
+    if (!currentUser || !userProfile) {
+      throw new Error('No hay usuario autenticado');
+    }
+
+    try {
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const userIndex = users.findIndex((u: any) => u.email === currentUser.email);
+      
+      if (userIndex !== -1) {
+        const newAdminStatus = !users[userIndex].isAdmin;
+        users[userIndex].isAdmin = newAdminStatus;
+        localStorage.setItem('users', JSON.stringify(users));
+        
+        // Actualizar el perfil actual
+        setUserProfile(prev => prev ? { ...prev, isAdmin: newAdminStatus } : null);
+        
+        console.log(`Rol cambiado a: ${newAdminStatus ? 'Administrador' : 'Usuario'}`);
+      } else {
+        throw new Error('Usuario no encontrado');
+      }
+    } catch (error) {
+      console.error('Error al cambiar rol:', error);
+      throw error;
+    }
+  };
+
+  // Exponer makeAdmin globalmente para testing
+  useEffect(() => {
+    (window as any).makeAdmin = makeAdmin;
+    return () => {
+      delete (window as any).makeAdmin;
+    };
+  }, [makeAdmin]);
+
   const value: AuthContextType = {
     currentUser,
     userProfile,
@@ -395,6 +483,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     resetPassword,
     resendVerification,
     updateUserProfile,
+    isAdmin,
+    makeAdmin,
+    toggleAdminRole,
   };
 
   return (
