@@ -291,7 +291,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const addReportToUser = async (reportId: string): Promise<void> => {
     console.log('🔵 addReportToUser llamada con reportId:', reportId);
     console.log('🔵 currentUser:', currentUser);
-    console.log('🔵 userProfile:', userProfile);
+    console.log('🔵 userProfile antes:', userProfile);
     
     if (!currentUser || !userProfile) {
       console.log('❌ No hay currentUser o userProfile, abortando');
@@ -316,14 +316,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           users[userIndex].reportes.push(reportId);
           localStorage.setItem('users', JSON.stringify(users));
           
-          // Actualizar estado local
+          // Actualizar estado local inmediatamente
+          const updatedReports = [...(userProfile.reportes || []), reportId];
           setUserProfile({
             ...userProfile, 
-            reportes: [...(userProfile.reportes || []), reportId]
+            reportes: updatedReports
           });
           
           console.log('✅ Reporte agregado al usuario:', reportId);
-          console.log('🔵 nuevos reportes:', users[userIndex].reportes);
+          console.log('🔵 nuevos reportes en localStorage:', users[userIndex].reportes);
+          console.log('🔵 nuevos reportes en estado:', updatedReports);
+          
+          // Forzar una actualización del perfil para que se recarguen los reportes
+          setTimeout(() => {
+            console.log('🔄 Forzando actualización del perfil...');
+            setUserProfile(prev => prev ? {...prev, reportes: updatedReports} : null);
+          }, 100);
+          
         } else {
           console.log('⚠️ Reporte ya existe en la lista del usuario');
         }

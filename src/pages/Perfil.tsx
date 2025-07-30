@@ -34,18 +34,72 @@ const Perfil: React.FC = () => {
   // Cargar reportes del usuario
   useEffect(() => {
     const loadUserReports = async () => {
-      if (!userProfile || !userProfile.reportes || userProfile.reportes.length === 0) {
+      if (!userProfile) {
         setUserReports([]);
         return;
       }
 
       setLoadingReports(true);
       try {
+        console.log('🔍 Cargando reportes para usuario:', userProfile.email);
+        console.log('📋 IDs de reportes en perfil:', userProfile.reportes);
+        
+        // Obtener todos los reportes
         const allReports = await getReportes();
-        const userReportDetails = allReports.filter(report => 
-          userProfile.reportes.includes(report.id)
+        console.log('📊 Total de reportes en sistema:', allReports.length);
+        
+        // Filtrar reportes del usuario de dos maneras:
+        // 1. Por IDs en la lista del usuario (localStorage)
+        const reportsByIds = allReports.filter(report => 
+          userProfile.reportes && userProfile.reportes.includes(report.id)
         );
-        setUserReports(userReportDetails);
+        
+        // 2. Por email del usuario (Firebase)
+        const reportsByEmail = allReports.filter(report => 
+          report.userEmail === userProfile.email
+        );
+        
+        console.log('📋 Reportes por IDs:', reportsByIds.length);
+        console.log('📧 Reportes por email:', reportsByEmail.length);
+        
+        // Combinar ambas listas y eliminar duplicados
+        const combinedReports = [...reportsByIds];
+        reportsByEmail.forEach(report => {
+          if (!combinedReports.find(r => r.id === report.id)) {
+            combinedReports.push(report);
+          }
+        });
+        
+        console.log('🎯 Total reportes combinados:', combinedReports.length);
+        setUserReports(combinedReports);
+        
+        // Si hay reportes por email que no están en localStorage, sincronizar
+        if (reportsByEmail.length > reportsByIds.length) {
+          console.log('🔄 Sincronizando reportes faltantes en localStorage...');
+          const missingReportIds = reportsByEmail
+            .filter(report => !userProfile.reportes?.includes(report.id))
+            .map(report => report.id);
+            
+          if (missingReportIds.length > 0) {
+            console.log('📝 IDs faltantes:', missingReportIds);
+            // Actualizar localStorage
+            try {
+              const users = JSON.parse(localStorage.getItem('users') || '[]');
+              const userIndex = users.findIndex((u: any) => u.email === userProfile.email);
+              
+              if (userIndex !== -1) {
+                const currentReports = users[userIndex].reportes || [];
+                const updatedReports = [...currentReports, ...missingReportIds];
+                users[userIndex].reportes = updatedReports;
+                localStorage.setItem('users', JSON.stringify(users));
+                console.log('✅ localStorage sincronizado');
+              }
+            } catch (syncError) {
+              console.error('❌ Error sincronizando localStorage:', syncError);
+            }
+          }
+        }
+        
       } catch (error) {
         console.error('Error al cargar reportes del usuario:', error);
         setUserReports([]);
@@ -55,7 +109,7 @@ const Perfil: React.FC = () => {
     };
 
     loadUserReports();
-  }, [userProfile?.reportes]);
+  }, [userProfile?.reportes, userProfile?.email]);
 
   const handleCreateReport = () => {
     navigate('/mapa');
@@ -401,7 +455,7 @@ const Perfil: React.FC = () => {
             <h2>Estadísticas</h2>
             <div className="stats-grid">
               <div className="stat-card">
-                <div className="stat-number">{userProfile.reportes.length}</div>
+                <div className="stat-number">{userReports.length}</div>
                 <div className="stat-label">Reportes Realizados</div>
               </div>
             </div>
@@ -409,14 +463,16 @@ const Perfil: React.FC = () => {
 
           <div className="section">
             <h2>Mis Reportes</h2>
-            {(!userProfile.reportes || userProfile.reportes.length === 0) ? (
+            {userReports.length === 0 ? (
               <div className="empty-state">
-                <p>Aún no has realizado ningún reporte</p>
-                <button className="btn-primary" onClick={handleCreateReport}>Crear mi primer reporte</button>
-              </div>
-            ) : loadingReports ? (
-              <div className="loading-state">
-                <p>Cargando reportes...</p>
+                {loadingReports ? (
+                  <p>Cargando reportes...</p>
+                ) : (
+                  <>
+                    <p>Aún no has realizado ningún reporte</p>
+                    <button className="btn-primary" onClick={handleCreateReport}>Crear mi primer reporte</button>
+                  </>
+                )}
               </div>
             ) : (
               <div className="reportes-list">
@@ -425,9 +481,18 @@ const Perfil: React.FC = () => {
                     <div className="reporte-content">
                       <h4>{reporte.calle || `Reporte #${index + 1}`}</h4>
                       <p><strong>Descripción:</strong> {reporte.descripción}</p>
-                      <p><strong>Tipo:</strong> {reporte.tipo}</p>
-                      <p><strong>Dificultad:</strong> {reporte.dificultad}</p>
+                      {reporte.tipo && <p><strong>Tipo:</strong> {reporte.tipo}</p>}
+                      {reporte.dificultad && <p><strong>Dificultad:</strong> {reporte.dificultad}</p>}
                       <p><strong>Fecha:</strong> {new Date(reporte.fecha).toLocaleDateString()}</p>
+                      {reporte.imagen && (
+                        <div style={{ marginTop: '10px' }}>
+                          <img 
+                            src={reporte.imagen} 
+                            alt="Imagen del reporte" 
+                            style={{ maxWidth: '200px', maxHeight: '150px', borderRadius: '4px' }}
+                          />
+                        </div>
+                      )}
                     </div>
                     <div className="reporte-actions">
                       <button 
