@@ -302,13 +302,9 @@ const Registro: React.FC = () => {
                 disabled={loading}
               />
               <span className="checkmark"></span>
-              Acepto los{' '}
+              Acepto la{' '}
               <Link to="/privacidad" target="_blank" className="auth-link">
-                términos y condiciones
-              </Link>{' '}
-              y la{' '}
-              <Link to="/privacidad" target="_blank" className="auth-link">
-                política de privacidad
+                política de privacidad.
               </Link>
             </label>
             {errors.terms && <span className="error-message">{errors.terms}</span>}
